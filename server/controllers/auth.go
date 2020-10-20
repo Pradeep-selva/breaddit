@@ -3,12 +3,14 @@ package controllers
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 
+	_aws "github.com/pradeep-selva/Breaddit/server/aws"
 	entities "github.com/pradeep-selva/Breaddit/server/entities"
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
@@ -44,13 +46,27 @@ func SignUpHandler(c *gin.Context) {
 		"password": body.Password,
 	})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "An error occured!",
-			"statusCode": http.StatusBadRequest,
+			"statusCode": http.StatusInternalServerError,
 		})
 		return 
 	}
 
+	_, err = utils.Client.Collection("users").Doc(body.UserName).Set(utils.Ctx, map[string]interface{}{
+		"avatar": _aws.GetBucketLink("default-avatar.png"),
+		"userName": body.UserName,
+		"email": body.Email,
+		"createdAt": time.Now(),
+		"updatedAt": time.Now(),
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "An error occured!",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return 
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"data": body,
