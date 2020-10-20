@@ -5,10 +5,15 @@ import (
 	"net/http"
 	"time"
 
+	// "encoding/json"
+
+	"cloud.google.com/go/firestore"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+
+	jwt "github.com/dgrijalva/jwt-go"
 
 	_aws "github.com/pradeep-selva/Breaddit/server/aws"
 	entities "github.com/pradeep-selva/Breaddit/server/entities"
@@ -18,7 +23,7 @@ import (
 func SignUpHandler(c *gin.Context) {
 	var body entities.UserCredentials
 	c.ShouldBindBodyWith(&body, binding.JSON)
-	log.Println(body.UserName)
+	log.Println(body.UserName, "signed up")
 
 	_, err := utils.Client.Collection("auth").Doc(body.UserName).Get(utils.Ctx)
 	if err == nil {
@@ -72,4 +77,77 @@ func SignUpHandler(c *gin.Context) {
 		"data": body,
 		"statusCode": http.StatusOK,
 	})
+}
+
+func LoginHandler(c *gin.Context) {
+	var body entities.UserCredentials
+	var doc *firestore.DocumentSnapshot
+	var err error
+	
+	c.ShouldBindBodyWith(&body, binding.JSON)
+	log.Println(body)
+
+	if body.UserName == "" {
+		iter := utils.Client.Collection("auth").Where("email", "==", body.Email).Documents(utils.Ctx)
+		doc, err = iter.Next()
+	} else {
+		doc, err = utils.Client.Collection("auth").Doc(body.UserName).Get(utils.Ctx)
+	}
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Specified user does not exist!",
+			"statusCode": http.StatusNotFound,
+		})
+		return
+	}
+	id := doc.Ref.ID
+	log.Println(id)
+	m := doc.Data()
+	_password := m["password"].(string)
+
+	err = bcrypt.CompareHashAndPassword([]byte(_password), []byte(body.Password))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Wrong credentials entered",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	token, err := GenerateJWT(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "An error occured!",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return 
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
+		"statusCode": http.StatusOK,
+	})
+}
+
+// helper
+
+func GenerateJWT(userName string) (string, error) {
+	token := jwt.New(jwt.SigningMethodHS256)
+
+	claims := token.Claims.(jwt.MapClaims)
+
+	claims["authorised"] = true
+	claims["user"] = userName
+	claims["exp"] = time.Now().Add(time.Minute*30).Unix()
+
+	tokenString, err := token.SignedString([]byte(_aws.GetEnvVar("SIGNING_KEY")))
+
+	if err != nil {
+		log.Println("Error occured while created JWT tokenString", err)
+		return "", err
+	}
+
+	return tokenString, nil
 }
