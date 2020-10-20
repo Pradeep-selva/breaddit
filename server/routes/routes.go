@@ -4,14 +4,28 @@ import (
 	"github.com/gin-gonic/gin"
 	_aws "github.com/pradeep-selva/Breaddit/server/aws"
 	controllers "github.com/pradeep-selva/Breaddit/server/controllers"
-	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
 
-func Init(router *gin.Engine) {
+func InitRoutes(router *gin.Engine) {
 	router.GET("/", controllers.IndexRouteHandler)
-	router.GET(utils.GetRouteWithVersion("/"), controllers.HomeHandler)
-	router.GET(utils.GetRouteWithVersion("/login"), controllers.LoginHandler)
+}
+
+func InitPublicRoutes(router *gin.RouterGroup) {
+	router.GET("/", controllers.HomeHandler)
+	router.GET("/login", controllers.LoginHandler)
 	
-	router.POST(utils.GetRouteWithVersion("/signup"), controllers.SignUpHandler)
-	router.POST(utils.GetRouteWithVersion("/upload"), _aws.UploadImageHandler)
+	router.POST("/signup", controllers.SignUpHandler)
+	router.POST("/upload", _aws.UploadImageHandler)
+}
+
+func InitPrivateRoutes(router *gin.RouterGroup) {
+	router.GET("/showUID", privateHandler)
+}
+
+func privateHandler(c *gin.Context){
+	k := c.MustGet("UID").(string)
+	c.JSON(200, gin.H{
+			"message":"private",
+			"UID": k,
+		})
 }

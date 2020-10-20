@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	_aws "github.com/pradeep-selva/Breaddit/server/aws"
+	middleware "github.com/pradeep-selva/Breaddit/server/middleware"
 	routes "github.com/pradeep-selva/Breaddit/server/routes"
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
@@ -28,7 +29,14 @@ func main() {
 		c.Next()
 	})
 
-	routes.Init(router)
+	publicRoutes := router.Group("/api/"+utils.Version+"/")
+	privateRoutes := router.Group("/api/"+utils.Version+"/")
+
+	privateRoutes.Use(middleware.IsAuthorized)
+
+	routes.InitRoutes(router)
+	routes.InitPublicRoutes(publicRoutes)
+	routes.InitPrivateRoutes(privateRoutes)
 
 	PORT = os.Getenv("PORT")
 	if PORT == "" {

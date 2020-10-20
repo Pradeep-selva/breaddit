@@ -42,8 +42,6 @@ func ConnectAWS(){
 
 	var err error
 
-	log.Println(AccessKeyID, SecretKey, AWSRegion)
-
 	Sess, err = session.NewSession(
 		&aws.Config{
 			Region: aws.String(AWSRegion),
