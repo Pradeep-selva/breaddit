@@ -6,7 +6,9 @@ import (
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
 
-func Init(router *gin.Engine){
+func Init(router *gin.Engine) {
 	router.GET("/", controllers.IndexRouteHandler)
 	router.GET(utils.GetRouteWithVersion("/"), controllers.HomeHandler)
+	
+	router.POST(utils.GetRouteWithVersion("/signup"), controllers.SignUpHandler)
 }

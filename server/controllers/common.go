@@ -19,3 +19,4 @@ func HomeHandler(c *gin.Context) {
 		"message": "Welcome to breaddit api -- " + utils.Version,
 	})
 }
+
