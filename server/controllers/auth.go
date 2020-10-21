@@ -12,6 +12,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/golang/protobuf/ptypes"
 
 	jwt "github.com/dgrijalva/jwt-go"
 
@@ -46,9 +47,9 @@ func SignUpHandler(c *gin.Context) {
 
 	body.Password = string(hashedPassword)
 
-	_, err = utils.Client.Collection("auth").Doc(body.UserName).Set(utils.Ctx, map[string]interface{}{
-		"email": body.Email,
-		"password": body.Password,
+	_, err = utils.Client.Collection("auth").Doc(body.UserName).Set(utils.Ctx, entities.AuthDoc{
+		Email: body.Email,
+		Password: body.Password,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -58,12 +59,17 @@ func SignUpHandler(c *gin.Context) {
 		return 
 	}
 
-	_, err = utils.Client.Collection("users").Doc(body.UserName).Set(utils.Ctx, map[string]interface{}{
-		"avatar": _aws.GetBucketLink("default-avatar.png"),
-		"userName": body.UserName,
-		"email": body.Email,
-		"createdAt": time.Now(),
-		"updatedAt": time.Now(),
+	_, err = utils.Client.Collection("users").Doc(body.UserName).Set(utils.Ctx, entities.UserData{
+		UserName:body.UserName,  
+		Email:body.Email,      
+		Avatar:_aws.GetBucketLink("default-avatar.png"),
+		Bio: "🍞", 
+		Status: "",     
+		Location:"",
+		CreatedAt: ptypes.TimestampNow(),
+		UpdatedAt: ptypes.TimestampNow(),
+		JoinedSubs: []entities.Subs{},
+		Breads: 0,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -88,7 +94,7 @@ func LoginHandler(c *gin.Context) {
 	log.Println(body)
 
 	if body.UserName == "" {
-		iter := utils.Client.Collection("auth").Where("email", "==", body.Email).Documents(utils.Ctx)
+		iter := utils.Client.Collection("auth").Where("Email", "==", body.Email).Documents(utils.Ctx)
 		doc, err = iter.Next()
 	} else {
 		doc, err = utils.Client.Collection("auth").Doc(body.UserName).Get(utils.Ctx)
@@ -104,7 +110,7 @@ func LoginHandler(c *gin.Context) {
 	id := doc.Ref.ID
 	log.Println(id)
 	m := doc.Data()
-	_password := m["password"].(string)
+	_password := m["Password"].(string)
 
 	err = bcrypt.CompareHashAndPassword([]byte(_password), []byte(body.Password))
 
