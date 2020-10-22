@@ -21,6 +21,8 @@ import (
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
 
+// /api/v/signup
+
 func SignUpHandler(c *gin.Context) {
 	var body entities.UserCredentials
 	c.ShouldBindBodyWith(&body, binding.JSON)
@@ -33,6 +35,16 @@ func SignUpHandler(c *gin.Context) {
 			"statusCode": http.StatusBadRequest,
 		})
 		return 
+	}
+
+	iter := utils.Client.Collection("auth").Where("Email", "==", body.Email).Documents(utils.Ctx)
+	_, err = iter.Next()
+	if err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Account with specified email already exists!",
+			"statusCode": http.StatusBadRequest,
+		})
+		return 	
 	}
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
@@ -84,6 +96,8 @@ func SignUpHandler(c *gin.Context) {
 		"statusCode": http.StatusOK,
 	})
 }
+
+// /api/v/login
 
 func LoginHandler(c *gin.Context) {
 	var body entities.UserCredentials

@@ -1,6 +1,7 @@
 package _aws
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -61,7 +62,7 @@ func GetBucketLink(filename string) string {
 	return "https://" + GetEnvVar("BUCKET_NAME") + "." + "s3.amazonaws.com/" + filename
 }
 
-func UploadImageHandler(c *gin.Context) {
+func UploadImageHandler(c *gin.Context) (string, error){
 	sess := c.MustGet("sess").(*session.Session)
 	uploader := s3manager.NewUploader(sess)
 
@@ -81,10 +82,8 @@ func UploadImageHandler(c *gin.Context) {
 			"err":      err,
 			"uploader": upload,
 		})
-		return
+		return "", fmt.Errorf("Failed to upload avatar")
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"filePath": GetBucketLink(fileName),
-	})
+	return GetBucketLink(fileName), nil
 }
