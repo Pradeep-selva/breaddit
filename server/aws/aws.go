@@ -62,11 +62,11 @@ func GetBucketLink(filename string) string {
 	return "https://" + GetEnvVar("BUCKET_NAME") + "." + "s3.amazonaws.com/" + filename
 }
 
-func UploadImageHandler(c *gin.Context) (string, error){
+func UploadImageHandler(c *gin.Context, fieldName string) (string, error){
 	sess := c.MustGet("sess").(*session.Session)
 	uploader := s3manager.NewUploader(sess)
 
-	file, header, err := c.Request.FormFile("image")
+	file, header, err := c.Request.FormFile(fieldName)
 	fileName := header.Filename
 
 	upload, err := uploader.Upload(&s3manager.UploadInput{

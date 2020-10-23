@@ -82,19 +82,23 @@ func UpdateUserDataHandler(c *gin.Context) {
 		}
 	}
 
-	avatarUrl, err := _aws.UploadImageHandler(c)
+	_, header, _ := c.Request.FormFile("Avatar")
 
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
-			"statusCode": http.StatusInternalServerError,
-		})
-		return
+	if header != nil {
+		avatarUrl, err := _aws.UploadImageHandler(c, "Avatar")
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err,
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+
+		formData["Avatar"] = avatarUrl
 	}
 
-	formData["Avatar"] = avatarUrl
-
-	_, err = utils.Client.Collection("users").Doc(UID).Set(utils.Ctx, formData, firestore.MergeAll)
+	_, err := utils.Client.Collection("users").Doc(UID).Set(utils.Ctx, formData, firestore.MergeAll)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "An error occured while updating your profile!",

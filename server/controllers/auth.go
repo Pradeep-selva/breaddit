@@ -80,7 +80,7 @@ func SignUpHandler(c *gin.Context) {
 		Location:"",
 		CreatedAt: ptypes.TimestampNow(),
 		UpdatedAt: ptypes.TimestampNow(),
-		JoinedSubs: []entities.Subs{},
+		JoinedSubs: []string{},
 		Breads: 0,
 	})
 	if err != nil {
@@ -160,7 +160,7 @@ func GenerateJWT(userName string) (string, error) {
 
 	claims["authorised"] = true
 	claims["user"] = userName
-	claims["exp"] = time.Now().Add(time.Minute*30).Unix()
+	claims["exp"] = time.Now().Add(time.Minute*60).Unix()
 
 	tokenString, err := token.SignedString([]byte(_aws.GetEnvVar("SIGNING_KEY")))
 

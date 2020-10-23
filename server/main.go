@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -20,8 +19,6 @@ func main() {
 
 	_aws.LoadDotEnv()
 	_aws.ConnectAWS()
-
-	log.Println(_aws.Sess)
 
 	router := gin.Default()
 	router.Use(func(c *gin.Context) {
