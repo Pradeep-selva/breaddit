@@ -34,4 +34,5 @@ func InitPrivateRoutes(router *gin.RouterGroup) {
 	router.POST("/sub", controllers.CreateSubHandler)
 	router.PUT("/sub/:id", controllers.UpdateSubHandler)
 	router.DELETE("/sub/:id", controllers.DeleteSubHandler)
+	router.POST("/sub/:id/join", controllers.JoinSubHandler)
 }

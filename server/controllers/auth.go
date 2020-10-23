@@ -21,7 +21,7 @@ import (
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
 
-// /api/v/signup
+//POST /api/v/signup
 
 func SignUpHandler(c *gin.Context) {
 	var body entities.UserCredentials
@@ -97,7 +97,7 @@ func SignUpHandler(c *gin.Context) {
 	})
 }
 
-// /api/v/login
+//GET /api/v/login
 
 func LoginHandler(c *gin.Context) {
 	var body entities.UserCredentials
@@ -105,7 +105,6 @@ func LoginHandler(c *gin.Context) {
 	var err error
 	
 	c.ShouldBindBodyWith(&body, binding.JSON)
-	log.Println(body)
 
 	if body.UserName == "" {
 		iter := utils.Client.Collection("auth").Where("Email", "==", body.Email).Documents(utils.Ctx)
@@ -122,7 +121,6 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	id := doc.Ref.ID
-	log.Println(id)
 	m := doc.Data()
 	_password := m["Password"].(string)
 

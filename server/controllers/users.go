@@ -8,8 +8,6 @@ import (
 	// "net/http"
 	// "time"
 
-	// "cloud.google.com/go/firestore"
-
 	"cloud.google.com/go/firestore"
 	"github.com/gin-gonic/gin"
 
@@ -21,7 +19,7 @@ import (
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
 
-// /api/v/user
+//GET /api/v/user
 func GetUserHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
 
@@ -43,7 +41,7 @@ func GetUserHandler(c *gin.Context) {
 	})
 }
 
-// /api/v/user/{id}
+//GET /api/v/user/{id}
 func GetUserById(c *gin.Context) {
 	UID, _ := c.Params.Get("id")
 
@@ -65,7 +63,7 @@ func GetUserById(c *gin.Context) {
 	})
 }
 
-// /api/v/user
+//PUT /api/v/user
 func UpdateUserDataHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
 
@@ -113,7 +111,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 	})
 }
 
-// /api/v/user
+//DELETE /api/v/user
 func DeactivateUserHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
 

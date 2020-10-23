@@ -8,7 +8,7 @@ import (
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
 
-// /
+//GET /
 
 func IndexRouteHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
@@ -16,7 +16,7 @@ func IndexRouteHandler(c *gin.Context) {
 	})
 }
 
-// /api/v/
+//GET /api/v/
 
 func HomeHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{

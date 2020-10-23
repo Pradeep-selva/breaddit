@@ -1,6 +1,10 @@
 package controllers
 
 import (
+	"context"
+	"fmt"
+
+	// "log"
 	"net/http"
 
 	"cloud.google.com/go/firestore"
@@ -8,18 +12,19 @@ import (
 	"github.com/golang/protobuf/ptypes"
 
 	_aws "github.com/pradeep-selva/Breaddit/server/aws"
-	entitites "github.com/pradeep-selva/Breaddit/server/entities"
+	entities "github.com/pradeep-selva/Breaddit/server/entities"
 	"github.com/pradeep-selva/Breaddit/server/utils"
 )
 
-// /api/v/sub
+//POST /api/v/sub
 func CreateSubHandler(c *gin.Context) {
-	body := &entitites.Sub{
+	body := &entities.Sub{
 		Name: c.PostForm("Name"),
 		Description: c.PostForm("Description"),
 	}
 	
-	_, err := utils.Client.Collection("subs").Doc(body.Name).Get(utils.Ctx)
+	subRef := utils.Client.Collection("subs").Doc(body.Name)
+	_, err := subRef.Get(utils.Ctx)
 
 	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -32,7 +37,7 @@ func CreateSubHandler(c *gin.Context) {
 	body.Owner = c.MustGet("UID").(string)
 	body.CreatedAt = ptypes.TimestampNow()
 	body.UpdatedAt = ptypes.TimestampNow()
-	body.Users = []string{}
+	body.Users = []string{body.Owner}
 
 	_,header,_ := c.Request.FormFile("Thumbnail")
 
@@ -52,7 +57,7 @@ func CreateSubHandler(c *gin.Context) {
 		body.Thumbnail = url
 	}
 
-	_,err = utils.Client.Collection("subs").Doc(body.Name).Set(utils.Ctx, body)
+	_,err = subRef.Set(utils.Ctx, body)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -62,13 +67,30 @@ func CreateSubHandler(c *gin.Context) {
 		return
 	}
 
+	userRef := utils.Client.Collection("users").Doc(c.MustGet("UID").(string))
+	dsnap,err := userRef.Get(utils.Ctx)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":"Error occured while creating subbreaddit",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return	
+	}
+
+	var user entities.UserData
+	dsnap.DataTo(&user)
+	user.JoinedSubs = append(user.JoinedSubs, body.Name)
+	user.UpdatedAt = ptypes.TimestampNow()
+
+	_,_ = userRef.Set(utils.Ctx, user)
+
 	c.JSON(http.StatusOK, gin.H{
 		"data":body,
 		"statusCode": http.StatusOK,
 	})
 }
 
-// /api/v/sub/:id
+//PUT /api/v/sub/:id
 func UpdateSubHandler(c *gin.Context) {
 	formData := map[string]interface{}{
 		"Description": c.PostForm("Description"),
@@ -133,7 +155,7 @@ func UpdateSubHandler(c *gin.Context) {
 	})
 }
 
-// /api/v/sub/:id
+//DELETE /api/v/sub/:id
 func DeleteSubHandler(c *gin.Context) {
 	ID,_ := c.Params.Get("id")
 
@@ -173,7 +195,7 @@ func DeleteSubHandler(c *gin.Context) {
 	})
 }
 
-// /api/v/sub/:id
+//GET /api/v/sub/:id
 func GetSubByIdHandler(c *gin.Context) {
 	ID, _ := c.Params.Get("id")
 
@@ -191,6 +213,75 @@ func GetSubByIdHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"data": data,
+		"statusCode": http.StatusOK,
+	})
+}
+
+//POST /api/v/sub/:id/join
+func JoinSubHandler(c *gin.Context) {
+	UID := c.MustGet("UID").(string)
+	ID,_ := c.Params.Get("id")
+
+	var user entities.UserData
+	var sub entities.Sub
+
+	dsnap,err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "This subreddit does not exist.",
+			"statusCode": http.StatusNotFound,
+		})
+		return
+	}
+
+	dsnap.DataTo(&sub)
+
+	ref := utils.Client.Collection("users").Doc(UID)
+	err = utils.Client.RunTransaction(utils.Ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+		dsnap,err := tx.Get(ref)
+
+		if err != nil {
+			return fmt.Errorf("An error occured.")
+		}
+		dsnap.DataTo(&user)
+
+		found := utils.ArrayContains(user.JoinedSubs, ID)
+
+		if found {
+			return fmt.Errorf("You are already in the subbreaddit.")
+		}
+
+		user.JoinedSubs = append(user.JoinedSubs, ID)
+		user.UpdatedAt = ptypes.TimestampNow()
+		sub.Users = append(sub.Users, UID)
+		sub.UpdatedAt = ptypes.TimestampNow()
+
+		return tx.Set(ref, user)
+	})
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	_,err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, sub)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "An error occured while joining.",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return	
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": map[string]interface{}{
+			"User": user,
+			"Sub": sub,
+		},
 		"statusCode": http.StatusOK,
 	})
 }
