@@ -23,3 +23,16 @@ func MapContains(_map map[string]string, item string) string {
 	}
 	return ""
 }
+
+func FindInArray(array []string, item string) int {
+	for i,v := range array {
+		if v == item{
+			return i
+		}
+	}
+	return -1
+}
+
+func RemoveArrayElement(array []string, index int) []string {
+	return append(array[:index], array[index+1:]...)
+}

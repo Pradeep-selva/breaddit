@@ -10,11 +10,13 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/api/iterator"
 
 	// "github.com/gin-gonic/gin/binding"
 	"github.com/golang/protobuf/ptypes"
 
 	_aws "github.com/pradeep-selva/Breaddit/server/aws"
+	entitites "github.com/pradeep-selva/Breaddit/server/entities"
 
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
@@ -114,6 +116,45 @@ func UpdateUserDataHandler(c *gin.Context) {
 //DELETE /api/v/user
 func DeactivateUserHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
+	batch := utils.Client.Batch()
+
+	iter:= utils.Client.Collection("subs").Where("Users", "array-contains", UID).Documents(utils.Ctx)
+	var sub entitites.Sub
+	updates := 0
+
+	for {
+		dsnap, err := iter.Next()
+
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+
+		dsnap.DataTo(&sub)
+		sub.Users = utils.RemoveArrayElement(sub.Users, utils.FindInArray(sub.Users,UID))
+		docRef := utils.Client.Collection("subs").Doc(sub.Name)
+
+		batch.Set(docRef, sub)
+		updates+=1
+	}
+
+	if updates != 0 {
+		_, err := batch.Commit(utils.Ctx)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}	
+	}
 
 	_, err := utils.Client.Collection("users").Doc(UID).Delete(utils.Ctx)
 

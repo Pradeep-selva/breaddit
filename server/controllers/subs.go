@@ -10,6 +10,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/ptypes"
+	"google.golang.org/api/iterator"
 
 	_aws "github.com/pradeep-selva/Breaddit/server/aws"
 	entities "github.com/pradeep-selva/Breaddit/server/entities"
@@ -179,8 +180,46 @@ func DeleteSubHandler(c *gin.Context) {
 		return
 	}
 
-	_, err = utils.Client.Collection("subs").Doc(ID).Delete(utils.Ctx)
+	iter := utils.Client.Collection("users").Where("JoinedSubs", "array-contains", ID).Documents(utils.Ctx)
 
+	batch := utils.Client.Batch()
+	var user entities.UserData
+	updates := 0
+
+	for {
+		dsnap, err := iter.Next()
+
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured while deleting.",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return	
+		}
+
+		dsnap.DataTo(&user)
+		user.JoinedSubs = utils.RemoveArrayElement(user.JoinedSubs, utils.FindInArray(user.JoinedSubs, ID))
+		docRef := utils.Client.Collection("users").Doc(user.UserName)
+
+		batch.Set(docRef, user)
+		updates += 1
+	}
+
+	if updates != 0 {
+		_, err = batch.Commit(utils.Ctx)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured while deleting.",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return	
+		}
+	}
+
+	_, err = utils.Client.Collection("subs").Doc(ID).Delete(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "An error occured while deleting.",
