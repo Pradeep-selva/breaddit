@@ -127,6 +127,16 @@ func DeactivateUserHandler(c *gin.Context) {
 		return
 	}
 
+	_, err = utils.Client.Collection("auth").Doc(UID).Delete(utils.Ctx)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "An error occured while deactivating.",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"data": "Deactivated succesfully! We'll see you around.",
 		"statusCode": http.StatusOK,

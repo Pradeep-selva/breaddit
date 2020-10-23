@@ -19,6 +19,9 @@ func InitPublicRoutes(router *gin.RouterGroup) {
 	
 	//user
 	router.GET("/user/:id", controllers.GetUserById)
+
+	//subs
+	router.GET("/sub/:id", controllers.GetSubByIdHandler)
 }
 
 func InitPrivateRoutes(router *gin.RouterGroup) {
@@ -30,4 +33,5 @@ func InitPrivateRoutes(router *gin.RouterGroup) {
 	//subs
 	router.POST("/sub", controllers.CreateSubHandler)
 	router.PUT("/sub/:id", controllers.UpdateSubHandler)
+	router.DELETE("/sub/:id", controllers.DeleteSubHandler)
 }
