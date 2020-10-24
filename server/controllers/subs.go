@@ -324,3 +324,73 @@ func JoinSubHandler(c *gin.Context) {
 		"statusCode": http.StatusOK,
 	})
 }
+
+
+//POST /api/v/sub/:id/leave
+func LeaveSubHandler(c *gin.Context) {
+	UID := c.MustGet("UID").(string)
+	ID,_ := c.Params.Get("id")
+
+	var user entities.UserData
+	var sub entities.Sub
+
+	dsnap,err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "This subreddit does not exist.",
+			"statusCode": http.StatusNotFound,
+		})
+		return
+	}
+
+	dsnap.DataTo(&sub)
+
+	ref := utils.Client.Collection("users").Doc(UID)
+	err = utils.Client.RunTransaction(utils.Ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+		dsnap,err := tx.Get(ref)
+
+		if err != nil {
+			return fmt.Errorf("An error occured.")
+		}
+		dsnap.DataTo(&user)
+
+		found := utils.ArrayContains(user.JoinedSubs, ID)
+
+		if !found {
+			return fmt.Errorf("You must join a subreddit before trying to leave it.")
+		}
+
+		user.JoinedSubs = utils.RemoveArrayElement(user.JoinedSubs, utils.FindInArray(user.JoinedSubs, ID))
+		user.UpdatedAt = ptypes.TimestampNow()
+		sub.Users = utils.RemoveArrayElement(sub.Users, utils.FindInArray(sub.Users, UID))
+		sub.UpdatedAt = ptypes.TimestampNow()
+
+		return tx.Set(ref, user)
+	})
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	_,err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, sub)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "An error occured while leaving.",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return	
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": map[string]interface{}{
+			"User": user,
+			"Sub": sub,
+		},
+		"statusCode": http.StatusOK,
+	})
+}
