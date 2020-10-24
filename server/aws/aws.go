@@ -5,8 +5,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
+
+	"github.com/google/uuid"
 
 	"github.com/gin-gonic/gin"
 
@@ -67,12 +70,13 @@ func UploadImageHandler(c *gin.Context, fieldName string) (string, error){
 	uploader := s3manager.NewUploader(sess)
 
 	file, header, err := c.Request.FormFile(fieldName)
-	fileName := header.Filename
+	fileName := uuid.New().String()+"."+strings.Split(header.Filename, ".")[1]
 
 	upload, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(AWSBucket),
 		ACL:    aws.String("public-read"),
 		Key:    aws.String(fileName),
+		ContentType: aws.String("image/"+strings.Split(header.Filename, ".")[1]),
 		Body:   file,
 	})
 

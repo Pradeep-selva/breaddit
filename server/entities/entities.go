@@ -37,3 +37,19 @@ type UserData struct {
 	JoinedSubs []string 
 	Breads int 
 }
+
+type Post struct {
+	Title string
+	Link string
+	Content string
+	Image string
+	User struct {
+		UserName string
+		Avatar string
+	}
+	Sub string
+	Upvotes int
+	Comments int
+	Downvotes int
+	CreatedAt *timestamppb.Timestamp
+}
