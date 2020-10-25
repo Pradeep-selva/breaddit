@@ -24,7 +24,9 @@ func InitPublicRoutes(router *gin.RouterGroup) {
 	router.GET("/sub/:id", controllers.GetSubByIdHandler)
 
 	//posts
-	router.GET("/post/:id", controllers.GetPostByIdhandler)
+	router.GET("/posts/:id", controllers.GetPostByIdhandler)
+	router.GET("/user/:id/posts", controllers.GetUserPostsHandler)
+	router.GET("/subs/:id/posts", controllers.GetSubPostsHandler)
 }
 
 func InitPrivateRoutes(router *gin.RouterGroup) {
@@ -42,5 +44,5 @@ func InitPrivateRoutes(router *gin.RouterGroup) {
 
 	//posts
 	router.POST("/sub/:id/post", controllers.PostToSubHandler)
-	router.DELETE("/post/:id", controllers.DeletePostHandler)
+	router.DELETE("/posts/:id", controllers.DeletePostHandler)
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/ptypes"
+	"google.golang.org/api/iterator"
 
 	_aws "github.com/pradeep-selva/Breaddit/server/aws"
 	entities "github.com/pradeep-selva/Breaddit/server/entities"
@@ -90,7 +91,87 @@ func PostToSubHandler(c *gin.Context) {
 }
 
 
-//GET /api/post/:id
+//GET /api/v/user/:id/posts/
+func GetUserPostsHandler(c *gin.Context){
+	UID,_ := c.Params.Get("id")
+
+	if _,err := utils.Client.Collection("users").Doc(UID).Get(utils.Ctx); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "The specified user is not found",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	userPosts := []map[string]interface{}{}
+	iter := utils.Client.Collection("posts").Where("User.UserName", "==", UID).Documents(utils.Ctx)
+
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured.",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+		post := dsnap.Data()
+		post["id"] = dsnap.Ref.ID
+
+		userPosts = append(userPosts, post)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": userPosts,
+		"statusCode": http.StatusOK,
+	})
+}
+
+
+//GET /api/v/subs/:id/posts/
+func GetSubPostsHandler(c *gin.Context){
+	ID,_ := c.Params.Get("id")
+
+	if _,err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "The specified subbreaddit is not found",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	subPosts := []map[string]interface{}{}
+	iter := utils.Client.Collection("posts").Where("Sub", "==", ID).Documents(utils.Ctx)
+
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured.",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+		post := dsnap.Data()
+		post["id"] = dsnap.Ref.ID
+
+		subPosts = append(subPosts, post)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": subPosts,
+		"statusCode": http.StatusOK,
+	})
+}
+
+
+//GET /api/posts/:id
 func GetPostByIdhandler(c *gin.Context) {
 	postId,_ := c.Params.Get("id")
 
@@ -110,7 +191,7 @@ func GetPostByIdhandler(c *gin.Context) {
 }
 
 
-//DELETE /api/v/post/:id
+//DELETE /api/v/posts/:id
 func DeletePostHandler(c *gin.Context) {
 	postId,_ := c.Params.Get("id")
 
