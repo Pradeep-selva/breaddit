@@ -43,7 +43,7 @@ func GetUserHandler(c *gin.Context) {
 	})
 }
 
-//GET /api/v/user/{id}
+//GET /api/v/user/:id
 func GetUserById(c *gin.Context) {
 	UID, _ := c.Params.Get("id")
 

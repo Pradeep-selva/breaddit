@@ -88,3 +88,62 @@ func PostToSubHandler(c *gin.Context) {
 		"statusCode": http.StatusOK,
 	})
 }
+
+
+//GET /api/post/:id
+func GetPostByIdhandler(c *gin.Context) {
+	postId,_ := c.Params.Get("id")
+
+	dsnap,err := utils.Client.Collection("posts").Doc(postId).Get(utils.Ctx)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "This post does not exist!",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": dsnap.Data(),
+		"statusCode": http.StatusOK,
+	})
+}
+
+
+//DELETE /api/v/post/:id
+func DeletePostHandler(c *gin.Context) {
+	postId,_ := c.Params.Get("id")
+
+	docRef := utils.Client.Collection("posts").Doc(postId)
+	dsnap,err := docRef.Get(utils.Ctx)
+	if  err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "This post does not exist.",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	var post entities.Post
+	dsnap.DataTo(&post)
+	if post.User.UserName != c.MustGet("UID").(string) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "You can only deleted posts that you posted.",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	if _,err := docRef.Delete(utils.Ctx); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "An error occured.",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": "Post deleted succesfully!",
+		"statusCode": http.StatusOK,
+	})
+}
