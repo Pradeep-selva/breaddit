@@ -38,7 +38,7 @@ func LoadDotEnv() {
 	}
 }
 
-func ConnectAWS(){
+func ConnectAWS() {
 	AccessKeyID = GetEnvVar("AWS_ACCESS_KEY_ID")
 	SecretKey = GetEnvVar("AWS_SECRET_KEY")
 	AWSRegion = GetEnvVar("AWS_REGION")
@@ -65,19 +65,19 @@ func GetBucketLink(filename string) string {
 	return "https://" + GetEnvVar("BUCKET_NAME") + "." + "s3.amazonaws.com/" + filename
 }
 
-func UploadImageHandler(c *gin.Context, fieldName string) (string, error){
+func UploadImageHandler(c *gin.Context, fieldName string) (string, error) {
 	sess := c.MustGet("sess").(*session.Session)
 	uploader := s3manager.NewUploader(sess)
 
 	file, header, err := c.Request.FormFile(fieldName)
-	fileName := uuid.New().String()+"."+strings.Split(header.Filename, ".")[1]
+	fileName := uuid.New().String() + "." + strings.Split(header.Filename, ".")[1]
 
 	upload, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket: aws.String(AWSBucket),
-		ACL:    aws.String("public-read"),
-		Key:    aws.String(fileName),
-		ContentType: aws.String("image/"+strings.Split(header.Filename, ".")[1]),
-		Body:   file,
+		Bucket:      aws.String(AWSBucket),
+		ACL:         aws.String("public-read"),
+		Key:         aws.String(fileName),
+		ContentType: aws.String("image/" + strings.Split(header.Filename, ".")[1]),
+		Body:        file,
 	})
 
 	if err != nil {

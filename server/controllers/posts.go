@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"cloud.google.com/go/firestore"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/api/iterator"
@@ -15,13 +16,13 @@ import (
 //POST /api/v/sub/:id/post
 func PostToSubHandler(c *gin.Context) {
 	post := entities.Post{
-		Content: c.PostForm("Content"),
-		Link: c.PostForm("Link"),
-		Comments: 0,
-		Upvotes: 0,
+		Content:   c.PostForm("Content"),
+		Link:      c.PostForm("Link"),
+		Comments:  0,
+		Upvotes:   0,
 		Downvotes: 0,
 		CreatedAt: ptypes.TimestampNow(),
-		Title: c.PostForm("Title"),
+		Title:     c.PostForm("Title"),
 	}
 	UID := c.MustGet("UID").(string)
 	subID, _ := c.Params.Get("id")
@@ -29,7 +30,7 @@ func PostToSubHandler(c *gin.Context) {
 	dsnap, err := utils.Client.Collection("subs").Doc(subID).Get(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": subID+" is not an existing subbreaddit",
+			"error":      subID + " is not an existing subbreaddit",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
@@ -40,7 +41,7 @@ func PostToSubHandler(c *gin.Context) {
 
 	if !found {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "You must join a subbreaddit before trying to post there.",
+			"error":      "You must join a subbreaddit before trying to post there.",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
@@ -53,7 +54,7 @@ func PostToSubHandler(c *gin.Context) {
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
+				"error":      err.Error(),
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -65,46 +66,48 @@ func PostToSubHandler(c *gin.Context) {
 	dsnap, err = utils.Client.Collection("users").Doc(UID).Get(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured.",
+			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
 	}
 	user := dsnap.Data()
-	post.User = struct{UserName string; Avatar string}{user["UserName"].(string), user["Avatar"].(string)}
+	post.User = struct {
+		UserName string
+		Avatar   string
+	}{user["UserName"].(string), user["Avatar"].(string)}
 
 	post.Sub = subID
 
 	_, _, err = utils.Client.Collection("posts").Add(utils.Ctx, post)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured.",
+			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
-		return	
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": post,
+		"data":       post,
 		"statusCode": http.StatusOK,
 	})
 }
 
-
 //GET /api/v/user/:id/posts/
-func GetUserPostsHandler(c *gin.Context){
-	UID,_ := c.Params.Get("id")
+func GetUserPostsHandler(c *gin.Context) {
+	UID, _ := c.Params.Get("id")
 
-	if _,err := utils.Client.Collection("users").Doc(UID).Get(utils.Ctx); err != nil {
+	if _, err := utils.Client.Collection("users").Doc(UID).Get(utils.Ctx); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "The specified user is not found",
+			"error":      "The specified user is not found",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
 
 	userPosts := []map[string]interface{}{}
-	iter := utils.Client.Collection("posts").Where("User.UserName", "==", UID).Documents(utils.Ctx)
+	iter := utils.Client.Collection("posts").Where("User.UserName", "==", UID).OrderBy("CreatedAt", firestore.Desc).Documents(utils.Ctx)
 
 	for {
 		dsnap, err := iter.Next()
@@ -113,7 +116,7 @@ func GetUserPostsHandler(c *gin.Context){
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -125,26 +128,25 @@ func GetUserPostsHandler(c *gin.Context){
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": userPosts,
+		"data":       userPosts,
 		"statusCode": http.StatusOK,
 	})
 }
 
-
 //GET /api/v/subs/:id/posts/
-func GetSubPostsHandler(c *gin.Context){
-	ID,_ := c.Params.Get("id")
+func GetSubPostsHandler(c *gin.Context) {
+	ID, _ := c.Params.Get("id")
 
-	if _,err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx); err != nil {
+	if _, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "The specified subbreaddit is not found",
+			"error":      "The specified subbreaddit is not found",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
 
 	subPosts := []map[string]interface{}{}
-	iter := utils.Client.Collection("posts").Where("Sub", "==", ID).Documents(utils.Ctx)
+	iter := utils.Client.Collection("posts").Where("Sub", "==", ID).OrderBy("CreatedAt", firestore.Desc).Documents(utils.Ctx)
 
 	for {
 		dsnap, err := iter.Next()
@@ -153,7 +155,7 @@ func GetSubPostsHandler(c *gin.Context){
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -165,41 +167,119 @@ func GetSubPostsHandler(c *gin.Context){
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": subPosts,
+		"data":       subPosts,
 		"statusCode": http.StatusOK,
 	})
 }
 
-
 //GET /api/posts/:id
 func GetPostByIdhandler(c *gin.Context) {
-	postId,_ := c.Params.Get("id")
+	postId, _ := c.Params.Get("id")
 
-	dsnap,err := utils.Client.Collection("posts").Doc(postId).Get(utils.Ctx)
+	dsnap, err := utils.Client.Collection("posts").Doc(postId).Get(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "This post does not exist!",
+			"error":      "This post does not exist!",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": dsnap.Data(),
+		"data":       dsnap.Data(),
 		"statusCode": http.StatusOK,
 	})
 }
 
+//POST /api/v/posts/:id/upvote
+func UpvotePostsHandler(c *gin.Context) {
+	ID, _ := c.Params.Get("id")
+	UID := c.MustGet("UID").(string)
+
+	postRef := utils.Client.Collection("posts").Doc(ID)
+
+	_, err := postRef.Get(utils.Ctx)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":      "This post does not exist.",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+
+	iter := utils.Client.Collection("upvotes").Where("UserName", "==", UID).Where("PostId", "==", ID).Limit(1).Documents(utils.Ctx)
+
+	dsnap, err := iter.Next()
+	if err == nil {
+		upvoteId := dsnap.Ref.ID
+
+		_, err := utils.Client.Collection("upvotes").Doc(upvoteId).Delete(utils.Ctx)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error":      "An error occured",
+				"statusCode": http.StatusBadRequest,
+			})
+			return
+		}
+
+		_, err = postRef.Update(utils.Ctx, []firestore.Update{
+			{Path: "Upvotes", Value: firestore.Increment(-1)},
+		})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":     "An error occured",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"data": "upvote removed successfully",
+			"statusCode": http.StatusOK,
+		})
+		return
+	}
+
+	payload := map[string]interface{}{
+		"UserName": UID,
+		"PostId":       ID,
+	}
+
+	_, _, err = utils.Client.Collection("upvotes").Add(utils.Ctx, payload)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":      "An error occured",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
+	}
+
+	_, err = postRef.Update(utils.Ctx, []firestore.Update{
+		{Path: "Upvotes", Value: firestore.Increment(1)},
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":     "An error occured",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data":       payload,
+		"statusCode": http.StatusOK,
+	})
+}
 
 //DELETE /api/v/posts/:id
 func DeletePostHandler(c *gin.Context) {
-	postId,_ := c.Params.Get("id")
+	postId, _ := c.Params.Get("id")
 
 	docRef := utils.Client.Collection("posts").Doc(postId)
-	dsnap,err := docRef.Get(utils.Ctx)
-	if  err != nil {
+	dsnap, err := docRef.Get(utils.Ctx)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "This post does not exist.",
+			"error":      "This post does not exist.",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
@@ -209,22 +289,22 @@ func DeletePostHandler(c *gin.Context) {
 	dsnap.DataTo(&post)
 	if post.User.UserName != c.MustGet("UID").(string) {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "You can only deleted posts that you posted.",
+			"error":      "You can only deleted posts that you posted.",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
 
-	if _,err := docRef.Delete(utils.Ctx); err != nil {
+	if _, err := docRef.Delete(utils.Ctx); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured.",
+			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": "Post deleted succesfully!",
+		"data":       "Post deleted succesfully!",
 		"statusCode": http.StatusOK,
 	})
 }

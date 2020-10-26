@@ -26,8 +26,8 @@ func main() {
 		c.Next()
 	})
 
-	publicRoutes := router.Group("/api/"+utils.Version+"/")
-	privateRoutes := router.Group("/api/"+utils.Version+"/")
+	publicRoutes := router.Group("/api/" + utils.Version + "/")
+	privateRoutes := router.Group("/api/" + utils.Version + "/")
 
 	privateRoutes.Use(middleware.IsAuthorized)
 

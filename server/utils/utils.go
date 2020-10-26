@@ -7,8 +7,8 @@ func GetRouteWithVersion(route string) string {
 }
 
 func ArrayContains(array []string, item string) bool {
-	for _,v := range array {
-		if v == item{
+	for _, v := range array {
+		if v == item {
 			return true
 		}
 	}
@@ -16,7 +16,7 @@ func ArrayContains(array []string, item string) bool {
 }
 
 func MapContains(_map map[string]string, item string) string {
-	for k,v := range _map {
+	for k, v := range _map {
 		if v == item {
 			return k
 		}
@@ -25,8 +25,8 @@ func MapContains(_map map[string]string, item string) string {
 }
 
 func FindInArray(array []string, item string) int {
-	for i,v := range array {
-		if v == item{
+	for i, v := range array {
+		if v == item {
 			return i
 		}
 	}

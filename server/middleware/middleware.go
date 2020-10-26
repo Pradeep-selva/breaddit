@@ -12,7 +12,7 @@ import (
 
 func IsAuthorized(c *gin.Context) {
 	authToken := c.GetHeader("Token")
-	if  authToken != "" {
+	if authToken != "" {
 		token, err := jwt.Parse(authToken, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				sendError(c)
@@ -46,7 +46,7 @@ func IsAuthorized(c *gin.Context) {
 
 func sendError(c *gin.Context) {
 	c.JSON(http.StatusUnauthorized, gin.H{
-		"error": "You are not authorized to be here",
+		"error":      "You are not authorized to be here",
 		"statusCode": http.StatusUnauthorized,
-	})		
+	})
 }

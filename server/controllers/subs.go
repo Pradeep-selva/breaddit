@@ -20,16 +20,16 @@ import (
 //POST /api/v/sub
 func CreateSubHandler(c *gin.Context) {
 	body := &entities.Sub{
-		Name: c.PostForm("Name"),
+		Name:        c.PostForm("Name"),
 		Description: c.PostForm("Description"),
 	}
-	
+
 	subRef := utils.Client.Collection("subs").Doc(body.Name)
 	_, err := subRef.Get(utils.Ctx)
 
 	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": body.Name+" is already an existing subbreaddit",
+			"error":      body.Name + " is already an existing subbreaddit",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
@@ -40,7 +40,7 @@ func CreateSubHandler(c *gin.Context) {
 	body.UpdatedAt = ptypes.TimestampNow()
 	body.Users = []string{body.Owner}
 
-	_,header,_ := c.Request.FormFile("Thumbnail")
+	_, header, _ := c.Request.FormFile("Thumbnail")
 
 	if header == nil {
 		body.Thumbnail = _aws.GetBucketLink("default-thumbnail.png")
@@ -49,8 +49,8 @@ func CreateSubHandler(c *gin.Context) {
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-			"error":"Error occured while creating subbreaddit",
-			"statusCode": http.StatusInternalServerError,
+				"error":      "Error occured while creating subbreaddit",
+				"statusCode": http.StatusInternalServerError,
 			})
 			return
 		}
@@ -58,24 +58,24 @@ func CreateSubHandler(c *gin.Context) {
 		body.Thumbnail = url
 	}
 
-	_,err = subRef.Set(utils.Ctx, body)
+	_, err = subRef.Set(utils.Ctx, body)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":"Error occured while creating subbreaddit",
+			"error":      "Error occured while creating subbreaddit",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
 	}
 
 	userRef := utils.Client.Collection("users").Doc(c.MustGet("UID").(string))
-	dsnap,err := userRef.Get(utils.Ctx)
+	dsnap, err := userRef.Get(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":"Error occured while creating subbreaddit",
+			"error":      "Error occured while creating subbreaddit",
 			"statusCode": http.StatusInternalServerError,
 		})
-		return	
+		return
 	}
 
 	var user entities.UserData
@@ -83,10 +83,10 @@ func CreateSubHandler(c *gin.Context) {
 	user.JoinedSubs = append(user.JoinedSubs, body.Name)
 	user.UpdatedAt = ptypes.TimestampNow()
 
-	_,_ = userRef.Set(utils.Ctx, user)
+	_, _ = userRef.Set(utils.Ctx, user)
 
 	c.JSON(http.StatusOK, gin.H{
-		"data":body,
+		"data":       body,
 		"statusCode": http.StatusOK,
 	})
 }
@@ -95,26 +95,26 @@ func CreateSubHandler(c *gin.Context) {
 func UpdateSubHandler(c *gin.Context) {
 	formData := map[string]interface{}{
 		"Description": c.PostForm("Description"),
-		"UpdatedAt": ptypes.TimestampNow(),
+		"UpdatedAt":   ptypes.TimestampNow(),
 	}
 
-	ID,_ := c.Params.Get("id")
+	ID, _ := c.Params.Get("id")
 
 	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-				"error": "This subbreaddit does not exist",
-				"statusCode": http.StatusBadRequest,
-			})
+			"error":      "This subbreaddit does not exist",
+			"statusCode": http.StatusBadRequest,
+		})
 		return
 	}
-	
+
 	data := dsnap.Data()
 
 	if data["Owner"].(string) != c.MustGet("UID").(string) {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "You are not authorized to modify this subbreaddit!",
+			"error":      "You are not authorized to modify this subbreaddit!",
 			"statusCode": http.StatusUnauthorized,
 		})
 		return
@@ -124,14 +124,14 @@ func UpdateSubHandler(c *gin.Context) {
 		delete(formData, "Description")
 	}
 
-	_,header,_ := c.Request.FormFile("Thumbnail")
+	_, header, _ := c.Request.FormFile("Thumbnail")
 
 	if header != nil {
 		url, err := _aws.UploadImageHandler(c, "Thumbnail")
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err,
+				"error":      err,
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -144,37 +144,37 @@ func UpdateSubHandler(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured while updating",
+			"error":      "An error occured while updating",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": formData,
+		"data":       formData,
 		"statusCode": http.StatusOK,
 	})
 }
 
 //DELETE /api/v/sub/:id
 func DeleteSubHandler(c *gin.Context) {
-	ID,_ := c.Params.Get("id")
+	ID, _ := c.Params.Get("id")
 
 	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-				"error": "This subbreaddit does not exist",
-				"statusCode": http.StatusBadRequest,
-			})
+			"error":      "This subbreaddit does not exist",
+			"statusCode": http.StatusBadRequest,
+		})
 		return
 	}
-	
+
 	data := dsnap.Data()
 
 	if data["Owner"].(string) != c.MustGet("UID").(string) {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "You are not authorized to delete this subbreaddit!",
+			"error":      "You are not authorized to delete this subbreaddit!",
 			"statusCode": http.StatusUnauthorized,
 		})
 		return
@@ -194,10 +194,10 @@ func DeleteSubHandler(c *gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured while deleting.",
+				"error":      "An error occured while deleting.",
 				"statusCode": http.StatusInternalServerError,
 			})
-			return	
+			return
 		}
 
 		dsnap.DataTo(&user)
@@ -212,24 +212,24 @@ func DeleteSubHandler(c *gin.Context) {
 		_, err = batch.Commit(utils.Ctx)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured while deleting.",
+				"error":      "An error occured while deleting.",
 				"statusCode": http.StatusInternalServerError,
 			})
-			return	
+			return
 		}
 	}
 
 	_, err = utils.Client.Collection("subs").Doc(ID).Delete(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured while deleting.",
+			"error":      "An error occured while deleting.",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": "This subbreaddit will be missed. Big F!",
+		"data":       "This subbreaddit will be missed. Big F!",
 		"statusCode": http.StatusOK,
 	})
 }
@@ -242,7 +242,7 @@ func GetSubByIdHandler(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "This subbreaddit does not exist.",
+			"error":      "This subbreaddit does not exist.",
 			"statusCode": http.StatusNotFound,
 		})
 		return
@@ -251,7 +251,7 @@ func GetSubByIdHandler(c *gin.Context) {
 	data := dsnap.Data()
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": data,
+		"data":       data,
 		"statusCode": http.StatusOK,
 	})
 }
@@ -259,16 +259,16 @@ func GetSubByIdHandler(c *gin.Context) {
 //POST /api/v/sub/:id/join
 func JoinSubHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
-	ID,_ := c.Params.Get("id")
+	ID, _ := c.Params.Get("id")
 
 	var user entities.UserData
 	var sub entities.Sub
 
-	dsnap,err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
+	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "This subreddit does not exist.",
+			"error":      "This subreddit does not exist.",
 			"statusCode": http.StatusNotFound,
 		})
 		return
@@ -278,7 +278,7 @@ func JoinSubHandler(c *gin.Context) {
 
 	ref := utils.Client.Collection("users").Doc(UID)
 	err = utils.Client.RunTransaction(utils.Ctx, func(ctx context.Context, tx *firestore.Transaction) error {
-		dsnap,err := tx.Get(ref)
+		dsnap, err := tx.Get(ref)
 
 		if err != nil {
 			return fmt.Errorf("An error occured.")
@@ -301,44 +301,43 @@ func JoinSubHandler(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
 
-	_,err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, sub)
+	_, err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, sub)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured while joining.",
+			"error":      "An error occured while joining.",
 			"statusCode": http.StatusInternalServerError,
 		})
-		return	
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"data": map[string]interface{}{
 			"User": user,
-			"Sub": sub,
+			"Sub":  sub,
 		},
 		"statusCode": http.StatusOK,
 	})
 }
 
-
 //POST /api/v/sub/:id/leave
 func LeaveSubHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
-	ID,_ := c.Params.Get("id")
+	ID, _ := c.Params.Get("id")
 
 	var user entities.UserData
 	var sub entities.Sub
 
-	dsnap,err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
+	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "This subreddit does not exist.",
+			"error":      "This subreddit does not exist.",
 			"statusCode": http.StatusNotFound,
 		})
 		return
@@ -348,7 +347,7 @@ func LeaveSubHandler(c *gin.Context) {
 
 	ref := utils.Client.Collection("users").Doc(UID)
 	err = utils.Client.RunTransaction(utils.Ctx, func(ctx context.Context, tx *firestore.Transaction) error {
-		dsnap,err := tx.Get(ref)
+		dsnap, err := tx.Get(ref)
 
 		if err != nil {
 			return fmt.Errorf("An error occured.")
@@ -371,25 +370,25 @@ func LeaveSubHandler(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
 		return
 	}
 
-	_,err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, sub)
+	_, err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, sub)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured while leaving.",
+			"error":      "An error occured while leaving.",
 			"statusCode": http.StatusInternalServerError,
 		})
-		return	
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"data": map[string]interface{}{
 			"User": user,
-			"Sub": sub,
+			"Sub":  sub,
 		},
 		"statusCode": http.StatusOK,
 	})

@@ -31,68 +31,68 @@ func SignUpHandler(c *gin.Context) {
 	_, err := utils.Client.Collection("auth").Doc(body.UserName).Get(utils.Ctx)
 	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Account with specified username already exists!",
+			"error":      "Account with specified username already exists!",
 			"statusCode": http.StatusBadRequest,
 		})
-		return 
+		return
 	}
 
 	iter := utils.Client.Collection("auth").Where("Email", "==", body.Email).Documents(utils.Ctx)
 	_, err = iter.Next()
 	if err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Account with specified email already exists!",
+			"error":      "Account with specified email already exists!",
 			"statusCode": http.StatusBadRequest,
 		})
-		return 	
+		return
 	}
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
 	err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(body.Password))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured!",
+			"error":      "An error occured!",
 			"statusCode": http.StatusInternalServerError,
 		})
-		return 
+		return
 	}
 
 	body.Password = string(hashedPassword)
 
 	_, err = utils.Client.Collection("auth").Doc(body.UserName).Set(utils.Ctx, entities.AuthDoc{
-		Email: body.Email,
+		Email:    body.Email,
 		Password: body.Password,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured!",
+			"error":      "An error occured!",
 			"statusCode": http.StatusInternalServerError,
 		})
-		return 
+		return
 	}
 
 	_, err = utils.Client.Collection("users").Doc(body.UserName).Set(utils.Ctx, entities.UserData{
-		UserName:body.UserName,  
-		Email:body.Email,      
-		Avatar:_aws.GetBucketLink("default-avatar.png"),
-		Bio: "🍞", 
-		Status: "",     
-		Location:"",
-		CreatedAt: ptypes.TimestampNow(),
-		UpdatedAt: ptypes.TimestampNow(),
+		UserName:   body.UserName,
+		Email:      body.Email,
+		Avatar:     _aws.GetBucketLink("default-avatar.png"),
+		Bio:        "🍞",
+		Status:     "",
+		Location:   "",
+		CreatedAt:  ptypes.TimestampNow(),
+		UpdatedAt:  ptypes.TimestampNow(),
 		JoinedSubs: []string{},
-		Breads: 0,
+		Breads:     0,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured!",
+			"error":      "An error occured!",
 			"statusCode": http.StatusInternalServerError,
 		})
-		return 
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": body,
+		"data":       body,
 		"statusCode": http.StatusOK,
 	})
 }
@@ -103,7 +103,7 @@ func LoginHandler(c *gin.Context) {
 	var body entities.UserCredentials
 	var doc *firestore.DocumentSnapshot
 	var err error
-	
+
 	c.ShouldBindBodyWith(&body, binding.JSON)
 
 	if body.UserName == "" {
@@ -115,7 +115,7 @@ func LoginHandler(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Specified user does not exist!",
+			"error":      "Specified user does not exist!",
 			"statusCode": http.StatusNotFound,
 		})
 		return
@@ -128,7 +128,7 @@ func LoginHandler(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Wrong credentials entered",
+			"error":      "Wrong credentials entered",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
@@ -137,14 +137,14 @@ func LoginHandler(c *gin.Context) {
 	token, err := GenerateJWT(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured!",
+			"error":      "An error occured!",
 			"statusCode": http.StatusInternalServerError,
 		})
-		return 
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"token": token,
+		"token":      token,
 		"statusCode": http.StatusOK,
 	})
 }
@@ -158,7 +158,7 @@ func GenerateJWT(userName string) (string, error) {
 
 	claims["authorised"] = true
 	claims["user"] = userName
-	claims["exp"] = time.Now().Add(time.Minute*60).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
 
 	tokenString, err := token.SignedString([]byte(_aws.GetEnvVar("SIGNING_KEY")))
 

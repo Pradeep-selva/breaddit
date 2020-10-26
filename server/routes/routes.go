@@ -16,7 +16,7 @@ func InitPublicRoutes(router *gin.RouterGroup) {
 	//auth
 	router.GET("/login", controllers.LoginHandler)
 	router.POST("/signup", controllers.SignUpHandler)
-	
+
 	//user
 	router.GET("/user/:id", controllers.GetUserById)
 
@@ -34,7 +34,7 @@ func InitPrivateRoutes(router *gin.RouterGroup) {
 	router.GET("/user", controllers.GetUserHandler)
 	router.PUT("/user", controllers.UpdateUserDataHandler)
 	router.DELETE("/user", controllers.DeactivateUserHandler)
-	
+
 	//subs
 	router.POST("/sub", controllers.CreateSubHandler)
 	router.PUT("/sub/:id", controllers.UpdateSubHandler)
@@ -45,4 +45,5 @@ func InitPrivateRoutes(router *gin.RouterGroup) {
 	//posts
 	router.POST("/sub/:id/post", controllers.PostToSubHandler)
 	router.DELETE("/posts/:id", controllers.DeletePostHandler)
+	router.POST("/posts/:id/upvote", controllers.UpvotePostsHandler)
 }

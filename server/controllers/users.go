@@ -29,7 +29,7 @@ func GetUserHandler(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to retrieve your data!",
+			"error":      "Failed to retrieve your data!",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
@@ -38,7 +38,7 @@ func GetUserHandler(c *gin.Context) {
 	data := dsnap.Data()
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": data,
+		"data":       data,
 		"statusCode": http.StatusOK,
 	})
 }
@@ -51,7 +51,7 @@ func GetUserById(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "User Not Found",
+			"error":      "User Not Found",
 			"statusCode": http.StatusNotFound,
 		})
 		return
@@ -60,7 +60,7 @@ func GetUserById(c *gin.Context) {
 	data := dsnap.Data()
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": data,
+		"data":       data,
 		"statusCode": http.StatusOK,
 	})
 }
@@ -69,16 +69,16 @@ func GetUserById(c *gin.Context) {
 func UpdateUserDataHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
 
-	formData := map[string]interface{} {
-		"Bio": c.PostForm("Bio"),
-		"Location": c.PostForm("Location"),
-		"Status": c.PostForm("Status"),
+	formData := map[string]interface{}{
+		"Bio":       c.PostForm("Bio"),
+		"Location":  c.PostForm("Location"),
+		"Status":    c.PostForm("Status"),
 		"UpdatedAt": ptypes.TimestampNow(),
 	}
 
-	for key,value := range formData {
+	for key, value := range formData {
 		if value == "" {
-			delete(formData,key)
+			delete(formData, key)
 		}
 	}
 
@@ -89,7 +89,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err,
+				"error":      err,
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -101,14 +101,14 @@ func UpdateUserDataHandler(c *gin.Context) {
 	_, err := utils.Client.Collection("users").Doc(UID).Set(utils.Ctx, formData, firestore.MergeAll)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured while updating your profile!",
+			"error":      "An error occured while updating your profile!",
 			"statusCode": http.StatusInternalServerError,
 		})
-		return 
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": formData,
+		"data":       formData,
 		"statusCode": http.StatusOK,
 	})
 }
@@ -118,7 +118,7 @@ func DeactivateUserHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
 	batch := utils.Client.Batch()
 
-	iter:= utils.Client.Collection("subs").Where("Users", "array-contains", UID).Documents(utils.Ctx)
+	iter := utils.Client.Collection("subs").Where("Users", "array-contains", UID).Documents(utils.Ctx)
 	var sub entitites.Sub
 	updates := 0
 
@@ -130,18 +130,18 @@ func DeactivateUserHandler(c *gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured",
+				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
 		}
 
 		dsnap.DataTo(&sub)
-		sub.Users = utils.RemoveArrayElement(sub.Users, utils.FindInArray(sub.Users,UID))
+		sub.Users = utils.RemoveArrayElement(sub.Users, utils.FindInArray(sub.Users, UID))
 		docRef := utils.Client.Collection("subs").Doc(sub.Name)
 
 		batch.Set(docRef, sub)
-		updates+=1
+		updates += 1
 	}
 
 	if updates != 0 {
@@ -149,18 +149,18 @@ func DeactivateUserHandler(c *gin.Context) {
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured",
+				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
-		}	
+		}
 	}
 
 	_, err := utils.Client.Collection("users").Doc(UID).Delete(utils.Ctx)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured while deactivating.",
+			"error":      "An error occured while deactivating.",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
@@ -170,14 +170,14 @@ func DeactivateUserHandler(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured while deactivating.",
+			"error":      "An error occured while deactivating.",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": "Deactivated succesfully! We'll see you around.",
+		"data":       "Deactivated succesfully! We'll see you around.",
 		"statusCode": http.StatusOK,
 	})
 }
