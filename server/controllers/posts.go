@@ -186,8 +186,33 @@ func GetPostByIdhandler(c *gin.Context) {
 		return
 	}
 
+	data := dsnap.Data()
+
+	iter := utils.Client.Collection("comments").Where("PostId", "==", postId).Documents(utils.Ctx)
+	var comments []entities.Comment
+	var comment entities.Comment
+
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured.",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+
+		dsnap.DataTo(&comment)
+		comments = append(comments, comment)
+	}
+
+	data["Comments"] = comments
+
 	c.JSON(http.StatusOK, gin.H{
-		"data":       dsnap.Data(),
+		"data":       data,
 		"statusCode": http.StatusOK,
 	})
 }
