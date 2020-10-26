@@ -16,7 +16,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 
 	_aws "github.com/pradeep-selva/Breaddit/server/aws"
-	entitites "github.com/pradeep-selva/Breaddit/server/entities"
+	entities "github.com/pradeep-selva/Breaddit/server/entities"
 
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
@@ -119,7 +119,7 @@ func DeactivateUserHandler(c *gin.Context) {
 	batch := utils.Client.Batch()
 
 	iter := utils.Client.Collection("subs").Where("Users", "array-contains", UID).Documents(utils.Ctx)
-	var sub entitites.Sub
+	var sub entities.Sub
 	updates := 0
 
 	for {
@@ -178,6 +178,70 @@ func DeactivateUserHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"data":       "Deactivated succesfully! We'll see you around.",
+		"statusCode": http.StatusOK,
+	})
+}
+
+//GET /api/v/users/upvotes
+func GetUserUpvotesHandler(c * gin.Context) {
+	UID := c.MustGet("UID").(string)
+	var upvotes []entities.Vote
+	var upvoteDoc entities.Vote
+
+	iter := utils.Client.Collection("upvotes").Where("UserName","==", UID).Documents(utils.Ctx)
+	
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured.",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+
+		dsnap.DataTo(&upvoteDoc)
+		upvoteDoc.ID = dsnap.Ref.ID
+		upvotes = append(upvotes, upvoteDoc)
+	}
+	
+	c.JSON(http.StatusOK, gin.H{
+		"data":upvotes,
+		"statusCode": http.StatusOK,
+	})
+}
+
+//GET /api/v/users/downvotes
+func GetUserDownvotesHandler(c * gin.Context) {
+	UID := c.MustGet("UID").(string)
+	var downvotes []entities.Vote
+	var downvoteDoc entities.Vote
+
+	iter := utils.Client.Collection("downvotes").Where("UserName","==", UID).Documents(utils.Ctx)
+	
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured.",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+
+		dsnap.DataTo(&downvoteDoc)
+		downvoteDoc.ID = dsnap.Ref.ID
+		downvotes = append(downvotes, downvoteDoc)
+	}
+	
+	c.JSON(http.StatusOK, gin.H{
+		"data":downvotes,
 		"statusCode": http.StatusOK,
 	})
 }

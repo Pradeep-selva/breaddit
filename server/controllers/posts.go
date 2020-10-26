@@ -122,7 +122,7 @@ func GetUserPostsHandler(c *gin.Context) {
 			return
 		}
 		post := dsnap.Data()
-		post["id"] = dsnap.Ref.ID
+		post["ID"] = dsnap.Ref.ID
 
 		userPosts = append(userPosts, post)
 	}
@@ -161,7 +161,7 @@ func GetSubPostsHandler(c *gin.Context) {
 			return
 		}
 		post := dsnap.Data()
-		post["id"] = dsnap.Ref.ID
+		post["ID"] = dsnap.Ref.ID
 
 		subPosts = append(subPosts, post)
 	}
@@ -275,10 +275,6 @@ func UpvotePostsHandler(c *gin.Context) {
 		"PostId":   ID,
 	}
 
-	if Downvote != "" {
-		payload["Downvote"] = Downvote
-	}
-
 	_, _, err = utils.Client.Collection("upvotes").Add(utils.Ctx, payload)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -297,6 +293,10 @@ func UpvotePostsHandler(c *gin.Context) {
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
+	}
+
+	if Downvote != "" {
+		payload["Downvote"] = Downvote
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -389,10 +389,6 @@ func DownvotePostsHandler(c *gin.Context) {
 		"PostId":   ID,
 	}
 
-	if Upvote != "" {
-		payload["Upvote"] = Upvote
-	}
-
 	_, _, err = utils.Client.Collection("downvotes").Add(utils.Ctx, payload)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -411,6 +407,10 @@ func DownvotePostsHandler(c *gin.Context) {
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
+	}
+
+	if Upvote != "" {
+		payload["Upvote"] = Upvote
 	}
 
 	c.JSON(http.StatusOK, gin.H{

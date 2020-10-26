@@ -53,3 +53,9 @@ type Post struct {
 	Downvotes int
 	CreatedAt *timestamppb.Timestamp
 }
+
+type Vote struct {
+	ID string
+	UserName string
+	PostId string
+}
