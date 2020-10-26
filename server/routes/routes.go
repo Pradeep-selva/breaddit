@@ -46,4 +46,5 @@ func InitPrivateRoutes(router *gin.RouterGroup) {
 	router.POST("/sub/:id/post", controllers.PostToSubHandler)
 	router.DELETE("/posts/:id", controllers.DeletePostHandler)
 	router.POST("/posts/:id/upvote", controllers.UpvotePostsHandler)
+	router.POST("/posts/:id/downvote", controllers.DownvotePostsHandler)
 }
