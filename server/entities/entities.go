@@ -59,3 +59,17 @@ type Vote struct {
 	UserName string
 	PostId string
 }
+
+type Comment struct {
+	PostId string
+	Body string
+	CreatedAt *timestamppb.Timestamp
+	CreatedBy string
+}
+
+type Notification struct {
+	Sender string
+	Time *timestamppb.Timestamp
+	Content string
+	Seen bool
+}

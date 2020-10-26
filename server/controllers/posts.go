@@ -5,6 +5,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/api/iterator"
 
@@ -415,6 +416,61 @@ func DownvotePostsHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"data":       payload,
+		"statusCode": http.StatusOK,
+	})
+}
+
+
+//POST /api/v/posts/:id/comment
+func CommentOnPostHandler(c *gin.Context) {
+	postId, _ := c.Params.Get("id")
+	UID := c.MustGet("UID").(string)
+	var comment entities.Comment
+	var post entities.Post
+
+	c.ShouldBindBodyWith(&comment, binding.JSON)
+	
+	docRef := utils.Client.Collection("posts").Doc(postId)
+
+	dsnap, err := docRef.Get(utils.Ctx)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "This post does not exist.",
+			"statusCode": http.StatusBadRequest,
+		})
+		return
+	}
+	dsnap.DataTo(&post)
+
+	comment.PostId = postId
+	comment.CreatedAt = ptypes.TimestampNow()
+	comment.CreatedBy = UID
+
+	_,_, err = utils.Client.Collection("comments").Add(utils.Ctx, comment)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":"An error occured.",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
+	}
+
+	notification := entities.Notification{
+		Content: UID+" has commented on "+post.Title,
+		Sender: UID,
+		Time: ptypes.TimestampNow(),
+		Seen: false,
+	}
+	_,err = utils.Client.Collection("notifications").Doc(post.User.UserName).Set(utils.Ctx, notification)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "An error occured",
+			"statusCode": http.StatusInternalServerError,
+		})
+	}
+	
+	c.JSON(http.StatusOK, gin.H{
+		"data": comment,
 		"statusCode": http.StatusOK,
 	})
 }
