@@ -53,9 +53,9 @@ func PostToSubHandler(c *gin.Context) {
 		url, err := _aws.UploadImageHandler(c, "Image")
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusBadRequest, gin.H{
 				"error":      err.Error(),
-				"statusCode": http.StatusInternalServerError,
+				"statusCode": http.StatusBadRequest,
 			})
 			return
 		}

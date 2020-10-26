@@ -48,9 +48,9 @@ func CreateSubHandler(c *gin.Context) {
 		url, err := _aws.UploadImageHandler(c, "Thumbnail")
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error":      "Error occured while creating subbreaddit",
-				"statusCode": http.StatusInternalServerError,
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error":      err.Error(),
+				"statusCode": http.StatusBadRequest,
 			})
 			return
 		}
@@ -130,9 +130,9 @@ func UpdateSubHandler(c *gin.Context) {
 		url, err := _aws.UploadImageHandler(c, "Thumbnail")
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error":      err,
-				"statusCode": http.StatusInternalServerError,
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error":      err.Error(),
+				"statusCode": http.StatusBadRequest,
 			})
 			return
 		}

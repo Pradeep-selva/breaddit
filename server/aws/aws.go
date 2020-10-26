@@ -3,11 +3,11 @@ package _aws
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"strings"
 
 	"github.com/joho/godotenv"
+	"github.com/pradeep-selva/Breaddit/server/utils"
 
 	"github.com/google/uuid"
 
@@ -70,9 +70,15 @@ func UploadImageHandler(c *gin.Context, fieldName string) (string, error) {
 	uploader := s3manager.NewUploader(sess)
 
 	file, header, err := c.Request.FormFile(fieldName)
+	extension := strings.Split(header.Filename, ".")[1]
+
+	if !utils.ArrayContains([]string{"png", "jpg", "jpeg"}, extension) {
+		return "", fmt.Errorf("Only files of types png/jpg/jpeg are allowed for upload!")
+	}
+
 	fileName := uuid.New().String() + "." + strings.Split(header.Filename, ".")[1]
 
-	upload, err := uploader.Upload(&s3manager.UploadInput{
+	_, err = uploader.Upload(&s3manager.UploadInput{
 		Bucket:      aws.String(AWSBucket),
 		ACL:         aws.String("public-read"),
 		Key:         aws.String(fileName),
@@ -81,11 +87,6 @@ func UploadImageHandler(c *gin.Context, fieldName string) (string, error) {
 	})
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":    "Failed to upload file!",
-			"err":      err,
-			"uploader": upload,
-		})
 		return "", fmt.Errorf("Failed to upload avatar")
 	}
 

@@ -88,9 +88,9 @@ func UpdateUserDataHandler(c *gin.Context) {
 		avatarUrl, err := _aws.UploadImageHandler(c, "Avatar")
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error":      err,
-				"statusCode": http.StatusInternalServerError,
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error":      err.Error(),
+				"statusCode": http.StatusBadRequest,
 			})
 			return
 		}
