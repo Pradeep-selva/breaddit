@@ -50,4 +50,7 @@ func InitPrivateRoutes(router *gin.RouterGroup) {
 	router.POST("/posts/:id/upvote", controllers.UpvotePostsHandler)
 	router.POST("/posts/:id/downvote", controllers.DownvotePostsHandler)
 	router.POST("/posts/:id/comment", controllers.CommentOnPostHandler)
+
+	//notifications
+	router.GET("/user/notifications", controllers.GetUserNotificationsHandler)
 }
