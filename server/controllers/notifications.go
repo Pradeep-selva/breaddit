@@ -9,8 +9,11 @@ import (
 	"github.com/pradeep-selva/Breaddit/server/utils"
 )
 
+//GET /api/v/user/notifications
 func GetUserNotificationsHandler(c *gin.Context) {
-	var notifications entities.Notification
+	var notifications struct{
+		Notifications []entities.Notification
+	}
 	UID := c.MustGet("UID").(string)
 
 	dsnap, err := utils.Client.Collection("notifications").Doc(UID).Get(utils.Ctx)
@@ -22,6 +25,48 @@ func GetUserNotificationsHandler(c *gin.Context) {
 		return
 	}
 	dsnap.DataTo(&notifications)
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": notifications.Notifications,
+		"statusCode": http.StatusOK,
+	})
+}
+
+
+//POST /api/v/user/notifications
+func SetUserNotificationsSeenHandler(c *gin.Context) {
+	var notifications struct{
+		Notifications []entities.Notification
+	}
+	UID := c.MustGet("UID").(string)
+	notifRef := utils.Client.Collection("notifications").Doc(UID)
+
+	dsnap, err := notifRef.Get(utils.Ctx)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "An error occured.",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
+	}
+
+	dsnap.DataTo(&notifications)
+	for i := range notifications.Notifications {
+		if notifications.Notifications[i].Seen == true {
+			break
+		}
+
+		notifications.Notifications[i].Seen = true
+	}
+
+	_,err = notifRef.Set(utils.Ctx, notifications)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "An error occured.",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"data": notifications,

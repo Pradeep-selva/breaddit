@@ -53,4 +53,5 @@ func InitPrivateRoutes(router *gin.RouterGroup) {
 
 	//notifications
 	router.GET("/user/notifications", controllers.GetUserNotificationsHandler)
+	router.POST("/user/notifications", controllers.SetUserNotificationsSeenHandler)
 }
