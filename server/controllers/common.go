@@ -35,6 +35,7 @@ func HomeHandler(c *gin.Context) {
 	})
 }
 
+//GET /api/v/search?q=
 func SearchKeywordHandler(c *gin.Context) {
 	key := c.Request.URL.Query().Get("q")
 
@@ -47,6 +48,12 @@ func SearchKeywordHandler(c *gin.Context) {
 		dsnap, err := iter.Next()
 		if err == iterator.Done {
 			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured.",
+				"statusCode": http.StatusInternalServerError,
+			})
 		}
 		var user userSearch
 		dsnap.DataTo(&user)
