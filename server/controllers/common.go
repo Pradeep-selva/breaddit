@@ -41,7 +41,7 @@ func SearchKeywordHandler(c *gin.Context) {
 	users := []userSearch{}
 	subs := []subsSearch{}
 
-	iter := utils.Client.Collection("users").Where("UserName", ">=", key).Where("UserName", "<", key+"z").Documents(utils.Ctx)
+	iter := utils.Client.Collection("users").Where("UserName", ">=", key).Where("UserName", "<", key+"\uf8ff").Documents(utils.Ctx)
 
 	for {
 		dsnap, err := iter.Next()
@@ -54,7 +54,7 @@ func SearchKeywordHandler(c *gin.Context) {
 		users = append(users, user)
 	}
 
-	iter = utils.Client.Collection("subs").Where("Name", ">=", key).Where("Name", "<", key+"z").Documents(utils.Ctx)
+	iter = utils.Client.Collection("subs").Where("Name", ">=", key).Where("Name", "<", key+"\uf8ff").Documents(utils.Ctx)
 
 	for {
 		dsnap, err := iter.Next()
