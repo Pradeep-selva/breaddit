@@ -199,7 +199,7 @@ func GetPostByIdhandler(c *gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -240,10 +240,10 @@ func UpvotePostsHandler(c *gin.Context) {
 	if err == nil {
 		downvoteId := dsnap.Ref.ID
 
-		_,err := utils.Client.Collection("downvotes").Doc(downvoteId).Delete(utils.Ctx)
+		_, err := utils.Client.Collection("downvotes").Doc(downvoteId).Delete(utils.Ctx)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured",
+				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -254,11 +254,11 @@ func UpvotePostsHandler(c *gin.Context) {
 		})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error":     "An error occured",
+				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
-		}	
+		}
 
 		Downvote = "deleted successfully"
 	}
@@ -283,14 +283,14 @@ func UpvotePostsHandler(c *gin.Context) {
 		})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error":     "An error occured",
+				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"data": "upvote removed successfully",
+			"data":       "upvote removed successfully",
 			"statusCode": http.StatusOK,
 		})
 		return
@@ -315,7 +315,7 @@ func UpvotePostsHandler(c *gin.Context) {
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":     "An error occured",
+			"error":      "An error occured",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
@@ -354,10 +354,10 @@ func DownvotePostsHandler(c *gin.Context) {
 	if err == nil {
 		upvoteId := dsnap.Ref.ID
 
-		_,err := utils.Client.Collection("upvotes").Doc(upvoteId).Delete(utils.Ctx)
+		_, err := utils.Client.Collection("upvotes").Doc(upvoteId).Delete(utils.Ctx)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured",
+				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -368,11 +368,11 @@ func DownvotePostsHandler(c *gin.Context) {
 		})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error":     "An error occured",
+				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
-		}	
+		}
 
 		Upvote = "deleted successfully"
 	}
@@ -397,14 +397,14 @@ func DownvotePostsHandler(c *gin.Context) {
 		})
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error":     "An error occured",
+				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"data": "downvote removed successfully",
+			"data":       "downvote removed successfully",
 			"statusCode": http.StatusOK,
 		})
 		return
@@ -429,7 +429,7 @@ func DownvotePostsHandler(c *gin.Context) {
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":     "An error occured",
+			"error":      "An error occured",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
@@ -445,7 +445,6 @@ func DownvotePostsHandler(c *gin.Context) {
 	})
 }
 
-
 //POST /api/v/posts/:id/comment
 func CommentOnPostHandler(c *gin.Context) {
 	postId, _ := c.Params.Get("id")
@@ -454,13 +453,13 @@ func CommentOnPostHandler(c *gin.Context) {
 	var post entities.Post
 
 	c.ShouldBindBodyWith(&comment, binding.JSON)
-	
+
 	docRef := utils.Client.Collection("posts").Doc(postId)
 
 	dsnap, err := docRef.Get(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "This post does not exist.",
+			"error":      "This post does not exist.",
 			"statusCode": http.StatusBadRequest,
 		})
 		return
@@ -471,20 +470,20 @@ func CommentOnPostHandler(c *gin.Context) {
 	comment.CreatedAt = ptypes.TimestampNow()
 	comment.CreatedBy = UID
 
-	_,_, err = utils.Client.Collection("comments").Add(utils.Ctx, comment)
+	_, _, err = utils.Client.Collection("comments").Add(utils.Ctx, comment)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":"An error occured.",
+			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
 	}
 
 	notification := entities.Notification{
-		Content: UID+" has commented on your post - "+post.Title,
-		Sender: UID,
-		Time: ptypes.TimestampNow(),
-		Seen: false,
+		Content: UID + " has commented on your post - " + post.Title,
+		Sender:  UID,
+		Time:    ptypes.TimestampNow(),
+		Seen:    false,
 	}
 	notifRef := utils.Client.Collection("notifications").Doc(post.User.UserName)
 	dsnap, err = notifRef.Get(utils.Ctx)
@@ -495,7 +494,7 @@ func CommentOnPostHandler(c *gin.Context) {
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -507,21 +506,20 @@ func CommentOnPostHandler(c *gin.Context) {
 	dsnap.DataTo(&notifDoc)
 	notifDoc.Notifications = append(notifDoc.Notifications, notification)
 
-	_,err = notifRef.Set(utils.Ctx, notifDoc)
+	_, err = notifRef.Set(utils.Ctx, notifDoc)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured.",
+			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{
-		"data": comment,
+		"data":       comment,
 		"statusCode": http.StatusOK,
 	})
 }
-
 
 //DELETE /api/v/posts/:id
 func DeletePostHandler(c *gin.Context) {

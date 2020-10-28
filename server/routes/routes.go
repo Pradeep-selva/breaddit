@@ -12,6 +12,7 @@ func InitRoutes(router *gin.Engine) {
 func InitPublicRoutes(router *gin.RouterGroup) {
 	//common
 	router.GET("/", controllers.HomeHandler)
+	router.GET("/search", controllers.SearchKeywordHandler)
 
 	//auth
 	router.GET("/login", controllers.LoginHandler)

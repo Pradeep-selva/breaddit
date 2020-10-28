@@ -11,7 +11,7 @@ import (
 
 //GET /api/v/user/notifications
 func GetUserNotificationsHandler(c *gin.Context) {
-	var notifications struct{
+	var notifications struct {
 		Notifications []entities.Notification
 	}
 	UID := c.MustGet("UID").(string)
@@ -19,7 +19,7 @@ func GetUserNotificationsHandler(c *gin.Context) {
 	dsnap, err := utils.Client.Collection("notifications").Doc(UID).Get(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"data": map[string]interface{}{},
+			"data":       map[string]interface{}{},
 			"statusCode": http.StatusOK,
 		})
 		return
@@ -27,15 +27,14 @@ func GetUserNotificationsHandler(c *gin.Context) {
 	dsnap.DataTo(&notifications)
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": notifications.Notifications,
+		"data":       notifications.Notifications,
 		"statusCode": http.StatusOK,
 	})
 }
 
-
 //POST /api/v/user/notifications
 func SetUserNotificationsSeenHandler(c *gin.Context) {
-	var notifications struct{
+	var notifications struct {
 		Notifications []entities.Notification
 	}
 	UID := c.MustGet("UID").(string)
@@ -44,7 +43,7 @@ func SetUserNotificationsSeenHandler(c *gin.Context) {
 	dsnap, err := notifRef.Get(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured.",
+			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
@@ -59,17 +58,17 @@ func SetUserNotificationsSeenHandler(c *gin.Context) {
 		notifications.Notifications[i].Seen = true
 	}
 
-	_,err = notifRef.Set(utils.Ctx, notifications)
+	_, err = notifRef.Set(utils.Ctx, notifications)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured.",
+			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": notifications,
+		"data":       notifications,
 		"statusCode": http.StatusOK,
 	})
 }

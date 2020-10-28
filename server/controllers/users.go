@@ -183,13 +183,13 @@ func DeactivateUserHandler(c *gin.Context) {
 }
 
 //GET /api/v/users/upvotes
-func GetUserUpvotesHandler(c * gin.Context) {
+func GetUserUpvotesHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
 	var upvotes []entities.Vote
 	var upvoteDoc entities.Vote
 
-	iter := utils.Client.Collection("upvotes").Where("UserName","==", UID).Documents(utils.Ctx)
-	
+	iter := utils.Client.Collection("upvotes").Where("UserName", "==", UID).Documents(utils.Ctx)
+
 	for {
 		dsnap, err := iter.Next()
 		if err == iterator.Done {
@@ -197,7 +197,7 @@ func GetUserUpvotesHandler(c * gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -207,21 +207,21 @@ func GetUserUpvotesHandler(c * gin.Context) {
 		upvoteDoc.ID = dsnap.Ref.ID
 		upvotes = append(upvotes, upvoteDoc)
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{
-		"data":upvotes,
+		"data":       upvotes,
 		"statusCode": http.StatusOK,
 	})
 }
 
 //GET /api/v/users/downvotes
-func GetUserDownvotesHandler(c * gin.Context) {
+func GetUserDownvotesHandler(c *gin.Context) {
 	UID := c.MustGet("UID").(string)
 	var downvotes []entities.Vote
 	var downvoteDoc entities.Vote
 
-	iter := utils.Client.Collection("downvotes").Where("UserName","==", UID).Documents(utils.Ctx)
-	
+	iter := utils.Client.Collection("downvotes").Where("UserName", "==", UID).Documents(utils.Ctx)
+
 	for {
 		dsnap, err := iter.Next()
 		if err == iterator.Done {
@@ -229,7 +229,7 @@ func GetUserDownvotesHandler(c * gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -239,9 +239,9 @@ func GetUserDownvotesHandler(c * gin.Context) {
 		downvoteDoc.ID = dsnap.Ref.ID
 		downvotes = append(downvotes, downvoteDoc)
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{
-		"data":downvotes,
+		"data":       downvotes,
 		"statusCode": http.StatusOK,
 	})
 }
