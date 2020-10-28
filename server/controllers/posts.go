@@ -481,15 +481,37 @@ func CommentOnPostHandler(c *gin.Context) {
 	}
 
 	notification := entities.Notification{
-		Content: UID+" has commented on "+post.Title,
+		Content: UID+" has commented on your post - "+post.Title,
 		Sender: UID,
 		Time: ptypes.TimestampNow(),
 		Seen: false,
 	}
-	_,err = utils.Client.Collection("notifications").Doc(post.User.UserName).Set(utils.Ctx, notification)
+	notifRef := utils.Client.Collection("notifications").Doc(post.User.UserName)
+	dsnap, err = notifRef.Get(utils.Ctx)
+	if err != nil {
+		_, err = notifRef.Set(utils.Ctx, map[string]interface{}{
+			"Notifications": []entities.Notification{notification},
+		})
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured.",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+	}
+	var notifDoc struct {
+		Notifications []entities.Notification
+	}
+	dsnap.DataTo(&notifDoc)
+	notifDoc.Notifications = append(notifDoc.Notifications, notification)
+
+	_,err = notifRef.Set(utils.Ctx, notifDoc)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "An error occured",
+			"error": "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
 	}
