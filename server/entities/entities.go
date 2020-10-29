@@ -19,6 +19,7 @@ type Sub struct {
 	Name        string
 	Description string
 	Users       []string
+	ThumbnailUpdatedAt *timestamppb.Timestamp
 	CreatedAt   *timestamppb.Timestamp
 	UpdatedAt   *timestamppb.Timestamp
 	Owner       string
@@ -33,6 +34,7 @@ type UserData struct {
 	Bio        string
 	Status     string
 	Location   string
+	AvatarUpdatedAt *timestamppb.Timestamp
 	CreatedAt  *timestamppb.Timestamp
 	UpdatedAt  *timestamppb.Timestamp
 	JoinedSubs []string
@@ -74,3 +76,4 @@ type Notification struct {
 	Content string
 	Seen bool
 }
+

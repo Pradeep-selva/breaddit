@@ -42,6 +42,7 @@ func CreateSubHandler(c *gin.Context) {
 	}
 
 	body.Owner = c.MustGet("UID").(string)
+	body.ThumbnailUpdatedAt = ptypes.TimestampNow()
 	body.CreatedAt = ptypes.TimestampNow()
 	body.UpdatedAt = ptypes.TimestampNow()
 	body.Users = []string{body.Owner}
@@ -105,6 +106,13 @@ func UpdateSubHandler(c *gin.Context) {
 		"Tags":        strings.Split(strings.ToLower(c.PostForm("Tags")), ", "),
 	}
 
+	if formData["Description"] == "" {
+		delete(formData, "Description")
+	}
+	if formData["Tags"].([]string)[0] == "" {
+		delete(formData, "Tags")
+	}
+
 	ID, _ := c.Params.Get("id")
 
 	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
@@ -127,10 +135,6 @@ func UpdateSubHandler(c *gin.Context) {
 		return
 	}
 
-	if formData["Description"] == "" {
-		delete(formData, "Description")
-	}
-
 	_, header, _ := c.Request.FormFile("Thumbnail")
 
 	if header != nil {
@@ -145,6 +149,7 @@ func UpdateSubHandler(c *gin.Context) {
 		}
 
 		formData["Thumbnail"] = url
+		formData["ThumbnailUpdatedAt"] = ptypes.TimestampNow()
 	}
 
 	_, err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, formData, firestore.MergeAll)

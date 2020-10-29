@@ -96,6 +96,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 		}
 
 		formData["Avatar"] = avatarUrl
+		formData["AvatarUpdatedAt"] = ptypes.TimestampNow()
 	}
 
 	_, err := utils.Client.Collection("users").Doc(UID).Set(utils.Ctx, formData, firestore.MergeAll)

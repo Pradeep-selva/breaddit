@@ -78,6 +78,8 @@ func UploadImageHandler(c *gin.Context, fieldName string) (string, error) {
 
 	fileName := uuid.New().String() + "." + strings.Split(header.Filename, ".")[1]
 
+	// dsnap, err :=
+
 	_, err = uploader.Upload(&s3manager.UploadInput{
 		Bucket:      aws.String(AWSBucket),
 		ACL:         aws.String("public-read"),
