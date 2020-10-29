@@ -135,8 +135,9 @@ func GetUserPostsHandler(c *gin.Context) {
 }
 
 //GET /api/v/subs/:id/posts/
-func GetSubPostsHandler(c *gin.Context) {
+func GetPostsBySubHandler(c *gin.Context) {
 	ID, _ := c.Params.Get("id")
+	limit, offset := utils.GetLimitAndOffset(c)
 
 	if _, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -147,7 +148,7 @@ func GetSubPostsHandler(c *gin.Context) {
 	}
 
 	subPosts := []map[string]interface{}{}
-	iter := utils.Client.Collection("posts").Where("Sub", "==", ID).OrderBy("CreatedAt", firestore.Desc).Documents(utils.Ctx)
+	iter := utils.Client.Collection("posts").Where("Sub", "==", ID).Offset(offset).OrderBy("CreatedAt", firestore.Desc).Limit(limit).Documents(utils.Ctx)
 
 	for {
 		dsnap, err := iter.Next()
