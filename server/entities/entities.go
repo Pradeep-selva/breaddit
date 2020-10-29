@@ -23,6 +23,7 @@ type Sub struct {
 	UpdatedAt   *timestamppb.Timestamp
 	Owner       string
 	Thumbnail   string
+	Tags []string
 }
 
 type UserData struct {

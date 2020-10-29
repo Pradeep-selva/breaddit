@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
@@ -37,7 +38,7 @@ func HomeHandler(c *gin.Context) {
 
 //GET /api/v/search?q=
 func SearchKeywordHandler(c *gin.Context) {
-	key := c.Request.URL.Query().Get("q")
+	key := strings.ToLower(c.Request.URL.Query().Get("q"))
 
 	users := []userSearch{}
 	subs := []subsSearch{}
@@ -68,6 +69,33 @@ func SearchKeywordHandler(c *gin.Context) {
 		if err == iterator.Done {
 			break
 		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured.",
+				"statusCode": http.StatusInternalServerError,
+			})
+		}
+
+		var sub subsSearch
+		dsnap.DataTo(&sub)
+
+		subs = append(subs, sub)
+	}
+
+	iter = utils.Client.Collection("subs").Where("Tags", "array-contains-any", strings.Split(key, " ")).Documents(utils.Ctx)
+
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "An error occured.",
+				"statusCode": http.StatusInternalServerError,
+			})
+		}
+
 		var sub subsSearch
 		dsnap.DataTo(&sub)
 

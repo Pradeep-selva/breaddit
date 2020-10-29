@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	// "log"
 	"net/http"
@@ -22,6 +23,12 @@ func CreateSubHandler(c *gin.Context) {
 	body := &entities.Sub{
 		Name:        c.PostForm("Name"),
 		Description: c.PostForm("Description"),
+		
+	}
+
+	_tags := c.PostForm("Tags")
+	if _tags != "" {
+		body.Tags = strings.Split(strings.ToLower(_tags), ", ")
 	}
 
 	subRef := utils.Client.Collection("subs").Doc(body.Name)
@@ -96,6 +103,7 @@ func UpdateSubHandler(c *gin.Context) {
 	formData := map[string]interface{}{
 		"Description": c.PostForm("Description"),
 		"UpdatedAt":   ptypes.TimestampNow(),
+		"Tags": strings.Split(strings.ToLower(c.PostForm("Tags")), ", "),
 	}
 
 	ID, _ := c.Params.Get("id")

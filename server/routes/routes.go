@@ -27,7 +27,7 @@ func InitPublicRoutes(router *gin.RouterGroup) {
 	//posts
 	router.GET("/posts/:id", controllers.GetPostByIdhandler)
 	router.GET("/users/:id/posts", controllers.GetUserPostsHandler)
-	router.GET("/subs/:id/posts", controllers.GetSubPostsHandler)
+	router.GET("/sub/:id/posts", controllers.GetSubPostsHandler)
 
 	//feed
 	router.GET("/feed/trending", controllers.GetTrendingPostsHandler)
