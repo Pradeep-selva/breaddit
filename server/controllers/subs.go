@@ -23,7 +23,6 @@ func CreateSubHandler(c *gin.Context) {
 	body := &entities.Sub{
 		Name:        c.PostForm("Name"),
 		Description: c.PostForm("Description"),
-		
 	}
 
 	_tags := c.PostForm("Tags")
@@ -103,7 +102,7 @@ func UpdateSubHandler(c *gin.Context) {
 	formData := map[string]interface{}{
 		"Description": c.PostForm("Description"),
 		"UpdatedAt":   ptypes.TimestampNow(),
-		"Tags": strings.Split(strings.ToLower(c.PostForm("Tags")), ", "),
+		"Tags":        strings.Split(strings.ToLower(c.PostForm("Tags")), ", "),
 	}
 
 	ID, _ := c.Params.Get("id")

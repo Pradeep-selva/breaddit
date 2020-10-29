@@ -134,6 +134,27 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
+	dsnap, err := utils.Client.Collection("notifications").Doc(body.UserName).Get(utils.Ctx)
+	if err == nil {
+		var notifDoc struct {
+			Notifications []entities.Notification
+		}
+		dsnap.DataTo(&notifDoc)
+
+		if len(notifDoc.Notifications) > 20 {
+			notifDoc.Notifications = notifDoc.Notifications[len(notifDoc.Notifications)-20:]
+			_, err := utils.Client.Collection("notifications").Doc(body.UserName).Set(utils.Ctx, notifDoc)
+
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error":      "An error occured!",
+					"statusCode": http.StatusInternalServerError,
+				})
+				return
+			}
+		}
+	}
+
 	token, err := GenerateJWT(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

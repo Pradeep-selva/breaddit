@@ -24,7 +24,7 @@ func GetTrendingPostsHandler(c *gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -37,11 +37,10 @@ func GetTrendingPostsHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": posts,
+		"data":       posts,
 		"statusCode": http.StatusOK,
 	})
 }
-
 
 //GET /api/v/feed/public
 func GetPublicFeedHandler(c *gin.Context) {
@@ -58,7 +57,7 @@ func GetPublicFeedHandler(c *gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -67,15 +66,14 @@ func GetPublicFeedHandler(c *gin.Context) {
 		var post entities.Post
 		dsnap.DataTo(&post)
 
-		posts = append(posts,post)
+		posts = append(posts, post)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": posts,
+		"data":       posts,
 		"statusCode": http.StatusOK,
 	})
 }
-
 
 //GET /api/v/feed/private
 func GetPrivateFeedHandler(c *gin.Context) {
@@ -98,7 +96,7 @@ func GetPrivateFeedHandler(c *gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 			return
@@ -107,11 +105,11 @@ func GetPrivateFeedHandler(c *gin.Context) {
 		var post entities.Post
 		dsnap.DataTo(&post)
 
-		posts = append(posts,post)
+		posts = append(posts, post)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": posts,
+		"data":       posts,
 		"statusCode": http.StatusOK,
 	})
 }

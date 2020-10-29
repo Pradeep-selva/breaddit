@@ -52,7 +52,7 @@ func SearchKeywordHandler(c *gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 		}
@@ -71,7 +71,7 @@ func SearchKeywordHandler(c *gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 		}
@@ -91,7 +91,7 @@ func SearchKeywordHandler(c *gin.Context) {
 		}
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "An error occured.",
+				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
 		}
