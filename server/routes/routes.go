@@ -30,7 +30,7 @@ func InitPublicRoutes(router *gin.RouterGroup) {
 	router.GET("/sub/:id/posts", controllers.GetPostsBySubHandler)
 
 	//feed
-	router.GET("/feed", controllers.GetFeedHandler)
+	router.GET("/feed/public", controllers.GetPublicFeedHandler)
 	router.GET("/feed/trending", controllers.GetTrendingPostsHandler)
 }
 
@@ -59,4 +59,7 @@ func InitPrivateRoutes(router *gin.RouterGroup) {
 	//notifications
 	router.GET("/user/notifications", controllers.GetUserNotificationsHandler)
 	router.POST("/user/notifications", controllers.SetUserNotificationsSeenHandler)
+
+	//feed
+	router.GET("/feed/private", controllers.GetPrivateFeedHandler)
 }
