@@ -42,7 +42,6 @@ func CreateSubHandler(c *gin.Context) {
 	}
 
 	body.Owner = c.MustGet("UID").(string)
-	body.ThumbnailUpdatedAt = ptypes.TimestampNow()
 	body.CreatedAt = ptypes.TimestampNow()
 	body.UpdatedAt = ptypes.TimestampNow()
 	body.Users = []string{body.Owner}
@@ -138,6 +137,16 @@ func UpdateSubHandler(c *gin.Context) {
 	_, header, _ := c.Request.FormFile("Thumbnail")
 
 	if header != nil {
+		err := utils.CheckImageUploadPerm("Thumbnail", ID)
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error":      err.Error(),
+				"statusCode": http.StatusBadRequest,
+			})
+			return
+		}	
+
 		url, err := _aws.UploadImageHandler(c, "Thumbnail")
 
 		if err != nil {

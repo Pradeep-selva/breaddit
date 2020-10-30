@@ -78,7 +78,6 @@ func SignUpHandler(c *gin.Context) {
 		Bio:        "🍞",
 		Status:     "",
 		Location:   "",
-		AvatarUpdatedAt: ptypes.TimestampNow(),
 		CreatedAt:  ptypes.TimestampNow(),
 		UpdatedAt:  ptypes.TimestampNow(),
 		JoinedSubs: []string{},

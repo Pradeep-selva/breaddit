@@ -85,6 +85,16 @@ func UpdateUserDataHandler(c *gin.Context) {
 	_, header, _ := c.Request.FormFile("Avatar")
 
 	if header != nil {
+		err := utils.CheckImageUploadPerm("Avatar", UID)
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error":      err.Error(),
+				"statusCode": http.StatusBadRequest,
+			})
+			return
+		}	
+
 		avatarUrl, err := _aws.UploadImageHandler(c, "Avatar")
 
 		if err != nil {

@@ -2,7 +2,10 @@ package utils
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
+	"strings"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
@@ -27,4 +30,41 @@ func FirebaseInit() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func CheckImageUploadPerm(updateType string, ID string) error {
+	fieldName := ""
+	collectionName := ""
+
+	if updateType == "Thumbnail" {
+		fieldName = "ThumbnailUpdatedAt"
+		collectionName = "subs"
+	} else {
+		fieldName = "AvatarUpdatedAt"
+		collectionName = "users"
+	}
+
+	dsnap, err := Client.Collection(collectionName).Doc(ID).Get(Ctx)
+
+	if err != nil {
+		return fmt.Errorf("An error occured.")
+	}
+
+	doc := dsnap.Data()
+
+	currentTime := time.Now()
+	
+	if doc[fieldName] == nil {
+		return nil
+	}
+
+	updatedAt := doc[fieldName].(time.Time)
+	
+	duration := currentTime.Sub(updatedAt)
+
+	if duration.Hours() < 6.0 {
+		return fmt.Errorf("You can only change the "+strings.ToLower(updateType)+" once in 6 hours.")
+	}
+
+	return nil
 }
