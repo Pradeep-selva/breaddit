@@ -226,7 +226,7 @@ func UpvotePostsHandler(c *gin.Context) {
 
 	postRef := utils.Client.Collection("posts").Doc(ID)
 
-	_, err := postRef.Get(utils.Ctx)
+	postDoc, err := postRef.Get(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":      "This post does not exist.",
@@ -262,7 +262,7 @@ func UpvotePostsHandler(c *gin.Context) {
 		}
 
 		Downvote = "deleted successfully"
-	}
+	} 
 
 	iter = utils.Client.Collection("upvotes").Where("UserName", "==", UID).Where("PostId", "==", ID).Limit(1).Documents(utils.Ctx)
 
@@ -290,6 +290,10 @@ func UpvotePostsHandler(c *gin.Context) {
 			return
 		}
 
+		_, _ = utils.Client.Collection("users").Doc(postDoc.Data()["User"].(map[string]interface{})["UserName"].(string)).Update(utils.Ctx, []firestore.Update{
+			{Path: "Breads", Value: firestore.Increment(-1)},
+		})
+
 		c.JSON(http.StatusOK, gin.H{
 			"data":       "upvote removed successfully",
 			"statusCode": http.StatusOK,
@@ -300,6 +304,24 @@ func UpvotePostsHandler(c *gin.Context) {
 	payload := map[string]interface{}{
 		"UserName": UID,
 		"PostId":   ID,
+	}
+
+	bread := 1.0
+
+	if Downvote != "" {
+		payload["Downvote"] = Downvote
+		bread+=0.5
+	}
+
+	_, err = utils.Client.Collection("users").Doc(postDoc.Data()["User"].(map[string]interface{})["UserName"].(string)).Update(utils.Ctx, []firestore.Update{
+		{Path: "Breads", Value: firestore.Increment(bread)},
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":      "An error occured",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
 	}
 
 	_, _, err = utils.Client.Collection("upvotes").Add(utils.Ctx, payload)
@@ -322,10 +344,6 @@ func UpvotePostsHandler(c *gin.Context) {
 		return
 	}
 
-	if Downvote != "" {
-		payload["Downvote"] = Downvote
-	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"data":       payload,
 		"statusCode": http.StatusOK,
@@ -340,7 +358,7 @@ func DownvotePostsHandler(c *gin.Context) {
 
 	postRef := utils.Client.Collection("posts").Doc(ID)
 
-	_, err := postRef.Get(utils.Ctx)
+	postDoc, err := postRef.Get(utils.Ctx)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":      "This post does not exist.",
@@ -404,6 +422,10 @@ func DownvotePostsHandler(c *gin.Context) {
 			return
 		}
 
+		_, _ = utils.Client.Collection("users").Doc(postDoc.Data()["User"].(map[string]interface{})["UserName"].(string)).Update(utils.Ctx, []firestore.Update{
+			{Path: "Breads", Value: firestore.Increment(0.5)},
+		})
+
 		c.JSON(http.StatusOK, gin.H{
 			"data":       "downvote removed successfully",
 			"statusCode": http.StatusOK,
@@ -414,6 +436,24 @@ func DownvotePostsHandler(c *gin.Context) {
 	payload := map[string]interface{}{
 		"UserName": UID,
 		"PostId":   ID,
+	}
+
+	bread := -0.5
+
+	if Upvote != "" {
+		payload["Upvote"] = Upvote
+		bread-=1
+	}
+
+	_, err = utils.Client.Collection("users").Doc(postDoc.Data()["User"].(map[string]interface{})["UserName"].(string)).Update(utils.Ctx, []firestore.Update{
+		{Path: "Breads", Value: firestore.Increment(bread)},
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":      "An error occured",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
 	}
 
 	_, _, err = utils.Client.Collection("downvotes").Add(utils.Ctx, payload)
@@ -434,10 +474,6 @@ func DownvotePostsHandler(c *gin.Context) {
 			"statusCode": http.StatusInternalServerError,
 		})
 		return
-	}
-
-	if Upvote != "" {
-		payload["Upvote"] = Upvote
 	}
 
 	c.JSON(http.StatusOK, gin.H{
