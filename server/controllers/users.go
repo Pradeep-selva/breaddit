@@ -105,6 +105,41 @@ func UpdateUserDataHandler(c *gin.Context) {
 			return
 		}
 
+		batch := utils.Client.Batch()
+		
+		iter := utils.Client.Collection("posts").Where("User.UserName", "==", UID).Documents(utils.Ctx)
+		for {
+			dsnap, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error":      "An error occured while updating your profile!",
+					"statusCode": http.StatusInternalServerError,
+				})
+				return	
+			}
+
+			payload := map[string]interface{}{
+					"Avatar": avatarUrl,
+					"UserName": UID,
+				}
+
+			batch.Set(dsnap.Ref, map[string]interface{}{
+				"User": payload,
+			}, firestore.MergeAll)
+		}
+		
+		_, err = batch.Commit(utils.Ctx)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":      "An error occured while updating your profile!",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return	
+		}	
+
 		formData["Avatar"] = avatarUrl
 		formData["AvatarUpdatedAt"] = ptypes.TimestampNow()
 	}
