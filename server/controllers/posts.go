@@ -581,6 +581,55 @@ func DeletePostHandler(c *gin.Context) {
 		})
 		return
 	}
+	
+	batch := utils.Client.Batch()
+	updates := 0
+
+	iter := utils.Client.Collection("upvotes").Where("PostId", "==", postId).Documents(utils.Ctx)
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":      "An error occured",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+		batch.Delete(dsnap.Ref)
+		updates+=1
+	}
+
+	iter = utils.Client.Collection("downvotes").Where("PostId", "==", postId).Documents(utils.Ctx)
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":      "An error occured",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+		batch.Delete(dsnap.Ref)
+		updates+=1
+	}
+
+	if updates != 0 {
+		_, err := batch.Commit(utils.Ctx)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":      "An error occured",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+	}
 
 	if _, err := docRef.Delete(utils.Ctx); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
