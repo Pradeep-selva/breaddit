@@ -190,6 +190,40 @@ func DeactivateUserHandler(c *gin.Context) {
 		updates += 1
 	}
 
+	iter = utils.Client.Collection("upvotes").Where("UserName", "==", UID).Documents(utils.Ctx)
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":      "An error occured",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+		batch.Delete(dsnap.Ref)
+		updates+=1
+	}
+
+	iter = utils.Client.Collection("downvotes").Where("UserName", "==", UID).Documents(utils.Ctx)
+	for {
+		dsnap, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":      "An error occured",
+				"statusCode": http.StatusInternalServerError,
+			})
+			return
+		}
+		batch.Delete(dsnap.Ref)
+		updates+=1
+	}
+
 	if updates != 0 {
 		_, err := batch.Commit(utils.Ctx)
 
