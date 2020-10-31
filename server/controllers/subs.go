@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	// "log"
 	"net/http"
 
 	"cloud.google.com/go/firestore"
@@ -145,7 +144,7 @@ func UpdateSubHandler(c *gin.Context) {
 				"statusCode": http.StatusBadRequest,
 			})
 			return
-		}	
+		}
 
 		url, err := _aws.UploadImageHandler(c, "Thumbnail")
 

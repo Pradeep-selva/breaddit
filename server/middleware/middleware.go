@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -11,7 +12,14 @@ import (
 )
 
 func IsAuthorized(c *gin.Context) {
-	authToken := c.GetHeader("Token")
+	authHeader := strings.Split(c.GetHeader("authorization"), " ")
+	if len(authHeader) < 2 {
+		sendError(c)
+		c.Abort()
+		return
+	}
+
+	authToken := authHeader[1]
 	if authToken != "" {
 		token, err := jwt.Parse(authToken, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

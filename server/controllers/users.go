@@ -3,16 +3,10 @@ package controllers
 import (
 	"net/http"
 
-	// "encoding/json"
-
-	// "net/http"
-	// "time"
-
 	"cloud.google.com/go/firestore"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
 
-	// "github.com/gin-gonic/gin/binding"
 	"github.com/golang/protobuf/ptypes"
 
 	_aws "github.com/pradeep-selva/Breaddit/server/aws"
@@ -93,7 +87,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 				"statusCode": http.StatusBadRequest,
 			})
 			return
-		}	
+		}
 
 		avatarUrl, err := _aws.UploadImageHandler(c, "Avatar")
 
@@ -106,7 +100,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 		}
 
 		batch := utils.Client.Batch()
-		
+
 		iter := utils.Client.Collection("posts").Where("User.UserName", "==", UID).Documents(utils.Ctx)
 		for {
 			dsnap, err := iter.Next()
@@ -118,27 +112,27 @@ func UpdateUserDataHandler(c *gin.Context) {
 					"error":      "An error occured while updating your profile!",
 					"statusCode": http.StatusInternalServerError,
 				})
-				return	
+				return
 			}
 
 			payload := map[string]interface{}{
-					"Avatar": avatarUrl,
-					"UserName": UID,
-				}
+				"Avatar":   avatarUrl,
+				"UserName": UID,
+			}
 
 			batch.Set(dsnap.Ref, map[string]interface{}{
 				"User": payload,
 			}, firestore.MergeAll)
 		}
-		
+
 		_, err = batch.Commit(utils.Ctx)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error":      "An error occured while updating your profile!",
 				"statusCode": http.StatusInternalServerError,
 			})
-			return	
-		}	
+			return
+		}
 
 		formData["Avatar"] = avatarUrl
 		formData["AvatarUpdatedAt"] = ptypes.TimestampNow()
@@ -204,7 +198,7 @@ func DeactivateUserHandler(c *gin.Context) {
 			return
 		}
 		batch.Delete(dsnap.Ref)
-		updates+=1
+		updates += 1
 	}
 
 	iter = utils.Client.Collection("downvotes").Where("UserName", "==", UID).Documents(utils.Ctx)
@@ -221,7 +215,7 @@ func DeactivateUserHandler(c *gin.Context) {
 			return
 		}
 		batch.Delete(dsnap.Ref)
-		updates+=1
+		updates += 1
 	}
 
 	if updates != 0 {

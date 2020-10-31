@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	// "encoding/json"
-
 	"cloud.google.com/go/firestore"
 	"golang.org/x/crypto/bcrypt"
 

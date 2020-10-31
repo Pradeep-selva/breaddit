@@ -262,7 +262,7 @@ func UpvotePostsHandler(c *gin.Context) {
 		}
 
 		Downvote = "deleted successfully"
-	} 
+	}
 
 	iter = utils.Client.Collection("upvotes").Where("UserName", "==", UID).Where("PostId", "==", ID).Limit(1).Documents(utils.Ctx)
 
@@ -310,7 +310,7 @@ func UpvotePostsHandler(c *gin.Context) {
 
 	if Downvote != "" {
 		payload["Downvote"] = Downvote
-		bread+=0.5
+		bread += 0.5
 	}
 
 	_, err = utils.Client.Collection("users").Doc(postDoc.Data()["User"].(map[string]interface{})["UserName"].(string)).Update(utils.Ctx, []firestore.Update{
@@ -442,7 +442,7 @@ func DownvotePostsHandler(c *gin.Context) {
 
 	if Upvote != "" {
 		payload["Upvote"] = Upvote
-		bread-=1
+		bread -= 1
 	}
 
 	_, err = utils.Client.Collection("users").Doc(postDoc.Data()["User"].(map[string]interface{})["UserName"].(string)).Update(utils.Ctx, []firestore.Update{
@@ -581,7 +581,7 @@ func DeletePostHandler(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	batch := utils.Client.Batch()
 	updates := 0
 
@@ -599,7 +599,7 @@ func DeletePostHandler(c *gin.Context) {
 			return
 		}
 		batch.Delete(dsnap.Ref)
-		updates+=1
+		updates += 1
 	}
 
 	iter = utils.Client.Collection("downvotes").Where("PostId", "==", postId).Documents(utils.Ctx)
@@ -616,7 +616,7 @@ func DeletePostHandler(c *gin.Context) {
 			return
 		}
 		batch.Delete(dsnap.Ref)
-		updates+=1
+		updates += 1
 	}
 
 	if updates != 0 {
