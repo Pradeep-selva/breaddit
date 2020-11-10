@@ -52,6 +52,20 @@ func IsAuthorized(c *gin.Context) {
 	}
 }
 
+func CheckApiAuthorization(c *gin.Context) {
+	token := c.Request.Header.Get("x-api-key")
+
+    if token == "" {
+		sendError(c)
+		c.Abort()
+    } else if token == string(_aws.GetEnvVar("X-API-KEY")) {
+        c.Next()
+    } else {
+		sendError(c)
+		c.Abort()
+    }
+}
+
 func sendError(c *gin.Context) {
 	c.JSON(http.StatusUnauthorized, gin.H{
 		"error":      "You are not authorized to be here",

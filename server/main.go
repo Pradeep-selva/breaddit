@@ -21,6 +21,7 @@ func main() {
 	_aws.ConnectAWS()
 
 	router := gin.Default()
+	router.Use(middleware.CheckApiAuthorization)
 	router.Use(func(c *gin.Context) {
 		c.Set("sess", _aws.Sess)
 		c.Next()
