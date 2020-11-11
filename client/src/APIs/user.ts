@@ -1,5 +1,5 @@
 import { ENDPOINTS } from "../Configs";
-import { retrieveResponse } from "../Services/api";
+import { getFormHeader, retrieveResponse } from "../Services/api";
 import { RawResponse } from "../Types";
 import axios from "./axios";
 
@@ -12,9 +12,7 @@ export const getUserData = () =>
 export const updateUserData = (payload: FormData) =>
   axios
     .getInstance()
-    .put<RawResponse>(ENDPOINTS.user, payload, {
-      headers: { "Content-Type": `multipart/form-data` }
-    })
+    .put<RawResponse>(ENDPOINTS.user, payload, getFormHeader())
     .then((response) => retrieveResponse(response.data));
 
 export const deactivateUser = () =>

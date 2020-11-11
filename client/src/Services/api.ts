@@ -8,3 +8,7 @@ export const retrieveResponse = (response: RawResponse): ApiResponse => ({
 export const getAxiosRequestObject = (payload: any) => ({
   data: payload
 });
+
+export const getFormHeader = () => ({
+  headers: { "Content-Type": `multipart/form-data` }
+});
