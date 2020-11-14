@@ -15,6 +15,12 @@ export const getSubById = (id: string) =>
     .get<RawResponse>(ENDPOINTS.subById(id))
     .then((response) => retrieveResponse(response.data));
 
+export const getSubPosts = (id: string, offset = 0, limit = 25) =>
+  axios
+    .getInstance()
+    .get<RawResponse>(ENDPOINTS.publicSubPosts(id, offset, limit))
+    .then((response) => retrieveResponse(response.data));
+
 export const updateSub = (payload: FormData, id: string) =>
   axios
     .getInstance()
@@ -25,4 +31,16 @@ export const deleteSub = (payload: FormData, id: string) =>
   axios
     .getInstance()
     .delete<RawResponse>(ENDPOINTS.subById(id))
+    .then((response) => retrieveResponse(response.data));
+
+export const joinSub = (id: string) =>
+  axios
+    .getInstance()
+    .post<RawResponse>(ENDPOINTS.joinSub(id))
+    .then((response) => retrieveResponse(response.data));
+
+export const leaveSub = (id: string) =>
+  axios
+    .getInstance()
+    .post(ENDPOINTS.leaveSub(id))
     .then((response) => retrieveResponse(response.data));

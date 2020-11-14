@@ -23,7 +23,8 @@ export const ENDPOINTS = {
   //sub endpoints,
   sub: "/sub",
   subById: (id: string) => `/sub/${id}`,
-  publicSubPosts: (id: string) => `/sub/${id}/posts`,
+  publicSubPosts: (id: string, offset = 0, limit = 25) =>
+    `/sub/${id}/posts?limit=${limit}&offset=${offset}`,
   joinSub: (id: string) => `/sub/${id}/join`,
   leaveSub: (id: string) => `/sub/${id}/leave`,
 
