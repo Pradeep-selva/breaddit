@@ -10,3 +10,8 @@ export const userActionTypes = {
   UPVOTE_POST: "UPVOTE_POST",
   DOWNVOTE_POST: "DOWNVOTE_POST"
 };
+
+export const feedActionTypes = {
+  SET_FEED: "SET_FEED",
+  SET_TRENDING_POSTS: "SET_TRENDING_POSTS"
+};
