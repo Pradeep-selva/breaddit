@@ -1,5 +1,7 @@
 export const RouteNames = {
   home: "/",
+  login: "login",
+  signup: "/signup",
   post: "/posts",
   user: "/users",
   sub: "/subs",
