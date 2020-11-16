@@ -5,7 +5,11 @@ export const setFeed = (payload: any) => ({
   payload
 });
 
+export const clearFeed = () => ({
+  type: feedActionTypes.CLEAR_FEED
+});
+
 export const setTrendingPosts = (payload: any) => ({
-  ype: feedActionTypes.SET_TRENDING_POSTS,
+  type: feedActionTypes.SET_TRENDING_POSTS,
   payload
 });

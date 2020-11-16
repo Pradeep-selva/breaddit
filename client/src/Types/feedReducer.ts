@@ -3,7 +3,7 @@ export interface IPostUser {
   Avatar: string;
 }
 
-export interface IFeed {
+export interface IPost {
   Title: string;
   Link: string;
   Content: string;
@@ -14,4 +14,9 @@ export interface IFeed {
   Comments: number;
   Downvotes: number;
   CreatedAt: Date;
+}
+
+export interface IFeedState {
+  feed: Array<IPost>;
+  trending: Array<IPost>;
 }
