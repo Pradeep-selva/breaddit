@@ -1,8 +1,8 @@
 import React from "react";
 
 export const Home = () => (
-  <div className='App'>
-    <header className='App-header'>
+  <div>
+    <header>
       <p>BREADDIT</p>
     </header>
   </div>
