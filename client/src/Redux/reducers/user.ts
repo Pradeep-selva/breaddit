@@ -10,7 +10,7 @@ const initialState: IUserState = {
   isAuthenticated: false
 };
 
-export default function (state = { ...initialState }, action) {
+export default function (state = { ...initialState }, action: any) {
   switch (action.type) {
     case userActionTypes.SET_USER_DATA:
       return {
