@@ -6,7 +6,7 @@ const initialState: IFeedState = {
   trending: []
 };
 
-export default function (state = { ...initialState }, action: any) {
+export default function feed(state = { ...initialState }, action: any) {
   switch (action.type) {
     case feedActionTypes.SET_FEED:
       return {
