@@ -1,6 +1,5 @@
 import { BLACK, DARK_GREY, GREY, WHITE } from "../Common/colors";
-
-export default {
+const palette = {
   primary: {
     light: "#abaaa7",
     main: DARK_GREY,
@@ -18,3 +17,4 @@ export default {
     secondary: GREY
   }
 };
+export default palette;

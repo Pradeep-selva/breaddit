@@ -11,8 +11,8 @@ import { Navbar } from "../Components";
 export const App = () => (
   <MuiThemeProvider theme={theme}>
     <Provider store={store}>
-      <Navbar />
       <Router>
+        <Navbar />
         <Routes />
       </Router>
     </Provider>

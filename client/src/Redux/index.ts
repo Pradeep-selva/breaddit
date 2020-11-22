@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { feedReducer, userReducer } from "./Reducers";
-// import Saga from "../Saga";
+import Saga from "./Saga";
 import { IFeedState, IUserState } from "../Types";
 
 export interface IReduxState {
@@ -18,10 +18,10 @@ const reducers = combineReducers<IReduxState>({
   user: userReducer
 });
 
-//   let middleware = applyMiddleware(sagaMiddleWare);
+let middleware = applyMiddleware(sagaMiddleWare);
 
-const store = createStore(reducers, initialState);
-// sagaMiddleWare.run(Saga);
+const store = createStore(reducers, initialState, middleware);
+sagaMiddleWare.run(Saga);
 
 export type RootState = ReturnType<typeof store.getState>;
 export default store;

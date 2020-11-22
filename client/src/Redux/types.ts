@@ -12,6 +12,8 @@ export const userActionTypes = {
 };
 
 export const feedActionTypes = {
+  LOAD_PUBLIC_FEED: "LOAD_PUBLIC_FEED",
+  LOAD_PRIVATE_FEED: "LOAD_PRIVATE_FEED",
   SET_FEED: "SET_FEED",
   SET_TRENDING_POSTS: "SET_TRENDING_POSTS",
   CLEAR_FEED: "CLEAR_FEED"

@@ -11,8 +11,10 @@ import {
 } from "@material-ui/core";
 import { BiSearchAlt } from "react-icons/bi";
 import { BLACK } from "../../Common/colors";
+import { NavLink } from "react-router-dom";
+import { RouteNames } from "../../Configs";
 
-export default function PrimarySearchAppBar() {
+export default function Navbar() {
   const classes = useStyles();
 
   return (
@@ -24,6 +26,8 @@ export default function PrimarySearchAppBar() {
             className={classes.menuButton}
             color='inherit'
             aria-label='open drawer'
+            component={NavLink}
+            to={RouteNames.home}
           >
             <img src={Logo} alt={"LOGO"} style={{ width: 45, fontSize: 10 }} />
           </IconButton>
@@ -49,6 +53,8 @@ export default function PrimarySearchAppBar() {
               variant={"outlined"}
               color={"inherit"}
               style={{ flex: 1, marginRight: 20 }}
+              component={NavLink}
+              to={RouteNames.login}
             >
               LOGIN
             </Button>
@@ -56,6 +62,8 @@ export default function PrimarySearchAppBar() {
               variant={"contained"}
               color={"inherit"}
               style={{ color: BLACK, flex: 1 }}
+              component={NavLink}
+              to={RouteNames.signup}
             >
               SIGNUP
             </Button>
