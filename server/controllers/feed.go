@@ -15,7 +15,7 @@ import (
 //GET /api/v/feed/trending
 func GetTrendingPostsHandler(c *gin.Context) {
 	iter := utils.Client.Collection("posts").OrderBy("Upvotes", firestore.Desc).Limit(3).Documents(utils.Ctx)
-	posts := []entities.Post{}
+	posts := []map[string]interface{}{}
 
 	for {
 		dsnap, err := iter.Next()
@@ -30,8 +30,9 @@ func GetTrendingPostsHandler(c *gin.Context) {
 			return
 		}
 
-		var post entities.Post
+		var post map[string]interface{}
 		dsnap.DataTo(&post)
+		post["id"] = dsnap.Ref.ID
 
 		posts = append(posts, post)
 	}
@@ -48,7 +49,7 @@ func GetPublicFeedHandler(c *gin.Context) {
 
 	iter := utils.Client.Collection("posts").OrderBy("CreatedAt", firestore.Desc).Offset(offset).Limit(limit).Documents(utils.Ctx)
 
-	posts := []entities.Post{}
+	posts := []map[string]interface{}{}
 
 	for {
 		dsnap, err := iter.Next()
@@ -63,8 +64,9 @@ func GetPublicFeedHandler(c *gin.Context) {
 			return
 		}
 
-		var post entities.Post
+		var post map[string]interface{}
 		dsnap.DataTo(&post)
+		post["id"] = dsnap.Ref.ID
 
 		posts = append(posts, post)
 	}
@@ -83,7 +85,7 @@ func GetPrivateFeedHandler(c *gin.Context) {
 	dsnap, _ := utils.Client.Collection("users").Doc(UID).Get(utils.Ctx)
 
 	var user entities.UserData
-	posts := []entities.Post{}
+	posts := []map[string]interface{}{}
 
 	dsnap.DataTo(&user)
 
@@ -102,8 +104,9 @@ func GetPrivateFeedHandler(c *gin.Context) {
 			return
 		}
 
-		var post entities.Post
+		var post map[string]interface{}
 		dsnap.DataTo(&post)
+		post["id"] = dsnap.Ref.ID
 
 		posts = append(posts, post)
 	}
