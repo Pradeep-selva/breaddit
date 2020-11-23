@@ -1,14 +1,21 @@
-import { createStyles, Theme } from "@material-ui/core";
+import { createStyles } from "@material-ui/core";
 
 const rawStyles = {
   container: {
-    marginTop: "10vh"
+    maxWidth: "50vw"
   },
   sectionTitle: {
-    fontWeight: 700
+    marginTop: "5vh",
+    fontWeight: 700,
+    fontSize: "1rem"
+  },
+  trending: {
+    marginTop: "1.5vh"
   }
 };
 
-export const styles = (theme: Theme) => createStyles(rawStyles);
+export const styles = () => createStyles(rawStyles);
 
-export type classesType = { classes: Record<keyof typeof rawStyles, string> };
+export interface IClass {
+  classes: Record<keyof typeof rawStyles, string>;
+}

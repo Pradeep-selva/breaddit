@@ -1,10 +1,5 @@
 import { put, takeLatest, all } from "redux-saga/effects";
-import {
-  loadPublicFeed,
-  loadPrivateFeed,
-  setTrendingPosts,
-  setFeed
-} from "../Actions";
+import { loadPublicFeed, setTrendingPosts, setFeed } from "../Actions";
 import { getTrendingFeed, getPublicFeed } from "../../APIs";
 import { feedActionTypes } from "../types";
 import store from "../index";
@@ -15,7 +10,7 @@ function* getAllPublicFeed({
   if (!store.getState().feed.trending.length) {
     try {
       let trendingFeed = yield getTrendingFeed();
-      yield put(setTrendingPosts(trendingFeed));
+      yield put(setTrendingPosts(trendingFeed.data));
     } catch (err) {
       console.error(err);
     }
@@ -24,7 +19,7 @@ function* getAllPublicFeed({
   if (!store.getState().feed.feed.length) {
     try {
       let feed = yield getPublicFeed(offset, limit);
-      yield put(setFeed(feed));
+      yield put(setFeed(feed.data));
     } catch (err) {
       console.error(err);
     }

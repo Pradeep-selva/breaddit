@@ -1,14 +1,13 @@
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+// import jwtDecode from "jwt-decode";
 import { BASE_URL, VERSION } from "../Configs";
 import { SECRETS } from "../secrets";
 
 const API_URL = `${BASE_URL}/api/${VERSION}`;
 
-const TOKEN: string = localStorage.AuthToken;
+// const TOKEN: string = localStorage.AuthToken;
 
 const getInstance = (baseURL = API_URL) => {
-  console.log(TOKEN);
   return axios.create({
     baseURL,
     headers: {
@@ -19,6 +18,8 @@ const getInstance = (baseURL = API_URL) => {
   });
 };
 
-export default {
+const axiosInstance = {
   getInstance
 };
+
+export default axiosInstance;

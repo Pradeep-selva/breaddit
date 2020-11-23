@@ -1,13 +1,14 @@
-import { Container, Paper, Typography, withStyles } from "@material-ui/core";
+import { Container, Grid, Typography, withStyles } from "@material-ui/core";
 import React, { Component } from "react";
+import { TrendingPostCard } from "../../Components";
 import { IProps } from "./index";
-import { styles, classesType } from "./styles";
+import { styles, IClass } from "./styles";
 
 interface IState {
   offset: number;
 }
 
-class Home extends Component<IProps & classesType, IState> {
+class Home extends Component<IProps & IClass, IState> {
   constructor(props: any) {
     super(props);
 
@@ -17,19 +18,30 @@ class Home extends Component<IProps & classesType, IState> {
   }
 
   componentDidMount() {
-    this.props.loadPublicFeed({ offset: 0, limit: 25 });
+    this.props.loadPublicFeed({ offset: this.state.offset, limit: 25 });
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, trendingPosts } = this.props;
+    console.log(trendingPosts);
     return (
-      <Container maxWidth={"sm"} className={classes.container}>
-        <Typography
-          variant={"h6"}
-          color={"textPrimary"}
-          className={classes.sectionTitle}
-        >
+      <Container className={classes.container}>
+        <Typography color={"textPrimary"} className={classes.sectionTitle}>
           Hot Breads
+        </Typography>
+        <Grid
+          container
+          justify={"space-between"}
+          className={classes.trending}
+          spacing={4}
+        >
+          {!!trendingPosts.length &&
+            trendingPosts.map((item, index) => (
+              <TrendingPostCard {...item} key={index} />
+            ))}
+        </Grid>
+        <Typography color={"textPrimary"} className={classes.sectionTitle}>
+          Breads For You
         </Typography>
       </Container>
     );
