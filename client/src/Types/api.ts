@@ -15,12 +15,20 @@ export interface ISignUp {
   password: string;
 }
 
-export interface ILogin {
-  userName?: string;
-  email?: string;
-  password: string;
-}
-
 export interface IComment {
   Body: string;
 }
+
+interface Password {
+  password: string;
+}
+
+interface ILoginWithUserName extends Password {
+  userName: string;
+}
+
+interface ILoginWithEmail extends Password {
+  email: string;
+}
+
+export type ILoginCredentials = ILoginWithEmail | ILoginWithUserName;

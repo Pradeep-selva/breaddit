@@ -1,3 +1,4 @@
+//user data
 export interface IUserData {
   Avatar: string;
   AvatarUpdatedAt: Date;
@@ -32,4 +33,10 @@ export interface IUserState {
   notifications: Array<INotification>;
   upvotes: Array<IUpvoteDownvote>;
   downvotes: Array<IUpvoteDownvote>;
+}
+
+//login
+export interface ISuccessfulLoginResponse {
+  token: string;
+  statusCode: number;
 }

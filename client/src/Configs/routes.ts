@@ -3,8 +3,8 @@ export const RouteNames = {
   login: "/login",
   signup: "/signup",
   post: "/posts",
-  user: "/users",
-  sub: "/subs",
+  user: "/u",
+  sub: "/b",
   search: "/search"
 };
 

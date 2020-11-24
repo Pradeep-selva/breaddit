@@ -1,9 +1,9 @@
 import { ENDPOINTS } from "../Configs";
 import { getAxiosRequestObject, retrieveResponse } from "../Services/api";
-import { ILogin, ISignUp, RawResponse } from "../Types";
+import { ILoginCredentials, ISignUp, RawResponse } from "../Types";
 import axios from "./axios";
 
-export const loginUser = (payload: ILogin) =>
+export const loginUser = (payload: ILoginCredentials) =>
   axios
     .getInstance()
     .get<RawResponse>(`${ENDPOINTS.login}`, getAxiosRequestObject(payload))

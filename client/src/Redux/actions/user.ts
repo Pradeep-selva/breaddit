@@ -1,4 +1,10 @@
+import { ILoginCredentials, ISuccessfulLoginResponse } from "../../Types";
 import { userActionTypes } from "../types";
+
+export const loginUserAction = (response: ISuccessfulLoginResponse) => ({
+  type: userActionTypes.LOGIN_USER,
+  response
+});
 
 export const setUserData = (payload: any) => ({
   type: userActionTypes.SET_USER_DATA,
