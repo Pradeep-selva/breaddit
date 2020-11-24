@@ -9,7 +9,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `0.1px solid ${DARK_GREY}`,
       position: "relative",
       borderRadius: 10,
-      overflow: "hidden"
+      overflow: "hidden",
+      cursor: "pointer",
+      transition: `${theme.transitions.create(["width", "transform"], {
+        duration: theme.transitions.duration.standard
+      })}`,
+      "&:hover": {
+        transform: "scale(1.1)"
+      }
     },
     content: {
       position: "absolute",
@@ -26,6 +33,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(2),
       textShadow:
         "-1px -1px 0 #000F, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
+    },
+    name: {
+      fontWeight: 700
     }
   })
 );
