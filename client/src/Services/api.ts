@@ -1,7 +1,7 @@
 import { ApiResponse, RawResponse } from "../Types";
 
 export const retrieveResponse = (response: RawResponse): ApiResponse => ({
-  data: response?.data || response?.message,
+  data: response?.data || response?.error || response?.token,
   statusCode: response.statusCode
 });
 

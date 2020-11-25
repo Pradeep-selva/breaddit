@@ -9,7 +9,7 @@ const getInstance = (baseURL = API_URL) => {
   return axios.create({
     baseURL,
     headers: {
-      "content-type": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
       accept: "application/json",
       "x-api-key": SECRETS.x_api_key,
       authorization: `Bearer ${localStorage.getItem("AuthToken") || ""}`

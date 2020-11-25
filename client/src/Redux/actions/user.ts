@@ -1,9 +1,8 @@
-import { ISuccessfulLoginResponse } from "../../Types";
 import { userActionTypes } from "../types";
 
-export const loginUserAction = (response: ISuccessfulLoginResponse) => ({
+export const loginUserAction = (token: string) => ({
   type: userActionTypes.LOGIN_USER,
-  response
+  token
 });
 
 export const setUserData = (payload: any) => ({

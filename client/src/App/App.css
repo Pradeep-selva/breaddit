@@ -6,6 +6,12 @@ body {
   scroll-behavior: smooth;
 }
 
+a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #086280;
+}
+
 ::-webkit-scrollbar {
   width: 10.5px;
   max-height: 25%;

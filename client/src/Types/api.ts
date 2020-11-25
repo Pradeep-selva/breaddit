@@ -1,11 +1,14 @@
 export interface ApiResponse {
-  data: string | undefined;
+  data?: string;
+  error?: string;
+  token?: string;
   statusCode: number;
 }
 
 export interface RawResponse {
   data?: string;
-  message?: string;
+  error?: string;
+  token?: string;
   statusCode: number;
 }
 

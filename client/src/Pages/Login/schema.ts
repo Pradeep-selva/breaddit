@@ -14,7 +14,8 @@ export const FormFields = [
     key: "password",
     label: "Password",
     placeholder: "Enter your Password",
-    ref: "passwordRef"
+    ref: "passwordRef",
+    type: "password"
   }
 ];
 
@@ -27,10 +28,6 @@ export const FormSchema = {
     }
   },
   password: {
-    presence: { allowEmpty: false, message: "can't be blank. " },
-    length: {
-      minimum: 6,
-      message: "must be at least 6 characters long"
-    }
+    presence: { allowEmpty: false, message: "can't be blank. " }
   }
 };
