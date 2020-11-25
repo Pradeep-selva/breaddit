@@ -1,4 +1,4 @@
-import { ILoginCredentials, ISuccessfulLoginResponse } from "../../Types";
+import { ISuccessfulLoginResponse } from "../../Types";
 import { userActionTypes } from "../types";
 
 export const loginUserAction = (response: ISuccessfulLoginResponse) => ({

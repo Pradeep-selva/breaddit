@@ -1,8 +1,12 @@
 import { createStyles } from "@material-ui/core";
+import theme from "../../Theme";
 
 const rawStyles = {
   container: {
-    maxWidth: "50vw"
+    maxWidth: "50vw",
+    [theme.breakpoints.down("xs")]: {
+      maxWidth: "100vw"
+    }
   },
   sectionTitle: {
     marginTop: "5vh",

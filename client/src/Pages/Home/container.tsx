@@ -8,8 +8,10 @@ interface IState {
   offset: number;
 }
 
-class Home extends Component<IProps & IClass, IState> {
-  constructor(props: any) {
+type Props = IProps & IClass;
+
+class Home extends Component<Props, IState> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
