@@ -23,6 +23,10 @@ const rawStyles = {
     fontSize: "0.7vw",
     maxWidth: "80%",
     marginBottom: "20%"
+  },
+  formField: {
+    marginBottom: "4%",
+    width: "75%"
   }
 };
 

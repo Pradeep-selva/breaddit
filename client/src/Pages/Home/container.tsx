@@ -25,7 +25,6 @@ class Home extends Component<Props, IState> {
 
   render() {
     const { classes, trendingPosts } = this.props;
-    console.log(trendingPosts);
     return (
       <Container className={classes.container}>
         <Typography color={"textPrimary"} className={classes.sectionTitle}>

@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Container,
   Grid,
   Paper,
@@ -45,6 +46,7 @@ class Login extends Component<Props, State> {
     });
 
   onSubmit = () => {
+    this.toggleLoading();
     let newState = { ...this.state };
     let errors = validate(
       {
@@ -55,10 +57,11 @@ class Login extends Component<Props, State> {
     );
 
     newState.errors = errors || {};
-
+    newState.loading = !!errors ? newState.loading : !newState.loading;
     this.setState(newState);
 
     if (!errors) {
+      this.setState(() => ({ errors: {} }));
       const re = /\S+@\S+\.\S+/;
       const payload = re.test(this.state.identifier)
         ? {
@@ -69,16 +72,24 @@ class Login extends Component<Props, State> {
             password: this.state.password,
             userName: this.state.identifier
           };
-      console.log(payload);
+
       loginUser(payload)
-        .then(({ data: token }) => {
-          !!token && this.props.loginUser(token);
+        .then(({ data, statusCode }) => {
+          statusCode === 200
+            ? this.props.loginUser(data || "")
+            : this.setState({
+                errors: {
+                  ...this.state.errors,
+                  general: [data]
+                }
+              });
         })
-        .catch((error) => console.log(error.error));
+        .catch((error) => console.log(error.error))
+        .finally(this.toggleLoading);
     }
   };
 
-  toggleLoading = () => this.setState({ loading: !this.state.loading });
+  toggleLoading = () => this.setState((state) => ({ loading: !state.loading }));
 
   render() {
     const { classes } = this.props;
@@ -105,9 +116,10 @@ class Login extends Component<Props, State> {
                 <Link to={RouteNames.home}>Terms & Conditions</Link>
               </Typography>
               <Grid container>
-                {FormFields.map((field) => (
+                {FormFields.map((field, index) => (
                   <Grid item xs={12}>
                     <TextInput
+                      key={index}
                       id={field.key}
                       label={field.label}
                       type={field.type || "text"}
@@ -115,17 +127,44 @@ class Login extends Component<Props, State> {
                       variant={"outlined"}
                       onChange={this.onFieldChange}
                       value={this.state[field.key as keyof State]}
-                      style={{ marginBottom: "4%", width: "75%" }}
+                      className={classes.formField}
+                      helperText={this.state.errors[field.key]}
+                      error={!!this.state.errors[field.key]}
                       color={"secondary"}
                     />
                   </Grid>
                 ))}
               </Grid>
+              {this.state.errors["general"] && (
+                <Typography
+                  variant={"body2"}
+                  color={"error"}
+                  style={{ marginBottom: "2%" }}
+                >
+                  {this.state.errors["general"]}
+                </Typography>
+              )}
               <Button
                 variant={"contained"}
-                color={"default"}
+                color={"primary"}
+                size={"large"}
+                disabled={this.state.loading}
                 onClick={this.onSubmit}
+                style={{
+                  marginBottom: "3%",
+                  position: "relative"
+                }}
               >
+                {this.state.loading && (
+                  <CircularProgress
+                    color={"inherit"}
+                    size={30}
+                    style={{
+                      position: "absolute",
+                      marginLeft: "10%"
+                    }}
+                  />
+                )}
                 LOGIN
               </Button>
               <Typography

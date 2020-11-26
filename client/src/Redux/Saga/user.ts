@@ -19,7 +19,6 @@ import { userActionTypes } from "../types";
 function* loginUserAndSetReduxState({
   token
 }: ReturnType<typeof loginUserAction>) {
-  console.log(token, "token");
   localStorage.setItem("AuthToken", token);
 
   const userData = yield getUserData();
