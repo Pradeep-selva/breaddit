@@ -7,14 +7,12 @@ export const FormFields = [
   {
     key: "identifier",
     label: "UserName/Email",
-    placeholder: "Enter your username or email",
-    ref: "identifierRef"
+    placeholder: "Enter your username or email"
   },
   {
     key: "password",
     label: "Password",
     placeholder: "Enter your Password",
-    ref: "passwordRef",
     type: "password"
   }
 ];

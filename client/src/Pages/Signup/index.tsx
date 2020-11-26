@@ -2,6 +2,11 @@ import {
   Button,
   CircularProgress,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
   Paper,
   Typography,
@@ -10,51 +15,47 @@ import {
 import validate from "validate.js";
 import { TextInput } from "../../Components";
 import { FormDefaultValues, FormFields, FormSchema } from "./schema";
-import { RiLoginCircleLine } from "react-icons/ri";
-import { IProps } from "./index";
+import { TiUserAdd } from "react-icons/ti";
 import { IClass, styles } from "./styles";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { RouteNames } from "../../Configs";
-import { loginUser } from "../../APIs";
+import { signUpUser } from "../../APIs";
 
-type Props = IProps & IClass;
-
-type State = typeof FormDefaultValues & {
+type State = {
+  values: typeof FormDefaultValues;
   errors: any;
   loading: boolean;
+  open: boolean;
 };
 
-class Login extends Component<Props, State> {
+class Signup extends Component<IClass, State> {
   FormSchema: typeof FormSchema;
-  constructor(props: Props) {
+  constructor(props: IClass) {
     super(props);
 
     this.FormSchema = FormSchema;
 
     this.state = {
-      ...FormDefaultValues,
+      values: { ...FormDefaultValues },
       errors: {},
+      open: false,
       loading: false
     };
   }
 
   onFieldChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({
-      ...this.state,
-      [event.target.id]: event.target.value
+      values: {
+        ...this.state.values,
+        [event.target.id]: event.target.value
+      }
     });
 
   onSubmit = () => {
     this.toggleLoading();
     let newState = { ...this.state };
-    let errors = validate(
-      {
-        identifier: newState.identifier,
-        password: newState.password
-      },
-      FormSchema
-    );
+    var errors = validate(this.state.values, FormSchema);
 
     newState.errors = errors || {};
     newState.loading = !!errors ? newState.loading : !newState.loading;
@@ -62,21 +63,14 @@ class Login extends Component<Props, State> {
 
     if (!errors) {
       this.setState(() => ({ errors: {} }));
-      const re = /\S+@\S+\.\S+/;
-      const payload = re.test(this.state.identifier)
-        ? {
-            password: this.state.password,
-            email: this.state.identifier
-          }
-        : {
-            password: this.state.password,
-            userName: this.state.identifier
-          };
+      const payload = this.state.values;
 
-      loginUser(payload)
-        .then(({ data, statusCode }) => {
+      delete payload.confirmPassword;
+
+      signUpUser(payload)
+        .then(({ statusCode, data }) => {
           statusCode === 200
-            ? this.props.loginUser(data || "")
+            ? this.setState({ open: true })
             : this.setState({
                 errors: {
                   ...this.state.errors,
@@ -91,10 +85,43 @@ class Login extends Component<Props, State> {
 
   toggleLoading = () => this.setState((state) => ({ loading: !state.loading }));
 
+  handleClose = () => this.setState({ open: false });
+
+  renderDialogue = () => (
+    <Dialog
+      open={this.state.open}
+      onClose={this.handleClose}
+      aria-labelledby='alert-dialog-title'
+      aria-describedby='alert-dialog-description'
+    >
+      <DialogTitle
+        id='alert-dialog-title'
+        className={this.props.classes.dialogueTitle}
+      >
+        SignUp Successful!
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id='alert-dialog-description'>
+          Welcome to breaddit and have a great time with breads.{"\n"} Proceed
+          to Login or go back to Home
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button color='primary'>
+          <Link to={RouteNames.home}>Go Home</Link>
+        </Button>
+        <Button color='primary' autoFocus>
+          <Link to={RouteNames.login}>Login</Link>
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
   render() {
     const { classes } = this.props;
     return (
       <Container maxWidth={"sm"}>
+        {this.renderDialogue()}
         <Paper className={classes.container}>
           <Grid container>
             <Grid item xs={3} className={classes.loginIllustration}></Grid>
@@ -104,8 +131,8 @@ class Login extends Component<Props, State> {
                 color={"textSecondary"}
                 className={classes.title}
               >
-                <RiLoginCircleLine style={{ marginRight: "2%" }} />
-                Login
+                <TiUserAdd style={{ marginRight: "2%" }} />
+                SignUp
               </Typography>
               <Typography
                 variant={"body2"}
@@ -165,15 +192,14 @@ class Login extends Component<Props, State> {
                     }}
                   />
                 )}
-                LOGIN
+                SIGNUP
               </Button>
               <Typography
                 variant={"body2"}
                 color={"textSecondary"}
                 className={classes.subTitle}
               >
-                Dont have an account?{" "}
-                <Link to={RouteNames.signup}>SIGN UP.</Link>
+                Dont have an account? <Link to={RouteNames.login}>LOGIN.</Link>
               </Typography>
             </Grid>
           </Grid>
@@ -183,4 +209,4 @@ class Login extends Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(Signup);
