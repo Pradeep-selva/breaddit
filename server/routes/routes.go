@@ -15,7 +15,7 @@ func InitPublicRoutes(router *gin.RouterGroup) {
 	router.GET("/search", controllers.SearchKeywordHandler)
 
 	//auth
-	router.GET("/login", controllers.LoginHandler)
+	router.POST("/login", controllers.LoginHandler)
 	router.POST("/signup", controllers.SignUpHandler)
 
 	//user

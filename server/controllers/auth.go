@@ -28,7 +28,7 @@ func SignUpHandler(c *gin.Context) {
 
 	_, err := utils.Client.Collection("auth").Doc(body.UserName).Get(utils.Ctx)
 	if err == nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "Account with specified username already exists!",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -38,7 +38,7 @@ func SignUpHandler(c *gin.Context) {
 	iter := utils.Client.Collection("auth").Where("Email", "==", body.Email).Documents(utils.Ctx)
 	_, err = iter.Next()
 	if err == nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "Account with specified email already exists!",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -48,7 +48,7 @@ func SignUpHandler(c *gin.Context) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
 	err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(body.Password))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured!",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -62,7 +62,7 @@ func SignUpHandler(c *gin.Context) {
 		Password: body.Password,
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured!",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -82,7 +82,7 @@ func SignUpHandler(c *gin.Context) {
 		Breads:     0,
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured!",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -103,6 +103,7 @@ func LoginHandler(c *gin.Context) {
 	var err error
 
 	c.ShouldBindBodyWith(&body, binding.JSON)
+	log.Println(body)
 
 	if body.UserName == "" {
 		iter := utils.Client.Collection("auth").Where("Email", "==", body.Email).Documents(utils.Ctx)
@@ -112,7 +113,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "Specified user does not exist!",
 			"statusCode": http.StatusNotFound,
 		})
@@ -125,7 +126,7 @@ func LoginHandler(c *gin.Context) {
 	err = bcrypt.CompareHashAndPassword([]byte(_password), []byte(body.Password))
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "Wrong credentials entered",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -144,7 +145,7 @@ func LoginHandler(c *gin.Context) {
 			_, err := utils.Client.Collection("notifications").Doc(body.UserName).Set(utils.Ctx, notifDoc)
 
 			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{
+				c.JSON(http.StatusOK, gin.H{
 					"error":      "An error occured!",
 					"statusCode": http.StatusInternalServerError,
 				})
@@ -155,7 +156,7 @@ func LoginHandler(c *gin.Context) {
 
 	token, err := GenerateJWT(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured!",
 			"statusCode": http.StatusInternalServerError,
 		})

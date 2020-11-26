@@ -42,7 +42,7 @@ func SetUserNotificationsSeenHandler(c *gin.Context) {
 
 	dsnap, err := notifRef.Get(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -60,7 +60,7 @@ func SetUserNotificationsSeenHandler(c *gin.Context) {
 
 	_, err = notifRef.Set(utils.Ctx, notifications)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})

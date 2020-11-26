@@ -22,7 +22,7 @@ func GetUserHandler(c *gin.Context) {
 	dsnap, err := utils.Client.Collection("users").Doc(UID).Get(utils.Ctx)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "Failed to retrieve your data!",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -44,7 +44,7 @@ func GetUserById(c *gin.Context) {
 	dsnap, err := utils.Client.Collection("users").Doc(UID).Get(utils.Ctx)
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "User Not Found",
 			"statusCode": http.StatusNotFound,
 		})
@@ -82,7 +82,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 		err := utils.CheckImageUploadPerm("Avatar", UID)
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      err.Error(),
 				"statusCode": http.StatusBadRequest,
 			})
@@ -92,7 +92,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 		avatarUrl, err := _aws.UploadImageHandler(c, "Avatar")
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      err.Error(),
 				"statusCode": http.StatusBadRequest,
 			})
@@ -108,7 +108,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 				break
 			}
 			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{
+				c.JSON(http.StatusOK, gin.H{
 					"error":      "An error occured while updating your profile!",
 					"statusCode": http.StatusInternalServerError,
 				})
@@ -127,7 +127,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 
 		_, err = batch.Commit(utils.Ctx)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured while updating your profile!",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -140,7 +140,7 @@ func UpdateUserDataHandler(c *gin.Context) {
 
 	_, err := utils.Client.Collection("users").Doc(UID).Set(utils.Ctx, formData, firestore.MergeAll)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured while updating your profile!",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -169,7 +169,7 @@ func DeactivateUserHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -191,7 +191,7 @@ func DeactivateUserHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -208,7 +208,7 @@ func DeactivateUserHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -222,7 +222,7 @@ func DeactivateUserHandler(c *gin.Context) {
 		_, err := batch.Commit(utils.Ctx)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -233,7 +233,7 @@ func DeactivateUserHandler(c *gin.Context) {
 	_, err := utils.Client.Collection("users").Doc(UID).Delete(utils.Ctx)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured while deactivating.",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -243,7 +243,7 @@ func DeactivateUserHandler(c *gin.Context) {
 	_, err = utils.Client.Collection("auth").Doc(UID).Delete(utils.Ctx)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured while deactivating.",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -270,7 +270,7 @@ func GetUserUpvotesHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -302,7 +302,7 @@ func GetUserDownvotesHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})

@@ -23,7 +23,7 @@ func GetTrendingPostsHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -57,7 +57,7 @@ func GetPublicFeedHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -97,7 +97,7 @@ func GetPrivateFeedHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})

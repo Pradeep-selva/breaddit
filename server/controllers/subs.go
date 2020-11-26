@@ -33,7 +33,7 @@ func CreateSubHandler(c *gin.Context) {
 	_, err := subRef.Get(utils.Ctx)
 
 	if err == nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      body.Name + " is already an existing subbreaddit",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -53,7 +53,7 @@ func CreateSubHandler(c *gin.Context) {
 		url, err := _aws.UploadImageHandler(c, "Thumbnail")
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      err.Error(),
 				"statusCode": http.StatusBadRequest,
 			})
@@ -66,7 +66,7 @@ func CreateSubHandler(c *gin.Context) {
 	_, err = subRef.Set(utils.Ctx, body)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "Error occured while creating subbreaddit",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -76,7 +76,7 @@ func CreateSubHandler(c *gin.Context) {
 	userRef := utils.Client.Collection("users").Doc(c.MustGet("UID").(string))
 	dsnap, err := userRef.Get(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "Error occured while creating subbreaddit",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -116,7 +116,7 @@ func UpdateSubHandler(c *gin.Context) {
 	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This subbreaddit does not exist",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -126,7 +126,7 @@ func UpdateSubHandler(c *gin.Context) {
 	data := dsnap.Data()
 
 	if data["Owner"].(string) != c.MustGet("UID").(string) {
-		c.JSON(http.StatusUnauthorized, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "You are not authorized to modify this subbreaddit!",
 			"statusCode": http.StatusUnauthorized,
 		})
@@ -139,7 +139,7 @@ func UpdateSubHandler(c *gin.Context) {
 		err := utils.CheckImageUploadPerm("Thumbnail", ID)
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      err.Error(),
 				"statusCode": http.StatusBadRequest,
 			})
@@ -149,7 +149,7 @@ func UpdateSubHandler(c *gin.Context) {
 		url, err := _aws.UploadImageHandler(c, "Thumbnail")
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      err.Error(),
 				"statusCode": http.StatusBadRequest,
 			})
@@ -163,7 +163,7 @@ func UpdateSubHandler(c *gin.Context) {
 	_, err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, formData, firestore.MergeAll)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured while updating",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -183,7 +183,7 @@ func DeleteSubHandler(c *gin.Context) {
 	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This subbreaddit does not exist",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -193,7 +193,7 @@ func DeleteSubHandler(c *gin.Context) {
 	data := dsnap.Data()
 
 	if data["Owner"].(string) != c.MustGet("UID").(string) {
-		c.JSON(http.StatusUnauthorized, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "You are not authorized to delete this subbreaddit!",
 			"statusCode": http.StatusUnauthorized,
 		})
@@ -213,7 +213,7 @@ func DeleteSubHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured while deleting.",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -231,7 +231,7 @@ func DeleteSubHandler(c *gin.Context) {
 	if updates != 0 {
 		_, err = batch.Commit(utils.Ctx)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured while deleting.",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -241,7 +241,7 @@ func DeleteSubHandler(c *gin.Context) {
 
 	_, err = utils.Client.Collection("subs").Doc(ID).Delete(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured while deleting.",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -261,7 +261,7 @@ func GetSubByIdHandler(c *gin.Context) {
 	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This subbreaddit does not exist.",
 			"statusCode": http.StatusNotFound,
 		})
@@ -287,7 +287,7 @@ func JoinSubHandler(c *gin.Context) {
 	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This subreddit does not exist.",
 			"statusCode": http.StatusNotFound,
 		})
@@ -320,7 +320,7 @@ func JoinSubHandler(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
@@ -329,7 +329,7 @@ func JoinSubHandler(c *gin.Context) {
 
 	_, err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, sub)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured while joining.",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -356,7 +356,7 @@ func LeaveSubHandler(c *gin.Context) {
 	dsnap, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx)
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This subreddit does not exist.",
 			"statusCode": http.StatusNotFound,
 		})
@@ -389,7 +389,7 @@ func LeaveSubHandler(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      err.Error(),
 			"statusCode": http.StatusBadRequest,
 		})
@@ -398,7 +398,7 @@ func LeaveSubHandler(c *gin.Context) {
 
 	_, err = utils.Client.Collection("subs").Doc(ID).Set(utils.Ctx, sub)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured while leaving.",
 			"statusCode": http.StatusInternalServerError,
 		})

@@ -30,7 +30,7 @@ func PostToSubHandler(c *gin.Context) {
 
 	dsnap, err := utils.Client.Collection("subs").Doc(subID).Get(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      subID + " is not an existing subbreaddit",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -41,7 +41,7 @@ func PostToSubHandler(c *gin.Context) {
 	found := utils.ArrayContains(subData.Users, UID)
 
 	if !found {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "You must join a subbreaddit before trying to post there.",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -54,7 +54,7 @@ func PostToSubHandler(c *gin.Context) {
 		url, err := _aws.UploadImageHandler(c, "Image")
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      err.Error(),
 				"statusCode": http.StatusBadRequest,
 			})
@@ -66,7 +66,7 @@ func PostToSubHandler(c *gin.Context) {
 
 	dsnap, err = utils.Client.Collection("users").Doc(UID).Get(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -82,7 +82,7 @@ func PostToSubHandler(c *gin.Context) {
 
 	_, _, err = utils.Client.Collection("posts").Add(utils.Ctx, post)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -100,7 +100,7 @@ func GetUserPostsHandler(c *gin.Context) {
 	UID, _ := c.Params.Get("id")
 
 	if _, err := utils.Client.Collection("users").Doc(UID).Get(utils.Ctx); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "The specified user is not found",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -116,7 +116,7 @@ func GetUserPostsHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -140,7 +140,7 @@ func GetPostsBySubHandler(c *gin.Context) {
 	limit, offset := utils.GetLimitAndOffset(c)
 
 	if _, err := utils.Client.Collection("subs").Doc(ID).Get(utils.Ctx); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "The specified subbreaddit is not found",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -156,7 +156,7 @@ func GetPostsBySubHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -180,7 +180,7 @@ func GetPostByIdhandler(c *gin.Context) {
 
 	dsnap, err := utils.Client.Collection("posts").Doc(postId).Get(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This post does not exist!",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -199,7 +199,7 @@ func GetPostByIdhandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -228,7 +228,7 @@ func UpvotePostsHandler(c *gin.Context) {
 
 	postDoc, err := postRef.Get(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This post does not exist.",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -243,7 +243,7 @@ func UpvotePostsHandler(c *gin.Context) {
 
 		_, err := utils.Client.Collection("downvotes").Doc(downvoteId).Delete(utils.Ctx)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -254,7 +254,7 @@ func UpvotePostsHandler(c *gin.Context) {
 			{Path: "Downvotes", Value: firestore.Increment(-1)},
 		})
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -272,7 +272,7 @@ func UpvotePostsHandler(c *gin.Context) {
 
 		_, err := utils.Client.Collection("upvotes").Doc(upvoteId).Delete(utils.Ctx)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusBadRequest,
 			})
@@ -283,7 +283,7 @@ func UpvotePostsHandler(c *gin.Context) {
 			{Path: "Upvotes", Value: firestore.Increment(-1)},
 		})
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -317,7 +317,7 @@ func UpvotePostsHandler(c *gin.Context) {
 		{Path: "Breads", Value: firestore.Increment(bread)},
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -326,7 +326,7 @@ func UpvotePostsHandler(c *gin.Context) {
 
 	_, _, err = utils.Client.Collection("upvotes").Add(utils.Ctx, payload)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -337,7 +337,7 @@ func UpvotePostsHandler(c *gin.Context) {
 		{Path: "Upvotes", Value: firestore.Increment(1)},
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -360,7 +360,7 @@ func DownvotePostsHandler(c *gin.Context) {
 
 	postDoc, err := postRef.Get(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This post does not exist.",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -375,7 +375,7 @@ func DownvotePostsHandler(c *gin.Context) {
 
 		_, err := utils.Client.Collection("upvotes").Doc(upvoteId).Delete(utils.Ctx)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -386,7 +386,7 @@ func DownvotePostsHandler(c *gin.Context) {
 			{Path: "Upvotes", Value: firestore.Increment(-1)},
 		})
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -404,7 +404,7 @@ func DownvotePostsHandler(c *gin.Context) {
 
 		_, err := utils.Client.Collection("downvotes").Doc(downvoteId).Delete(utils.Ctx)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusBadRequest,
 			})
@@ -415,7 +415,7 @@ func DownvotePostsHandler(c *gin.Context) {
 			{Path: "Downvotes", Value: firestore.Increment(-1)},
 		})
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -449,7 +449,7 @@ func DownvotePostsHandler(c *gin.Context) {
 		{Path: "Breads", Value: firestore.Increment(bread)},
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -458,7 +458,7 @@ func DownvotePostsHandler(c *gin.Context) {
 
 	_, _, err = utils.Client.Collection("downvotes").Add(utils.Ctx, payload)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -469,7 +469,7 @@ func DownvotePostsHandler(c *gin.Context) {
 		{Path: "Downvotes", Value: firestore.Increment(1)},
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -495,7 +495,7 @@ func CommentOnPostHandler(c *gin.Context) {
 
 	dsnap, err := docRef.Get(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This post does not exist.",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -509,7 +509,7 @@ func CommentOnPostHandler(c *gin.Context) {
 
 	_, _, err = utils.Client.Collection("comments").Add(utils.Ctx, comment)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -530,7 +530,7 @@ func CommentOnPostHandler(c *gin.Context) {
 		})
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured.",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -546,7 +546,7 @@ func CommentOnPostHandler(c *gin.Context) {
 	_, err = notifRef.Set(utils.Ctx, notifDoc)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
@@ -565,7 +565,7 @@ func DeletePostHandler(c *gin.Context) {
 	docRef := utils.Client.Collection("posts").Doc(postId)
 	dsnap, err := docRef.Get(utils.Ctx)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "This post does not exist.",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -575,7 +575,7 @@ func DeletePostHandler(c *gin.Context) {
 	var post entities.Post
 	dsnap.DataTo(&post)
 	if post.User.UserName != c.MustGet("UID").(string) {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "You can only deleted posts that you posted.",
 			"statusCode": http.StatusBadRequest,
 		})
@@ -592,7 +592,7 @@ func DeletePostHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -609,7 +609,7 @@ func DeletePostHandler(c *gin.Context) {
 			break
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -623,7 +623,7 @@ func DeletePostHandler(c *gin.Context) {
 		_, err := batch.Commit(utils.Ctx)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.JSON(http.StatusOK, gin.H{
 				"error":      "An error occured",
 				"statusCode": http.StatusInternalServerError,
 			})
@@ -632,7 +632,7 @@ func DeletePostHandler(c *gin.Context) {
 	}
 
 	if _, err := docRef.Delete(utils.Ctx); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured.",
 			"statusCode": http.StatusInternalServerError,
 		})
