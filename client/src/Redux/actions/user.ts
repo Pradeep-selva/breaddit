@@ -5,6 +5,10 @@ export const loginUserAction = (token: string) => ({
   token
 });
 
+export const logoutUserAction = () => ({
+  type: userActionTypes.LOGOUT_USER
+});
+
 export const setUserData = (payload: any) => ({
   type: userActionTypes.SET_USER_DATA,
   payload

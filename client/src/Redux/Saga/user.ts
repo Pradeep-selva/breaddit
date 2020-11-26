@@ -1,5 +1,6 @@
 import { put, takeLatest, all } from "redux-saga/effects";
 import {
+  clearUserData,
   loginUserAction,
   setNotificationData,
   setUserAuthenticated,
@@ -33,8 +34,15 @@ function* loginUserAndSetReduxState({
   yield put(setUserAuthenticated());
 }
 
+function* logoutUser() {
+  localStorage.removeItem("AuthToken");
+
+  yield put(clearUserData());
+}
+
 export default function* feedSaga() {
   yield all([
-    takeLatest(userActionTypes.LOGIN_USER, loginUserAndSetReduxState)
+    takeLatest(userActionTypes.LOGIN_USER, loginUserAndSetReduxState),
+    takeLatest(userActionTypes.LOGOUT_USER, logoutUser)
   ]);
 }
