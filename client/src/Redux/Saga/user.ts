@@ -15,6 +15,7 @@ import {
   getUserUpvotes
 } from "../../APIs";
 import { userActionTypes } from "../types";
+import { STATUS_SUCCESS } from "../../Configs";
 // import store from "../index";
 
 function* loginUserAndSetReduxState({
@@ -27,16 +28,24 @@ function* loginUserAndSetReduxState({
   const upvotesData = yield getUserUpvotes();
   const downvotesData = yield getUserDownvotes();
 
-  yield put(setUserData(userData.data));
-  yield put(setNotificationData(notificationData.data));
-  yield put(setUserUpvotes(upvotesData.data));
-  yield put(setUserDownvotes(downvotesData.data));
-  yield put(setUserAuthenticated());
+  const didAnyFail = [userData, notificationData, upvotesData, downvotesData]
+    .map((response) => response.statusCode !== STATUS_SUCCESS)
+    .every((item) => item === true);
+
+  if (didAnyFail) {
+    localStorage.removeItem("AuthToken");
+    yield put(clearUserData());
+  } else {
+    yield put(setUserData(userData.data));
+    yield put(setNotificationData(notificationData.data));
+    yield put(setUserUpvotes(upvotesData.data));
+    yield put(setUserDownvotes(downvotesData.data));
+    yield put(setUserAuthenticated());
+  }
 }
 
 function* logoutUser() {
   localStorage.removeItem("AuthToken");
-
   yield put(clearUserData());
 }
 

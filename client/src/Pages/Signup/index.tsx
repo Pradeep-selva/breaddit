@@ -19,7 +19,7 @@ import { TiUserAdd } from "react-icons/ti";
 import { IClass, styles } from "./styles";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { RouteNames } from "../../Configs";
+import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import { signUpUser } from "../../APIs";
 
 type State = {
@@ -69,7 +69,7 @@ class Signup extends Component<IClass, State> {
 
       signUpUser(payload)
         .then(({ statusCode, data }) => {
-          statusCode === 200
+          statusCode === STATUS_SUCCESS
             ? this.setState({ open: true })
             : this.setState({
                 errors: {

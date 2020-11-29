@@ -5,7 +5,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       //   width: "30%",
-      height: "20vh",
+      height: "12rem",
       border: `0.1px solid ${DARK_GREY}`,
       position: "relative",
       borderRadius: 10,

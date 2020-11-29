@@ -4,6 +4,8 @@ export const DEPLOYED_URL = window.location.origin;
 
 export const VERSION = "v1";
 
+export const STATUS_SUCCESS = 200;
+
 export const ENDPOINTS = {
   //auth endpoints
   login: "/login",

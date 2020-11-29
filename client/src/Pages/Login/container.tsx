@@ -15,7 +15,7 @@ import { IProps } from "./index";
 import { IClass, styles } from "./styles";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { RouteNames } from "../../Configs";
+import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import { loginUser } from "../../APIs";
 
 type Props = IProps & IClass;
@@ -75,7 +75,7 @@ class Login extends Component<Props, State> {
 
       loginUser(payload)
         .then(({ data, statusCode }) => {
-          statusCode === 200
+          statusCode === STATUS_SUCCESS
             ? this.props.loginUser(data || "")
             : this.setState({
                 errors: {
