@@ -11,10 +11,10 @@ import {
 } from "@material-ui/core";
 import { IProps } from "./index";
 import { BiSearchAlt } from "react-icons/bi";
-import { AiTwotoneEdit } from "react-icons/ai";
 import { BLACK } from "../../Common/colors";
 import { NavLink } from "react-router-dom";
 import { RouteNames } from "../../Configs";
+import AddPost from "../AddPost";
 
 const Navbar = ({ isAuthenticated, logoutUser }: IProps) => {
   const classes = useStyles();
@@ -44,9 +44,7 @@ const Navbar = ({ isAuthenticated, logoutUser }: IProps) => {
 
   const renderAuthenticatedButtons = () => (
     <div className={classes.sectionDesktop}>
-      <IconButton color={"inherit"} style={{ flex: 1, marginRight: 20 }}>
-        <AiTwotoneEdit />
-      </IconButton>
+      <AddPost />
       <Button
         variant={"contained"}
         color={"inherit"}

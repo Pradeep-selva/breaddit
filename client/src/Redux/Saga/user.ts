@@ -15,7 +15,7 @@ import {
   getUserUpvotes
 } from "../../APIs";
 import { userActionTypes } from "../types";
-import { STATUS_SUCCESS } from "../../Configs";
+import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 // import store from "../index";
 
 function* loginUserAndSetReduxState({
@@ -35,6 +35,7 @@ function* loginUserAndSetReduxState({
   if (didAnyFail) {
     localStorage.removeItem("AuthToken");
     yield put(clearUserData());
+    window.location.href = RouteNames.home;
   } else {
     yield put(setUserData(userData.data));
     yield put(setNotificationData(notificationData.data));

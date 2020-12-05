@@ -7,3 +7,10 @@ export const formatNumberNotation = (number = 0) => {
   }
   return number;
 };
+
+export const tabProps = (index: any) => {
+  return {
+    id: `full-width-tab-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`
+  };
+};

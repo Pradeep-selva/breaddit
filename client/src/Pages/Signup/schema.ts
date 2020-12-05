@@ -16,7 +16,8 @@ export const FormFields = [
   {
     key: "userName",
     label: "UserName",
-    placeholder: "Enter your username"
+    placeholder: "Enter your username",
+    autofocus: true
   },
   {
     key: "email",

@@ -150,6 +150,7 @@ class Signup extends Component<IClass, State> {
                       id={field.key}
                       label={field.label}
                       type={field.type || "text"}
+                      autoFocus={field.autofocus}
                       placeholder={field.placeholder}
                       variant={"outlined"}
                       onChange={this.onFieldChange}
