@@ -6,3 +6,4 @@ export { default as AddPost } from "./AddPost";
 export { default as TabPanel } from "./TabPanel";
 export { default as Transition } from "./Transition";
 export { default as BoxedTextField } from "./BoxedTextField";
+export { default as Dropdown } from "./Dropdown";

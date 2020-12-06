@@ -2,7 +2,7 @@ import { IUserState } from "../../Types";
 import { userActionTypes } from "../types";
 
 const initialState: IUserState = {
-  userData: {},
+  userData: null,
   userId: "",
   notifications: [],
   downvotes: [],

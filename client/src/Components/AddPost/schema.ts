@@ -19,13 +19,13 @@ export const FormSchema = (tabValue: number) => ({
   Sub: {
     presence: { allowEmpty: false, message: "can't be blank. " }
   },
+  [`${tabTypes[tabValue]}`]: {
+    presence: { allowEmpty: false, message: "can't be blank. " }
+  },
   Link:
     tabValue === 2
       ? {
           url: true
         }
-      : {},
-  [`${tabTypes[tabValue]}`]: {
-    presence: { allowEmpty: false, message: "can't be blank. " }
-  }
+      : {}
 });

@@ -11,7 +11,7 @@ const rawStyles = {
     flex: 1
   },
   tabContainer: {
-    marginTop: "20vh"
+    marginTop: "15vh"
   },
   toolbar: {
     backgroundColor: DARK_GREY
@@ -44,6 +44,10 @@ const rawStyles = {
   imageIcon: {
     width: "2vw",
     marginRight: "1vw"
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 3,
+    color: "#fff"
   }
 };
 

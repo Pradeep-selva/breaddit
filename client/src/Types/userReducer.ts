@@ -27,7 +27,7 @@ export interface IUpvoteDownvote {
 }
 
 export interface IUserState {
-  userData: IUserData | {};
+  userData: IUserData | null;
   userId: string;
   isAuthenticated: Boolean;
   notifications: Array<INotification>;

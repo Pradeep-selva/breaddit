@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import { DARK_GREY, SMOKEY_WHITE } from "../../Common/colors";
 
-export const BootstrapInput = withStyles((theme: Theme) =>
+export const BoxedInput = withStyles((theme: Theme) =>
   createStyles({
     root: {
       "label + &": {

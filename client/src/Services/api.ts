@@ -12,3 +12,10 @@ export const getAxiosRequestObject = (payload: any) => ({
 export const getFormHeader = () => ({
   headers: { "Content-Type": `multipart/form-data` }
 });
+
+export const getFormPayload = (payloadObj: any): FormData => {
+  const payload = new FormData();
+  for (var key in payloadObj) payload.set(key, payloadObj[key]);
+
+  return payload;
+};

@@ -3,11 +3,12 @@ import {
   InputLabel,
   FormControlProps,
   InputLabelProps,
-  TextFieldProps
+  TextFieldProps,
+  Typography
 } from "@material-ui/core";
 import React from "react";
 import { SMOKEY_WHITE } from "../../Common/colors";
-import { BootstrapInput } from "./styles";
+import { BoxedInput } from "./styles";
 
 interface IProps {
   textColor?: string;
@@ -39,7 +40,7 @@ const BoxedTextField = ({
     >
       {label}
     </InputLabel>
-    <BootstrapInput
+    <BoxedInput
       {...{
         fullWidth,
         id,
@@ -48,13 +49,15 @@ const BoxedTextField = ({
         color,
         onChange,
         onSubmit,
-        error,
         value,
         helperText,
-        rows
+        rows,
+        multiline: !!rows
       }}
-      multiline={!!rows}
     />
+    <Typography variant={"caption"} color={"error"}>
+      {helperText}
+    </Typography>
   </FormControl>
 );
 
