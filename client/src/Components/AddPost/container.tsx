@@ -23,6 +23,7 @@ import { FormDefaultValues, FormSchema, tabTypes } from "./schema";
 import { AiTwotoneEdit } from "react-icons/ai";
 import { IoMdArrowBack } from "react-icons/io";
 import { BsImages } from "react-icons/bs";
+import { FaThList } from "react-icons/fa";
 import { getFormPayload, tabProps } from "../../Services";
 import Transition from "../Transition";
 import TabPanel from "../TabPanel";
@@ -175,7 +176,7 @@ class AddPost extends Component<IClass & IProps, IState> {
       <Grid container>
         <Grid item xs={3}>
           <Dropdown
-            label={"Sub"}
+            label={"Subreaddit"}
             value={this.state.values.Sub}
             onChange={this.handleSubChange}
             input={<BoxedInput fullWidth />}
@@ -282,7 +283,7 @@ class AddPost extends Component<IClass & IProps, IState> {
 
   render() {
     const { loading, open, tabValue, showToast } = this.state;
-    const { classes } = this.props;
+    const { classes, joinedSubs } = this.props;
 
     return (
       <React.Fragment>
@@ -318,62 +319,81 @@ class AddPost extends Component<IClass & IProps, IState> {
               <Typography variant='h6' className={classes.title}>
                 Add Post
               </Typography>
-              <Button
-                autoFocus
-                color='inherit'
-                variant={"outlined"}
-                onClick={this.onSubmit}
-                disabled={loading}
-              >
-                {loading && (
-                  <CircularProgress
-                    color={"secondary"}
-                    size={30}
-                    style={{
-                      position: "absolute",
-                      marginLeft: "10%"
-                    }}
-                  />
-                )}
-                submit
-              </Button>
+              {!!joinedSubs?.length && (
+                <Button
+                  autoFocus
+                  color='inherit'
+                  variant={"outlined"}
+                  onClick={this.onSubmit}
+                  disabled={loading}
+                >
+                  {loading && (
+                    <CircularProgress
+                      color={"secondary"}
+                      size={30}
+                      style={{
+                        position: "absolute",
+                        marginLeft: "10%"
+                      }}
+                    />
+                  )}
+                  submit
+                </Button>
+              )}
             </Toolbar>
           </AppBar>
           <DialogContent>
             <Container maxWidth={"md"} className={classes.tabContainer}>
               <Paper className={classes.toolbar}>
-                <Tabs
-                  value={tabValue}
-                  onChange={this.handleTabChange}
-                  indicatorColor='secondary'
-                  textColor='inherit'
-                  centered
-                >
-                  <Tab label='Text' {...tabProps(0)} />
-                  <Tab label='Image' {...tabProps(1)} />
-                  <Tab label='Link' {...tabProps(2)} />
-                </Tabs>
-                <TabPanel
-                  value={tabValue}
-                  index={0}
-                  style={{ backgroundColor: LIGHT_BLACK }}
-                >
-                  {this.renderTextTab()}
-                </TabPanel>
-                <TabPanel
-                  value={tabValue}
-                  index={1}
-                  style={{ backgroundColor: LIGHT_BLACK }}
-                >
-                  {this.renderImageTab()}
-                </TabPanel>
-                <TabPanel
-                  value={tabValue}
-                  index={2}
-                  style={{ backgroundColor: LIGHT_BLACK }}
-                >
-                  {this.renderLinkTab()}
-                </TabPanel>
+                {!!joinedSubs?.length ? (
+                  <React.Fragment>
+                    <Tabs
+                      value={tabValue}
+                      onChange={this.handleTabChange}
+                      indicatorColor='secondary'
+                      textColor='inherit'
+                      centered
+                    >
+                      <Tab label='Text' {...tabProps(0)} />
+                      <Tab label='Image' {...tabProps(1)} />
+                      <Tab label='Link' {...tabProps(2)} />
+                    </Tabs>
+                    <TabPanel
+                      value={tabValue}
+                      index={0}
+                      style={{ backgroundColor: LIGHT_BLACK }}
+                    >
+                      {this.renderTextTab()}
+                    </TabPanel>
+                    <TabPanel
+                      value={tabValue}
+                      index={1}
+                      style={{ backgroundColor: LIGHT_BLACK }}
+                    >
+                      {this.renderImageTab()}
+                    </TabPanel>
+                    <TabPanel
+                      value={tabValue}
+                      index={2}
+                      style={{ backgroundColor: LIGHT_BLACK }}
+                    >
+                      {this.renderLinkTab()}
+                    </TabPanel>
+                  </React.Fragment>
+                ) : (
+                  <Box className={classes.noSubsContainer}>
+                    <Grid container>
+                      <Grid item xs={12} sm={3}>
+                        <FaThList size={100} />
+                      </Grid>
+                      <Grid item xs={12} sm={8}>
+                        <Typography variant={"h4"} color={"textPrimary"}>
+                          You must join a subreaddit before trying to post
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                )}
               </Paper>
             </Container>
           </DialogContent>

@@ -48,6 +48,12 @@ const rawStyles = {
   backdrop: {
     zIndex: theme.zIndex.drawer + 3,
     color: "#fff"
+  },
+  noSubsContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "10rem"
   }
 };
 

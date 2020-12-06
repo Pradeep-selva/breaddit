@@ -7,7 +7,8 @@ import {
   IconButton,
   Typography,
   InputBase,
-  Button
+  Button,
+  Grid
 } from "@material-ui/core";
 import { IProps } from "./index";
 import { BiSearchAlt } from "react-icons/bi";
@@ -74,17 +75,24 @@ const Navbar = ({ isAuthenticated, logoutUser }: IProps) => {
             breaddit
           </Typography>
           <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <BiSearchAlt size={20} />
-            </div>
-            <InputBase
-              placeholder='Search…'
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
+            <Grid container>
+              <Grid item xs={1}>
+                <div className={classes.searchIcon}>
+                  <BiSearchAlt size={20} />
+                </div>
+              </Grid>
+              <Grid item xs={11}>
+                <InputBase
+                  fullWidth
+                  placeholder='Search…'
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput
+                  }}
+                  inputProps={{ "aria-label": "search" }}
+                />
+              </Grid>
+            </Grid>
           </div>
           <div className={classes.grow} />
           {isAuthenticated
