@@ -1,5 +1,7 @@
 import {
+  Box,
   Button,
+  Checkbox,
   CircularProgress,
   Container,
   Dialog,
@@ -7,6 +9,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   Grid,
   Paper,
   Typography,
@@ -21,12 +24,14 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import { signUpUser } from "../../APIs";
+import { BLACK } from "../../Common/colors";
 
 type State = {
   values: typeof FormDefaultValues;
   errors: any;
   loading: boolean;
   open: boolean;
+  showPassword: boolean;
 };
 
 class Signup extends Component<IClass, State> {
@@ -40,7 +45,8 @@ class Signup extends Component<IClass, State> {
       values: { ...FormDefaultValues },
       errors: {},
       open: false,
-      loading: false
+      loading: false,
+      showPassword: false
     };
   }
 
@@ -51,6 +57,8 @@ class Signup extends Component<IClass, State> {
         [event.target.id]: event.target.value
       }
     });
+  onTick = () =>
+    this.setState((state) => ({ showPassword: !state.showPassword }));
 
   onSubmit = () => {
     this.toggleLoading();
@@ -149,7 +157,9 @@ class Signup extends Component<IClass, State> {
                       key={index}
                       id={field.key}
                       label={field.label}
-                      type={field.type || "text"}
+                      type={
+                        this.state.showPassword ? "text" : field.type || "text"
+                      }
                       autoFocus={field.autofocus}
                       placeholder={field.placeholder}
                       variant={"outlined"}
@@ -163,6 +173,20 @@ class Signup extends Component<IClass, State> {
                   </Grid>
                 ))}
               </Grid>
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.showPassword}
+                      onChange={this.onTick}
+                      name='checkedB'
+                      color='primary'
+                    />
+                  }
+                  style={{ color: BLACK }}
+                  label='Show password'
+                />
+              </Box>
               {this.state.errors["general"] && (
                 <Typography
                   variant={"body2"}
