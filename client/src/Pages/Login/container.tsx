@@ -20,7 +20,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import { loginUser } from "../../APIs";
-import { BLACK } from "../../Common/colors";
 
 type Props = IProps & IClass;
 
@@ -161,7 +160,7 @@ class Login extends Component<Props, State> {
                       color='primary'
                     />
                   }
-                  style={{ color: BLACK }}
+                  className={classes.checkbox}
                   label='Show password'
                 />
               </Box>

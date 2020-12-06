@@ -1,7 +1,7 @@
 import Home from "./container";
 import { connect } from "react-redux";
 import { IReduxState } from "../../Redux";
-import { loadPublicFeed } from "../../Redux/Actions";
+import { loadPublicFeed, loadPrivateFeed } from "../../Redux/Actions";
 
 const mapStateToProps = (state: IReduxState) => ({
   trendingPosts: state.feed.trending,
@@ -10,7 +10,8 @@ const mapStateToProps = (state: IReduxState) => ({
 });
 
 const mapActionsToProps = {
-  loadPublicFeed
+  loadPublicFeed,
+  loadPrivateFeed
 };
 
 export type IProps = ReturnType<typeof mapStateToProps> &

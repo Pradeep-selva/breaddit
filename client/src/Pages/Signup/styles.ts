@@ -1,6 +1,6 @@
 import { createStyles } from "@material-ui/core";
 import { ImageURLS } from "../../Assets";
-import { DARK_GREY } from "../../Common/colors";
+import { BLACK, DARK_GREY } from "../../Common/colors";
 // import theme from "../../Theme";
 
 const rawStyles = {
@@ -32,6 +32,10 @@ const rawStyles = {
   dialogueTitle: {
     color: DARK_GREY,
     fontWeight: 700
+  },
+  checkbox: {
+    marginBottom: "4%",
+    color: BLACK
   }
 };
 

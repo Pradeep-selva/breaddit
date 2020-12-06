@@ -1,6 +1,6 @@
 import { Container, Grid, Typography, withStyles } from "@material-ui/core";
 import React, { Component } from "react";
-import { TrendingPostCard } from "../../Components";
+import { PostCard, TrendingPostCard } from "../../Components";
 import { IProps } from "./index";
 import { styles, IClass } from "./styles";
 
@@ -20,11 +20,16 @@ class Home extends Component<Props, IState> {
   }
 
   componentDidMount() {
-    this.props.loadPublicFeed({ offset: this.state.offset, limit: 25 });
+    if (this.props.isAuthenticated) {
+      this.props.loadPrivateFeed({ offset: this.state.offset, limit: 25 });
+    } else {
+      this.props.loadPublicFeed({ offset: this.state.offset, limit: 25 });
+    }
   }
 
   render() {
-    const { classes, trendingPosts } = this.props;
+    const { classes, trendingPosts, feed } = this.props;
+
     return (
       <Container className={classes.container}>
         <Typography color={"textPrimary"} className={classes.sectionTitle}>
@@ -33,17 +38,21 @@ class Home extends Component<Props, IState> {
         <Grid
           container
           justify={"space-between"}
-          className={classes.trending}
+          className={classes.postsContainer}
           spacing={4}
         >
-          {!!trendingPosts.length &&
-            trendingPosts.map((item, index) => (
-              <TrendingPostCard {...item} key={index} />
-            ))}
+          {trendingPosts?.map((item, index) => (
+            <TrendingPostCard {...item} key={index} />
+          ))}
         </Grid>
         <Typography color={"textPrimary"} className={classes.sectionTitle}>
           Breads For You
         </Typography>
+        <Grid container direction={"column"} className={classes.postsContainer}>
+          {feed?.map((item, index) => (
+            <PostCard {...item} key={index} />
+          ))}
+        </Grid>
       </Container>
     );
   }

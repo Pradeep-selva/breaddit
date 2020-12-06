@@ -1,6 +1,7 @@
 import { put, takeLatest, all } from "redux-saga/effects";
 import {
   clearUserData,
+  loadPrivateFeed,
   loginUserAction,
   setNotificationData,
   setUserAuthenticated,
@@ -41,6 +42,7 @@ function* loginUserAndSetReduxState({
     yield put(clearUserData());
     window.location.href = RouteNames.home;
   } else {
+    yield put(loadPrivateFeed({ limit: 25, offset: 0 }));
     yield put(setUserData(userData.data));
     yield put(setNotificationData(notificationData.data));
     yield put(setUserUpvotes(upvotesData.data));

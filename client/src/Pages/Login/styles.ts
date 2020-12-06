@@ -1,5 +1,6 @@
 import { createStyles } from "@material-ui/core";
 import { ImageURLS } from "../../Assets";
+import { BLACK } from "../../Common/colors";
 // import theme from "../../Theme";
 
 const rawStyles = {
@@ -27,6 +28,10 @@ const rawStyles = {
   formField: {
     marginBottom: "4%",
     width: "75%"
+  },
+  checkbox: {
+    marginBottom: "4%",
+    color: BLACK
   }
 };
 

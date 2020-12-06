@@ -13,7 +13,7 @@ const rawStyles = {
     fontWeight: 700,
     fontSize: "1rem"
   },
-  trending: {
+  postsContainer: {
     marginTop: "1.5vh"
   }
 };

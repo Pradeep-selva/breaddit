@@ -183,6 +183,7 @@ class Signup extends Component<IClass, State> {
                       color='primary'
                     />
                   }
+                  className={classes.checkbox}
                   style={{ color: BLACK }}
                   label='Show password'
                 />
