@@ -33,6 +33,7 @@ export interface IUserState {
   notifications: Array<INotification>;
   upvotes: Array<IUpvoteDownvote>;
   downvotes: Array<IUpvoteDownvote>;
+  loading: boolean;
 }
 
 //login

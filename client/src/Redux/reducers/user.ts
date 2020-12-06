@@ -7,7 +7,8 @@ const initialState: IUserState = {
   notifications: [],
   downvotes: [],
   upvotes: [],
-  isAuthenticated: false
+  isAuthenticated: false,
+  loading: false
 };
 
 export default function user(state = { ...initialState }, action: any) {
@@ -93,6 +94,18 @@ export default function user(state = { ...initialState }, action: any) {
       return {
         ...state,
         downvotes
+      };
+
+    case userActionTypes.START_LOADING:
+      return {
+        ...state,
+        loading: true
+      };
+
+    case userActionTypes.STOP_LOADING:
+      return {
+        ...state,
+        loading: false
       };
 
     default:

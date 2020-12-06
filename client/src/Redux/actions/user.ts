@@ -54,3 +54,11 @@ export const downvotePost = (id: string) => ({
   type: userActionTypes.DOWNVOTE_POST,
   id
 });
+
+export const startLoading = () => ({
+  type: userActionTypes.START_LOADING
+});
+
+export const stopLoading = () => ({
+  type: userActionTypes.STOP_LOADING
+});

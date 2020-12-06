@@ -95,7 +95,8 @@ class Login extends Component<Props, State> {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, loading } = this.props;
+
     return (
       <Container maxWidth={"sm"}>
         <Paper className={classes.container}>
@@ -120,7 +121,7 @@ class Login extends Component<Props, State> {
               </Typography>
               <Grid container>
                 {FormFields.map((field, index) => (
-                  <Grid item xs={12}>
+                  <Grid item xs={12} key={index}>
                     <TextInput
                       key={index}
                       id={field.key}
@@ -152,14 +153,14 @@ class Login extends Component<Props, State> {
                 variant={"contained"}
                 color={"primary"}
                 size={"large"}
-                disabled={this.state.loading}
+                disabled={this.state.loading || loading}
                 onClick={this.onSubmit}
                 style={{
                   marginBottom: "3%",
                   position: "relative"
                 }}
               >
-                {this.state.loading && (
+                {(loading || this.state.loading) && (
                   <CircularProgress
                     color={"inherit"}
                     size={30}

@@ -6,7 +6,9 @@ import {
   setUserAuthenticated,
   setUserData,
   setUserDownvotes,
-  setUserUpvotes
+  setUserUpvotes,
+  startLoading,
+  stopLoading
 } from "../Actions";
 import {
   getUserData,
@@ -22,6 +24,8 @@ function* loginUserAndSetReduxState({
   token
 }: ReturnType<typeof loginUserAction>) {
   localStorage.setItem("AuthToken", token);
+
+  yield put(startLoading());
 
   const userData = yield getUserData();
   const notificationData = yield getUserNotifications();
@@ -43,6 +47,8 @@ function* loginUserAndSetReduxState({
     yield put(setUserDownvotes(downvotesData.data));
     yield put(setUserAuthenticated());
   }
+
+  yield put(stopLoading());
 }
 
 function* logoutUser() {

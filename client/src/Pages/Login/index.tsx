@@ -4,7 +4,8 @@ import { loginUserAction } from "../../Redux/Actions";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state: IReduxState) => ({
-  user: state.user
+  user: state.user,
+  loading: state.user.loading
 });
 
 const mapActionsToProps = {
