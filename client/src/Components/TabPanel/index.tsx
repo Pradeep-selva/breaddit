@@ -5,10 +5,11 @@ interface TabPanelProps {
   dir?: string;
   index: any;
   value: any;
+  style: any;
 }
 
 const TabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, style, ...other } = props;
 
   return (
     <div
@@ -16,6 +17,7 @@ const TabPanel = (props: TabPanelProps) => {
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
+      style={style}
       {...other}
     >
       {value === index && children}

@@ -2,40 +2,30 @@ export const FormDefaultValues = {
   Content: "",
   Link: "",
   Title: "",
-  Image: null
+  Image: {} as File,
+  Sub: ""
 };
 
-export const FormFields = [
-  {
-    key: "Content",
-    label: "Content",
-    placeholder: "What do you want to say?",
-    autofocus: true
-  },
-  {
-    key: "Link",
-    label: "Link",
-    placeholder: "Add a link"
-  },
-  {
-    key: "Link",
-    label: "Link",
-    placeholder: "Add a link"
-  },
-  {
-    key: "Link",
-    label: "Link",
-    placeholder: "Add a link"
-  },
-  {
-    key: "Image",
-    label: "Image",
-    placeholder: "Add an image"
-  }
-];
+export const tabTypes: any = {
+  0: "Content",
+  1: "Image",
+  2: "Link"
+};
 
-export const FormSchema = {
+export const FormSchema = (tabValue: number) => ({
   Title: {
     presence: { allowEmpty: false, message: "can't be blank. " }
+  },
+  Sub: {
+    presence: { allowEmpty: false, message: "can't be blank. " }
+  },
+  Link:
+    tabValue === 2
+      ? {
+          url: true
+        }
+      : {},
+  [`${tabTypes[tabValue]}`]: {
+    presence: { allowEmpty: false, message: "can't be blank. " }
   }
-};
+});
