@@ -46,50 +46,53 @@ class Login extends Component<Props, State> {
     });
 
   onSubmit = () => {
-    this.toggleLoading();
-    let newState = { ...this.state };
-    let errors = validate(
-      {
-        identifier: newState.identifier,
-        password: newState.password
-      },
-      FormSchema
-    );
+    this.setState({ loading: true }, () => {
+      let newState = { ...this.state };
+      let errors = validate(
+        {
+          identifier: newState.identifier,
+          password: newState.password
+        },
+        FormSchema
+      );
 
-    newState.errors = errors || {};
-    newState.loading = !!errors ? newState.loading : !newState.loading;
-    this.setState(newState);
-
-    if (!errors) {
-      this.setState(() => ({ errors: {} }));
-      const re = /\S+@\S+\.\S+/;
-      const payload = re.test(this.state.identifier)
-        ? {
-            password: this.state.password,
-            email: this.state.identifier
-          }
-        : {
-            password: this.state.password,
-            userName: this.state.identifier
-          };
-
-      loginUser(payload)
-        .then(({ data, statusCode }) => {
-          statusCode === STATUS_SUCCESS
-            ? this.props.loginUser(data || "")
-            : this.setState({
-                errors: {
-                  ...this.state.errors,
-                  general: [data]
+      newState.errors = errors || {};
+      this.setState(
+        (state) => ({ ...newState }),
+        () => {
+          if (!errors) {
+            this.setState(() => ({ errors: {} }));
+            const re = /\S+@\S+\.\S+/;
+            const payload = re.test(this.state.identifier)
+              ? {
+                  password: this.state.password,
+                  email: this.state.identifier
                 }
-              });
-        })
-        .catch((error) => console.log(error.error))
-        .finally(this.toggleLoading);
-    }
-  };
+              : {
+                  password: this.state.password,
+                  userName: this.state.identifier
+                };
 
-  toggleLoading = () => this.setState((state) => ({ loading: !state.loading }));
+            loginUser(payload)
+              .then(({ data, statusCode }) => {
+                statusCode === STATUS_SUCCESS
+                  ? this.props.loginUser(data || "")
+                  : this.setState({
+                      errors: {
+                        ...this.state.errors,
+                        general: [data]
+                      }
+                    });
+              })
+              .catch((error) => console.log(error.error))
+              .finally(() => this.setState({ loading: false }));
+          } else {
+            this.setState({ loading: false });
+          }
+        }
+      );
+    });
+  };
 
   render() {
     const { classes } = this.props;

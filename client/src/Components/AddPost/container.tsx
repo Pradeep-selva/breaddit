@@ -238,7 +238,7 @@ class AddPost extends Component<IClass & IProps, IState> {
         >
           <BsImages size={50} className={this.props.classes.imageIcon} />
           <Typography variant={"h6"} color={"textPrimary"}>
-            {!!this.state.values.Image
+            {this.state.values.Image.name?.length > 0
               ? this.state.values.Image.name
               : "Add an image"}
           </Typography>
