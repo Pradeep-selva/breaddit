@@ -21,6 +21,9 @@ import Avatar from "../Avatar";
 import { BLUE, LIGHT_BLUE, SEMI_GREY } from "../../Common/colors";
 import { IProps } from "./index";
 import { getTruncatedContent } from "../../Services";
+import { deletePostById } from "../../APIs";
+import { STATUS_SUCCESS } from "../../Configs";
+import DeletePostButton from "../DeletePostButton";
 
 const PostCard = ({
   Title,
@@ -34,7 +37,9 @@ const PostCard = ({
   Comments,
   Upvotes,
   Downvotes,
-  ID
+  ID,
+  userId,
+  removePostFromFeed
 }: IPost & IProps) => {
   const classes = useStyles();
   const cumulativeVotes = Upvotes - Downvotes;
@@ -44,6 +49,14 @@ const PostCard = ({
     event.preventDefault();
 
   const handleImageOrLinkClick = () => window.open(Link || Image, "_blank");
+
+  const onDelete = async () => {
+    const { statusCode } = await deletePostById(ID);
+
+    if (statusCode === STATUS_SUCCESS) {
+      removePostFromFeed(ID);
+    }
+  };
 
   return (
     <Grid item>
@@ -87,6 +100,12 @@ const PostCard = ({
               >
                 JOIN
               </Button>
+            )}
+            {User.UserName === userId && (
+              <DeletePostButton
+                className={classes.joinButton}
+                onDelete={onDelete}
+              />
             )}
           </Box>
           <Box className={classes.flexContainer} style={{ flex: 5 }}>

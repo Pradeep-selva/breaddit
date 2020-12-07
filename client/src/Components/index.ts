@@ -8,3 +8,5 @@ export { default as Transition } from "./Transition";
 export { default as BoxedTextField } from "./BoxedTextField";
 export { default as Dropdown } from "./Dropdown";
 export { default as PostCard } from "./PostCard";
+export { default as VotesSection } from "./VotesSection";
+export { default as DeletePostButton } from "./DeletePostButton";

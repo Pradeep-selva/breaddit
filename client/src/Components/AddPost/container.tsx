@@ -138,10 +138,18 @@ class AddPost extends Component<IClass & IProps, IState> {
             addPostToSub(this.state.values.Sub, getFormPayload(payload))
               .then(({ data, statusCode }) => {
                 if (statusCode === STATUS_SUCCESS) {
-                  this.setState({
-                    open: false,
-                    showToast: true
-                  });
+                  this.setState(
+                    {
+                      open: false,
+                      showToast: true
+                    },
+                    () => {
+                      setTimeout(
+                        () => this.setState({ showToast: false }),
+                        3000
+                      );
+                    }
+                  );
                   this.props.addPostToFeed(data);
                 } else {
                   this.setState({
@@ -403,7 +411,7 @@ class AddPost extends Component<IClass & IProps, IState> {
             </Container>
           </DialogContent>
         </Dialog>
-        <Snackbar autoHideDuration={4000} open={showToast}>
+        <Snackbar autoHideDuration={3000} open={showToast}>
           <Alert
             variant='filled'
             severity='success'
