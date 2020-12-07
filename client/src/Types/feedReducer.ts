@@ -14,6 +14,7 @@ export interface IPost {
   Comments: number;
   Downvotes: number;
   CreatedAt: Date;
+  ID: string;
 }
 
 export interface IFeedState {

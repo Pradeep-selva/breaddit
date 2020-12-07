@@ -12,6 +12,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { IPost } from "../../Types";
 import { useStyles } from "./styles";
 import { GoLink } from "react-icons/go";
+import VotesSection from "../VotesSection";
 import { FaLink, FaPlus, FaExpand } from "react-icons/fa";
 import { MdComment } from "react-icons/md";
 import dayjs from "dayjs";
@@ -30,9 +31,13 @@ const PostCard = ({
   Link,
   Image,
   joinedSubs,
-  Comments
+  Comments,
+  Upvotes,
+  Downvotes,
+  ID
 }: IPost & IProps) => {
   const classes = useStyles();
+  const cumulativeVotes = Upvotes - Downvotes;
   dayjs.extend(relativeTime);
 
   const preventDefault = (event: React.SyntheticEvent) =>
@@ -43,7 +48,9 @@ const PostCard = ({
   return (
     <Grid item>
       <Paper className={classes.container}>
-        <Box className={classes.upvoteSection}></Box>
+        <Box className={classes.upvoteSection}>
+          <VotesSection cumulativeVotes={cumulativeVotes} postId={ID} />
+        </Box>
         <Box className={classes.contentSection}>
           <Box className={classes.titleSection} style={{ flex: 1 }}>
             <Typography

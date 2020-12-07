@@ -66,7 +66,7 @@ func GetPublicFeedHandler(c *gin.Context) {
 
 		var post map[string]interface{}
 		dsnap.DataTo(&post)
-		post["id"] = dsnap.Ref.ID
+		post["ID"] = dsnap.Ref.ID
 
 		posts = append(posts, post)
 	}
@@ -106,7 +106,7 @@ func GetPrivateFeedHandler(c *gin.Context) {
 
 		var post map[string]interface{}
 		dsnap.DataTo(&post)
-		post["id"] = dsnap.Ref.ID
+		post["ID"] = dsnap.Ref.ID
 
 		posts = append(posts, post)
 	}

@@ -25,7 +25,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       flex: 1,
       display: "flex",
       flexDirection: "column",
-      borderRadius: 5
+      borderRadius: 5,
+      alignItems: "center"
     },
     contentSection: {
       padding: "1rem 0rem 0rem 0",
