@@ -13,11 +13,13 @@ export default function feed(state = { ...initialState }, action: any) {
         ...state,
         feed: action.payload
       };
+
     case feedActionTypes.CLEAR_FEED:
       return {
         ...state,
         feed: []
       };
+
     case feedActionTypes.SET_TRENDING_POSTS:
       return {
         ...state,

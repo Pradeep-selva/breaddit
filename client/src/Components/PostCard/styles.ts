@@ -91,7 +91,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginLeft: "50%",
       padding: 0,
       position: "absolute",
-      right: "0.5rem"
+      right: "1rem"
     },
     bottomBarContainer: {
       backgroundColor: LIGHT_BLACK,

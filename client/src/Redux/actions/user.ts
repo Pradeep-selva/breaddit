@@ -55,6 +55,16 @@ export const downvotePost = (id: string) => ({
   id
 });
 
+export const startUpvote = (id: string) => ({
+  type: userActionTypes.START_UPVOTE,
+  id
+});
+
+export const startDownvote = (id: string) => ({
+  type: userActionTypes.START_DOWNVOTE,
+  id
+});
+
 export const startLoading = () => ({
   type: userActionTypes.START_LOADING
 });

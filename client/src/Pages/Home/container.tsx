@@ -29,7 +29,6 @@ class Home extends Component<Props, IState> {
 
   render() {
     const { classes, trendingPosts, feed } = this.props;
-    console.log(feed);
 
     return (
       <Container className={classes.container}>

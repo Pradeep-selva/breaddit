@@ -1,6 +1,7 @@
 import { put, takeLatest, all } from "redux-saga/effects";
 import {
   clearUserData,
+  downvotePost,
   loadPrivateFeed,
   loginUserAction,
   setNotificationData,
@@ -8,14 +9,19 @@ import {
   setUserData,
   setUserDownvotes,
   setUserUpvotes,
+  startDownvote,
   startLoading,
-  stopLoading
+  startUpvote,
+  stopLoading,
+  upvotePost
 } from "../Actions";
 import {
   getUserData,
   getUserDownvotes,
   getUserNotifications,
-  getUserUpvotes
+  getUserUpvotes,
+  upvotePost as upvotePostAPI,
+  downvotePost as downvotePostAPI
 } from "../../APIs";
 import { userActionTypes } from "../types";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
@@ -58,9 +64,21 @@ function* logoutUser() {
   yield put(clearUserData());
 }
 
+function* upvotePostSaga({ id }: ReturnType<typeof startUpvote>) {
+  yield put(upvotePost(id));
+  yield upvotePostAPI(id);
+}
+
+function* downvotePostSaga({ id }: ReturnType<typeof startDownvote>) {
+  yield put(downvotePost(id));
+  yield downvotePostAPI(id);
+}
+
 export default function* feedSaga() {
   yield all([
-    takeLatest(userActionTypes.LOGIN_USER, loginUserAndSetReduxState),
-    takeLatest(userActionTypes.LOGOUT_USER, logoutUser)
+    takeLatest(userActionTypes.LOGIN_USER, loginUserAndSetReduxState)
   ]);
+  yield all([takeLatest(userActionTypes.LOGOUT_USER, logoutUser)]);
+  yield all([takeLatest(userActionTypes.START_UPVOTE, upvotePostSaga)]);
+  yield all([takeLatest(userActionTypes.START_DOWNVOTE, downvotePostSaga)]);
 }

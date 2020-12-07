@@ -65,10 +65,14 @@ export default function user(state = { ...initialState }, action: any) {
       };
 
     case userActionTypes.UPVOTE_POST:
-      const upvotes = !!state.upvotes.find((item) => item.PostId === action.id)
+      const downvotes = state.downvotes?.filter(
+        (item) => item.PostId !== action.id
+      );
+
+      const upvotes = !!state.upvotes?.find((item) => item.PostId === action.id)
         ? state.upvotes.filter((item) => item.PostId !== action.id)
         : [
-            ...state.upvotes,
+            ...(!!state.upvotes ? state.upvotes : []),
             {
               PostId: action.id,
               UserName: state.userId
@@ -76,16 +80,21 @@ export default function user(state = { ...initialState }, action: any) {
           ];
       return {
         ...state,
-        upvotes
+        upvotes,
+        downvotes
       };
 
     case userActionTypes.DOWNVOTE_POST:
-      const downvotes = !!state.downvotes.find(
+      const newUpvotes = state.upvotes?.filter(
+        (item) => item.PostId !== action.id
+      );
+
+      const newDownvotes = !!state.downvotes?.find(
         (item) => item.PostId === action.id
       )
         ? state.downvotes.filter((item) => item.PostId !== action.id)
         : [
-            ...state.downvotes,
+            ...(!!state.downvotes ? state.downvotes : []),
             {
               PostId: action.id,
               UserName: state.userId
@@ -93,7 +102,8 @@ export default function user(state = { ...initialState }, action: any) {
           ];
       return {
         ...state,
-        downvotes
+        upvotes: newUpvotes,
+        downvotes: newDownvotes
       };
 
     case userActionTypes.START_LOADING:

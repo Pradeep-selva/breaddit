@@ -43,7 +43,7 @@ const TrendingPostCard = ({
               color={"textPrimary"}
               align={"center"}
             >
-              {Title}
+              {getTruncatedContent(Title, 30)}
             </Typography>
             <Typography
               variant={"body1"}

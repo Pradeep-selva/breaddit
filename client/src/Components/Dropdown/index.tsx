@@ -38,8 +38,8 @@ const Dropdown = ({
         <MenuItem style={{ backgroundColor }} value=''>
           <em>None</em>
         </MenuItem>
-        {items?.map((item) => (
-          <MenuItem style={{ backgroundColor }} value={item}>
+        {items?.map((item, index) => (
+          <MenuItem style={{ backgroundColor }} value={item} key={index}>
             {item}
           </MenuItem>
         ))}
