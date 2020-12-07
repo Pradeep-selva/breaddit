@@ -26,3 +26,13 @@ export const setTrendingPosts = (payload: any) => ({
   type: feedActionTypes.SET_TRENDING_POSTS,
   payload
 });
+
+export const addPostToFeed = (payload: any) => ({
+  type: feedActionTypes.ADD_POST_TO_FEED,
+  payload
+});
+
+export const removePostFromFeed = (id: string) => ({
+  type: feedActionTypes.REMOVE_POST_FROM_FEED,
+  id
+});

@@ -24,7 +24,7 @@ import { AiTwotoneEdit } from "react-icons/ai";
 import { IoMdArrowBack } from "react-icons/io";
 import { BsImages } from "react-icons/bs";
 import { FaThList } from "react-icons/fa";
-import { getFormPayload, tabProps } from "../../Services";
+import { getFormPayload, getTruncatedContent, tabProps } from "../../Services";
 import Transition from "../Transition";
 import TabPanel from "../TabPanel";
 import { DARK_GREY, LIGHT_BLACK } from "../../Common/colors";
@@ -142,6 +142,7 @@ class AddPost extends Component<IClass & IProps, IState> {
                     open: false,
                     showToast: true
                   });
+                  this.props.addPostToFeed(data);
                 } else {
                   this.setState({
                     errors: {
@@ -239,7 +240,11 @@ class AddPost extends Component<IClass & IProps, IState> {
           <BsImages size={50} className={this.props.classes.imageIcon} />
           <Typography variant={"h6"} color={"textPrimary"}>
             {this.state.values.Image.name?.length > 0
-              ? this.state.values.Image.name
+              ? getTruncatedContent(
+                  this.state.values.Image.name,
+                  20,
+                  this.state.values.Image.name.split(".").pop()
+                )
               : "Add an image"}
           </Typography>
         </Box>
@@ -400,7 +405,7 @@ class AddPost extends Component<IClass & IProps, IState> {
         </Dialog>
         <Snackbar autoHideDuration={4000} open={showToast}>
           <Alert
-            variant='outlined'
+            variant='filled'
             severity='success'
             action={
               <Button color='inherit' size='small'>

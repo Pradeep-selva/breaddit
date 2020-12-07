@@ -26,6 +26,20 @@ export default function feed(state = { ...initialState }, action: any) {
         trending: action.payload
       };
 
+    case feedActionTypes.ADD_POST_TO_FEED:
+      return {
+        ...state,
+        feed: [action.payload, ...state.feed]
+      };
+
+    case feedActionTypes.REMOVE_POST_FROM_FEED:
+      let feed = state.feed.filter((item) => item.ID !== action.id);
+
+      return {
+        ...state,
+        feed
+      };
+
     default:
       return {
         ...state
