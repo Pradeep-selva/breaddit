@@ -96,7 +96,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     bottomBarContainer: {
       backgroundColor: LIGHT_BLACK,
       display: "flex",
-      paddingLeft: "1rem"
+      paddingLeft: "1rem",
+      borderBottomRightRadius: 5
     },
     bottomBarElement: {
       display: "flex",

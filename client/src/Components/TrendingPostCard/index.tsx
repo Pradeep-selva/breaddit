@@ -9,9 +9,11 @@ import {
 import React from "react";
 import Avatar from "../Avatar";
 import { MdTrendingUp } from "react-icons/md";
+import { FaLink } from "react-icons/fa";
 import { formatNumberNotation, getTruncatedContent } from "../../Services";
 import { IPost } from "../../Types";
 import { useStyles } from "./styles";
+import { BLUE } from "../../Common/colors";
 
 const TrendingPostCard = ({
   Title,
@@ -21,6 +23,7 @@ const TrendingPostCard = ({
   Upvotes,
   Downvotes,
   width,
+  Link,
   onClick = () => alert("clicked post")
 }: IPost & {
   width: string;
@@ -45,13 +48,27 @@ const TrendingPostCard = ({
             >
               {getTruncatedContent(Title, 30)}
             </Typography>
-            <Typography
-              variant={"body1"}
-              color={"textPrimary"}
-              align={"center"}
-            >
-              {getTruncatedContent(Content, truncateLength, "more")}
-            </Typography>
+            {!!Content && (
+              <Typography
+                variant={"body1"}
+                color={"textPrimary"}
+                align={"center"}
+              >
+                {getTruncatedContent(Content, truncateLength, "more")}
+              </Typography>
+            )}
+            {!!Link && (
+              <Box
+                {...{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  display: "flex",
+                  marginTop: "2.5rem"
+                }}
+              >
+                <FaLink color={BLUE} size={35} />
+              </Box>
+            )}
           </Container>
           <Container style={{ flex: 1 }}>
             <Grid container>
