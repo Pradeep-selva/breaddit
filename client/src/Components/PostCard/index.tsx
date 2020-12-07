@@ -5,7 +5,8 @@ import { removePostFromFeed } from "../../Redux/Actions/feed";
 
 const mapStateToProps = (state: IReduxState) => ({
   joinedSubs: state.user.userData?.JoinedSubs,
-  userId: state.user.userId
+  userId: state.user.userId,
+  isAuthenticated: state.user.isAuthenticated
 });
 
 const mapActionsToProps = {

@@ -8,7 +8,7 @@ import {
   IconButton
 } from "@material-ui/core";
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import { IPost } from "../../Types";
 import { useStyles } from "./styles";
 import { GoLink } from "react-icons/go";
@@ -22,7 +22,7 @@ import { BLUE, LIGHT_BLUE, SEMI_GREY } from "../../Common/colors";
 import { IProps } from "./index";
 import { getTruncatedContent } from "../../Services";
 import { deletePostById } from "../../APIs";
-import { STATUS_SUCCESS } from "../../Configs";
+import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import DeletePostButton from "../DeletePostButton";
 
 const PostCard = ({
@@ -39,9 +39,11 @@ const PostCard = ({
   Downvotes,
   ID,
   userId,
+  isAuthenticated,
   removePostFromFeed
 }: IPost & IProps) => {
   const classes = useStyles();
+  const history = useHistory();
   const cumulativeVotes = Upvotes - Downvotes;
   dayjs.extend(relativeTime);
 
@@ -55,6 +57,14 @@ const PostCard = ({
 
     if (statusCode === STATUS_SUCCESS) {
       removePostFromFeed(ID);
+    }
+  };
+
+  const onJoin = () => {
+    if (isAuthenticated) {
+      alert("Pressed join");
+    } else {
+      history.push(RouteNames.login);
     }
   };
 
@@ -95,6 +105,7 @@ const PostCard = ({
                 size={"small"}
                 variant={"outlined"}
                 color={"inherit"}
+                onClick={onJoin}
                 startIcon={<FaPlus size={10} />}
                 className={classes.joinButton}
               >

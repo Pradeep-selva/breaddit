@@ -26,7 +26,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       marginLeft: 0,
       width: "100%",
       [theme.breakpoints.up("sm")]: {
-        flex: 0.9,
+        flex: 1.5,
         width: "auto"
       }
     },
