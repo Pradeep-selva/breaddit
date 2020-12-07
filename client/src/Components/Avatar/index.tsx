@@ -11,8 +11,8 @@ const Avatar = ({ url, size, style }: IProps) => (
   <img
     src={url}
     style={{
-      ...style,
-      ...avatarStyle(size || "sm")
+      ...avatarStyle(size || "sm"),
+      ...style
     }}
     alt={"avatar"}
   />

@@ -9,7 +9,7 @@ import {
 import React from "react";
 import Avatar from "../Avatar";
 import { MdTrendingUp } from "react-icons/md";
-import { formatNumberNotation } from "../../Services";
+import { formatNumberNotation, getTruncatedContent } from "../../Services";
 import { IPost } from "../../Types";
 import { useStyles } from "./styles";
 
@@ -50,9 +50,7 @@ const TrendingPostCard = ({
               color={"textPrimary"}
               align={"center"}
             >
-              {Content.length < truncateLength
-                ? Content
-                : `${Content.slice(0, truncateLength)}...more`}
+              {getTruncatedContent(Content, truncateLength, "more")}
             </Typography>
           </Container>
           <Container style={{ flex: 1 }}>

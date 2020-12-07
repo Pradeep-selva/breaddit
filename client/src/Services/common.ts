@@ -8,6 +8,16 @@ export const formatNumberNotation = (number = 0) => {
   return number;
 };
 
+export const getTruncatedContent = (
+  content: string,
+  length: number,
+  additionalContent = ""
+) => {
+  return content.length > length
+    ? `${content.slice(0, length)}...${additionalContent}`
+    : content;
+};
+
 export const tabProps = (index: any) => {
   return {
     id: `full-width-tab-${index}`,

@@ -16,6 +16,8 @@ export const ORANGE = "#db4900";
 
 export const BLUE = "#5d9afc";
 
+export const LIGHT_BLUE = "#5f92e3";
+
 export const TURQUOISE = "#17dce3";
 
 export const BLUE_GREEN = "#05edc3";
