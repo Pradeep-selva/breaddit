@@ -16,6 +16,7 @@ import { BLACK } from "../../Common/colors";
 import { NavLink } from "react-router-dom";
 import { RouteNames } from "../../Configs";
 import AddPost from "../AddPost";
+import NavbarUserButton from "../NavbarUserButton";
 
 const Navbar = ({ isAuthenticated, logoutUser }: IProps) => {
   const classes = useStyles();
@@ -46,14 +47,15 @@ const Navbar = ({ isAuthenticated, logoutUser }: IProps) => {
   const renderAuthenticatedButtons = () => (
     <div className={classes.sectionDesktop}>
       <AddPost />
-      <Button
+      {/* <Button
         variant={"contained"}
         color={"inherit"}
         style={{ color: BLACK, flex: 1 }}
         onClick={() => logoutUser()}
       >
         LOGOUT
-      </Button>
+      </Button> */}
+      <NavbarUserButton />
     </div>
   );
 

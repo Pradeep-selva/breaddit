@@ -55,7 +55,7 @@ const DeletePostButton = ({ onDelete, className }: IProps) => {
         aria-describedby='alert-dialog-description'
       >
         <DialogTitle id='alert-dialog-title' className={classes.titleText}>
-          {"Are you sure you want to delete this post?"}
+          Are you sure you want to delete this post?
         </DialogTitle>
         <DialogContent>
           <DialogContentText
