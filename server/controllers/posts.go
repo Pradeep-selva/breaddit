@@ -16,7 +16,7 @@ import (
 
 //POST /api/v/sub/:id/post
 func PostToSubHandler(c *gin.Context) {
-	post := entities.Post{
+	post := entities.PostWithID{
 		Content:   c.PostForm("Content"),
 		Link:      c.PostForm("Link"),
 		Comments:  0,
@@ -80,7 +80,7 @@ func PostToSubHandler(c *gin.Context) {
 
 	post.Sub = subID
 
-	_, _, err = utils.Client.Collection("posts").Add(utils.Ctx, post)
+	docRef, _, err := utils.Client.Collection("posts").Add(utils.Ctx, post)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"error":      "An error occured.",
@@ -88,6 +88,7 @@ func PostToSubHandler(c *gin.Context) {
 		})
 		return
 	}
+	post.ID = docRef.ID
 
 	c.JSON(http.StatusOK, gin.H{
 		"data":       post,

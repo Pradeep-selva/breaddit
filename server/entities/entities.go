@@ -57,6 +57,23 @@ type Post struct {
 	CreatedAt *timestamppb.Timestamp
 }
 
+type PostWithID struct {
+	Title   string
+	Link    string
+	Content string
+	Image   string
+	User    struct {
+		UserName string
+		Avatar   string
+	}
+	Sub       string
+	Upvotes   int
+	Comments  int
+	Downvotes int
+	CreatedAt *timestamppb.Timestamp
+	ID string
+}
+
 type Vote struct {
 	ID string
 	UserName string
