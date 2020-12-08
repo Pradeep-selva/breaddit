@@ -11,12 +11,14 @@ import { BiLogOut } from "react-icons/bi";
 import { FaUserAlt } from "react-icons/fa";
 import { DARK_GREY, SMOKEY_WHITE } from "../../Common/colors";
 import Avatar from "../Avatar";
+import ConfirmDialogWithAlert from "../ConfirmDialogWithAlert";
 import { IProps } from "./index";
 import { useStyles } from "./styles";
 
 const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [openDialog, setOpenDialog] = React.useState(false);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -24,6 +26,13 @@ const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleConfirm = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    logoutUser();
+    setOpenDialog(false);
   };
 
   return (
@@ -54,13 +63,26 @@ const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
           </ListItemIcon>
           <ListItemText primary='Profile' />
         </MenuItem>
-        <MenuItem onClick={() => logoutUser()}>
+        <MenuItem onClick={() => setOpenDialog(true)}>
           <ListItemIcon>
             <BiLogOut color={SMOKEY_WHITE} size={20} />
           </ListItemIcon>
           <ListItemText primary='Logout' />
         </MenuItem>
       </Menu>
+      <ConfirmDialogWithAlert
+        openDialog={openDialog}
+        handleClose={() => setOpenDialog(false)}
+        paperClassName={classes.dialogContainer}
+        titleClassName={classes.titleText}
+        title={"Are you sure you want to log out?"}
+        contentClassName={classes.contentText}
+        content={"Press confirm to log out."}
+        handleConfirm={handleConfirm}
+        alertText={"Logged out successfully!"}
+        cancelText={"Cancel"}
+        confirmText={"Confirm"}
+      />
     </React.Fragment>
   );
 };
