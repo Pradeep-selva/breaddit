@@ -1,6 +1,10 @@
 import { feedActionTypes } from "../types";
 
-export const loadPublicFeed = (payload: { offset: number; limit: number }) => ({
+export const loadPublicFeed = (payload: {
+  offset: number;
+  limit: number;
+  fetchMore?: boolean;
+}) => ({
   type: feedActionTypes.LOAD_PUBLIC_FEED,
   payload
 });
@@ -8,6 +12,7 @@ export const loadPublicFeed = (payload: { offset: number; limit: number }) => ({
 export const loadPrivateFeed = (payload: {
   offset: number;
   limit: number;
+  fetchMore?: boolean;
 }) => ({
   type: feedActionTypes.LOAD_PRIVATE_FEED,
   payload
@@ -38,7 +43,7 @@ export const removePostFromFeed = (id: string) => ({
 });
 
 export const appendPostsToFeed = (payload: any) => ({
-  type: feedActionTypes.ADD_POST_TO_FEED,
+  type: feedActionTypes.APPEND_POSTS_TO_FEED,
   payload
 });
 

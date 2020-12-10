@@ -6,7 +6,9 @@ import { loadPublicFeed, loadPrivateFeed } from "../../Redux/Actions";
 const mapStateToProps = (state: IReduxState) => ({
   trendingPosts: state.feed.trending,
   feed: state.feed.feed,
-  isAuthenticated: state.user.isAuthenticated
+  isAuthenticated: state.user.isAuthenticated,
+  loading: state.feed.loading,
+  hasMoreToFetch: state.feed.hasMoreToFetch
 });
 
 const mapActionsToProps = {

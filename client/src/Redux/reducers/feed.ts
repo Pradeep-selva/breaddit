@@ -16,7 +16,7 @@ export default function feed(state = { ...initialState }, action: any) {
         feed: action.payload
       };
 
-    case feedActionTypes.ADD_POST_TO_FEED:
+    case feedActionTypes.APPEND_POSTS_TO_FEED:
       return {
         ...state,
         feed: [...state.feed, ...action.payload]
