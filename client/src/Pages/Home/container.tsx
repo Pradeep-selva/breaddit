@@ -33,7 +33,13 @@ class Home extends Component<Props, IState> {
   }
 
   render() {
-    const { classes, trendingPosts, feed } = this.props;
+    const {
+      classes,
+      trendingPosts,
+      feed,
+      joinedSubs = [],
+      isAuthenticated
+    } = this.props;
 
     return (
       <Container className={classes.container}>
@@ -58,11 +64,19 @@ class Home extends Component<Props, IState> {
           Breads For You
         </Typography>
         <Grid container direction={"column"} className={classes.postsContainer}>
-          {!feed.length
-            ? Array.from({ length: 15 }).map((_, index) => (
+          {!!joinedSubs.length || !isAuthenticated ? (
+            !feed.length ? (
+              Array.from({ length: 15 }).map((_, index) => (
                 <PostSkeleton key={index} />
               ))
-            : feed?.map((item, index) => <PostCard {...item} key={index} />)}
+            ) : (
+              feed?.map((item, index) => <PostCard {...item} key={index} />)
+            )
+          ) : (
+            <Typography variant={"h6"} color={"textPrimary"}>
+              Nothing to show
+            </Typography>
+          )}
         </Grid>
       </Container>
     );

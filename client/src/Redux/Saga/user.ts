@@ -3,6 +3,7 @@ import {
   clearUserData,
   downvotePost,
   loadPrivateFeed,
+  loadPublicFeed,
   loginUserAction,
   setNotificationData,
   setUserAuthenticated,
@@ -62,6 +63,7 @@ function* loginUserAndSetReduxState({
 function* logoutUser() {
   localStorage.removeItem("AuthToken");
   yield put(clearUserData());
+  yield put(loadPublicFeed({ limit: 25, offset: 0 }));
 }
 
 function* upvotePostSaga({ id }: ReturnType<typeof startUpvote>) {

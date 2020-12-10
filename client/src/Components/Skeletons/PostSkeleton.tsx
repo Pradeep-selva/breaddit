@@ -10,7 +10,12 @@ const PostSkeleton = () => {
     <Grid item>
       <Paper className={classes.container}>
         <Box className={classes.upvoteSection}>
-          <Skeleton variant={"circle"} width={30} height={30} />
+          <Skeleton
+            variant={"circle"}
+            width={30}
+            height={30}
+            style={{ marginTop: "1rem" }}
+          />
           <Skeleton variant={"circle"} width={10} height={10} />
           <Skeleton variant={"circle"} width={30} height={30} />
         </Box>
