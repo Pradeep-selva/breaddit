@@ -27,7 +27,6 @@ const BoxedTextField = ({
   onChange,
   onSubmit,
   helperText,
-  error,
   value,
   rows,
   style

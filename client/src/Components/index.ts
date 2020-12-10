@@ -12,3 +12,4 @@ export { default as VotesSection } from "./VotesSection";
 export { default as DeletePostButton } from "./DeletePostButton";
 export { default as NavbarUserButton } from "./NavbarUserButton";
 export { default as ConfirmDialogWithAlert } from "./ConfirmDialogWithAlert";
+export * from "./Skeletons";

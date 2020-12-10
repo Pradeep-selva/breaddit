@@ -1,6 +1,11 @@
 import { Container, Grid, Typography, withStyles } from "@material-ui/core";
 import React, { Component } from "react";
-import { PostCard, TrendingPostCard } from "../../Components";
+import {
+  PostCard,
+  PostSkeleton,
+  TrendingPostCard,
+  TrendingPostSkeleton
+} from "../../Components";
 import { IProps } from "./index";
 import { styles, IClass } from "./styles";
 
@@ -41,17 +46,23 @@ class Home extends Component<Props, IState> {
           className={classes.postsContainer}
           spacing={4}
         >
-          {trendingPosts?.map((item, index) => (
-            <TrendingPostCard {...item} key={index} />
-          ))}
+          {!trendingPosts.length
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <TrendingPostSkeleton key={index} />
+              ))
+            : trendingPosts?.map((item, index) => (
+                <TrendingPostCard {...item} key={index} />
+              ))}
         </Grid>
         <Typography color={"textPrimary"} className={classes.sectionTitle}>
           Breads For You
         </Typography>
         <Grid container direction={"column"} className={classes.postsContainer}>
-          {feed?.map((item, index) => (
-            <PostCard {...item} key={index} />
-          ))}
+          {!feed.length
+            ? Array.from({ length: 15 }).map((_, index) => (
+                <PostSkeleton key={index} />
+              ))
+            : feed?.map((item, index) => <PostCard {...item} key={index} />)}
         </Grid>
       </Container>
     );
