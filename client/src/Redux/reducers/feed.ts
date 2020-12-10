@@ -3,7 +3,9 @@ import { IFeedState } from "../../Types";
 
 const initialState: IFeedState = {
   feed: [],
-  trending: []
+  trending: [],
+  loading: false,
+  hasMoreToFetch: true
 };
 
 export default function feed(state = { ...initialState }, action: any) {
@@ -12,6 +14,12 @@ export default function feed(state = { ...initialState }, action: any) {
       return {
         ...state,
         feed: action.payload
+      };
+
+    case feedActionTypes.ADD_POST_TO_FEED:
+      return {
+        ...state,
+        feed: [...state.feed, ...action.payload]
       };
 
     case feedActionTypes.CLEAR_FEED:
@@ -38,6 +46,24 @@ export default function feed(state = { ...initialState }, action: any) {
       return {
         ...state,
         feed
+      };
+
+    case feedActionTypes.START_FEED_LOADING:
+      return {
+        ...state,
+        loading: true
+      };
+
+    case feedActionTypes.STOP_FEED_LOADING:
+      return {
+        ...state,
+        loading: false
+      };
+
+    case feedActionTypes.SET_HAS_MORE_TO_FETCH:
+      return {
+        ...state,
+        hasMoreToFetch: action.payload
       };
 
     default:

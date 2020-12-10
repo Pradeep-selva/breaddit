@@ -11,9 +11,9 @@ import {
   setUserDownvotes,
   setUserUpvotes,
   startDownvote,
-  startLoading,
+  startUserLoading,
   startUpvote,
-  stopLoading,
+  stopUserLoading,
   upvotePost
 } from "../Actions";
 import {
@@ -33,7 +33,7 @@ function* loginUserAndSetReduxState({
 }: ReturnType<typeof loginUserAction>) {
   localStorage.setItem("AuthToken", token);
 
-  yield put(startLoading());
+  yield put(startUserLoading());
 
   const userData = yield getUserData();
   const notificationData = yield getUserNotifications();
@@ -57,7 +57,7 @@ function* loginUserAndSetReduxState({
     yield put(setUserAuthenticated());
   }
 
-  yield put(stopLoading());
+  yield put(stopUserLoading());
 }
 
 function* logoutUser() {

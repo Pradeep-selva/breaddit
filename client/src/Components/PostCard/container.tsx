@@ -64,7 +64,10 @@ const PostCard = ({
     if (isAuthenticated) {
       alert("Pressed join");
     } else {
-      history.push(RouteNames.login);
+      history.push({
+        pathname: RouteNames.login,
+        state: { heading: "Login to join subreaddits you like!" }
+      });
     }
   };
 
@@ -86,7 +89,7 @@ const PostCard = ({
             </Typography>
             <Typography className={classes.postedText}>posted by</Typography>
             <Avatar
-              url={User.Avatar}
+              url={User?.Avatar || ""}
               size={"xs"}
               style={{ margin: "0 0.3rem" }}
             />
@@ -95,7 +98,7 @@ const PostCard = ({
               component={RouterLink}
               to={"/"}
             >
-              u/{User.UserName}
+              u/{User?.UserName || ""}
             </Typography>
             <Typography className={classes.postedText}>
               {dayjs(CreatedAt).fromNow()}
@@ -112,7 +115,7 @@ const PostCard = ({
                 JOIN
               </Button>
             )}
-            {User.UserName === userId && (
+            {(User?.UserName || "") === userId && (
               <DeletePostButton
                 className={classes.joinButton}
                 onDelete={onDelete}

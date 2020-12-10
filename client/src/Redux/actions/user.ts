@@ -65,10 +65,10 @@ export const startDownvote = (id: string) => ({
   id
 });
 
-export const startLoading = () => ({
-  type: userActionTypes.START_LOADING
+export const startUserLoading = () => ({
+  type: userActionTypes.START_USER_LOADING
 });
 
-export const stopLoading = () => ({
-  type: userActionTypes.STOP_LOADING
+export const stopUserLoading = () => ({
+  type: userActionTypes.STOP_USER_LOADING
 });

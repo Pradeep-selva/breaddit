@@ -106,13 +106,13 @@ export default function user(state = { ...initialState }, action: any) {
         downvotes: newDownvotes
       };
 
-    case userActionTypes.START_LOADING:
+    case userActionTypes.START_USER_LOADING:
       return {
         ...state,
         loading: true
       };
 
-    case userActionTypes.STOP_LOADING:
+    case userActionTypes.STOP_USER_LOADING:
       return {
         ...state,
         loading: false

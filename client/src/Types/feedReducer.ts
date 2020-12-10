@@ -20,4 +20,6 @@ export interface IPost {
 export interface IFeedState {
   feed: Array<IPost>;
   trending: Array<IPost>;
+  loading: boolean;
+  hasMoreToFetch: boolean;
 }

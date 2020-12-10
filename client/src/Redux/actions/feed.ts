@@ -36,3 +36,21 @@ export const removePostFromFeed = (id: string) => ({
   type: feedActionTypes.REMOVE_POST_FROM_FEED,
   id
 });
+
+export const appendPostsToFeed = (payload: any) => ({
+  type: feedActionTypes.ADD_POST_TO_FEED,
+  payload
+});
+
+export const startFeedLoading = () => ({
+  type: feedActionTypes.START_FEED_LOADING
+});
+
+export const stopFeedLoading = () => ({
+  type: feedActionTypes.STOP_FEED_LOADING
+});
+
+export const setHasMoreToFetch = (payload: boolean) => ({
+  type: feedActionTypes.SET_HAS_MORE_TO_FETCH,
+  payload
+});

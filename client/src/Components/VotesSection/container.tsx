@@ -40,7 +40,10 @@ const VotesSection = ({
       }
       startUpvote(postId);
     } else {
-      history.push(RouteNames.login);
+      history.push({
+        pathname: RouteNames.login,
+        state: { heading: "Login to vote on posts you like!" }
+      });
     }
   };
 
@@ -55,7 +58,10 @@ const VotesSection = ({
       }
       startDownvote(postId);
     } else {
-      history.push(RouteNames.login);
+      history.push({
+        pathname: RouteNames.login,
+        state: { heading: "Login to vote on posts you like!" }
+      });
     }
   };
 

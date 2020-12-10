@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import { loginUser } from "../../APIs";
 
-type Props = IProps & IClass;
+type Props = IProps & IClass & { location: { state: { heading: string } } };
 
 type State = typeof FormDefaultValues & {
   errors: any;
@@ -117,7 +117,7 @@ class Login extends Component<Props, State> {
                 className={classes.title}
               >
                 <RiLoginCircleLine style={{ marginRight: "2%" }} />
-                Login
+                {this.props.location?.state?.heading || "Login"}
               </Typography>
               <Typography
                 variant={"body2"}
