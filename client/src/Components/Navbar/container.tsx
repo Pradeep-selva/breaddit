@@ -47,14 +47,6 @@ const Navbar = ({ isAuthenticated, logoutUser }: IProps) => {
   const renderAuthenticatedButtons = () => (
     <div className={classes.sectionDesktop}>
       <AddPost />
-      {/* <Button
-        variant={"contained"}
-        color={"inherit"}
-        style={{ color: BLACK, flex: 1 }}
-        onClick={() => logoutUser()}
-      >
-        LOGOUT
-      </Button> */}
       <NavbarUserButton />
     </div>
   );

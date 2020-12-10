@@ -45,6 +45,7 @@ function* getAllPrivateFeed({
 
   try {
     let feed = yield getPrivateFeed(offset, limit);
+    if (!feed.data.length) feed = yield getPublicFeed(offset, limit);
     yield put(setFeed(feed.data));
   } catch (err) {
     console.error(err);
