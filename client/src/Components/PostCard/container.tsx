@@ -83,7 +83,7 @@ const PostCard = ({
               className={classes.subName}
               color={"textPrimary"}
               component={RouterLink}
-              to={"/"}
+              to={`${RouteNames.sub}/${Sub}`}
             >
               b/{Sub}
             </Typography>

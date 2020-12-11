@@ -148,7 +148,7 @@ class Signup extends Component<IClass, State> {
                 className={classes.subTitle}
               >
                 By stepping into this world of breads, you are agreeing to our{" "}
-                <Link to={RouteNames.home}>Terms & Conditions</Link>
+                <Link to={RouteNames.tc}>Terms & Conditions</Link>
               </Typography>
               <Grid container>
                 {FormFields.map((field, index) => (

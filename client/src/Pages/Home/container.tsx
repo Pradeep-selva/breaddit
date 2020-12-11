@@ -28,7 +28,7 @@ class Home extends Component<Props, IState> {
 
   constructor(props: Props) {
     super(props);
-    this.limit = 15;
+    this.limit = 3;
 
     this.state = {
       offset: 0

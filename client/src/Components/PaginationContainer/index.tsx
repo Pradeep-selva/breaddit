@@ -1,22 +1,25 @@
-import React from "react";
+import { Component } from "react";
 
 interface IProps {
   children: any;
   handlePagination: Function;
 }
 
-const PaginationContainer = ({ children, handlePagination }: IProps) => {
-  React.useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (
-        window.pageYOffset + window.innerHeight ===
-        document.body.clientHeight
-      )
-        handlePagination();
-    });
-  }, []);
+class PaginationContainer extends Component<IProps> {
+  componentDidMount() {
+    window.addEventListener("scroll", this.listenToScroll);
+  }
 
-  return children;
-};
+  listenToScroll = () => {
+    if (window.pageYOffset + window.innerHeight === document.body.clientHeight)
+      this.props.handlePagination();
+  };
+
+  render() {
+    const { children } = this.props;
+
+    return children;
+  }
+}
 
 export default PaginationContainer;

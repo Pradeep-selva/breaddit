@@ -5,7 +5,8 @@ export const RouteNames = {
   post: "/posts",
   user: "/u",
   sub: "/b",
-  search: "/search"
+  search: "/search",
+  tc: "/terms-and-conditions"
 };
 
 export const RouteParams = {
