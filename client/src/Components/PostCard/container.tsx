@@ -96,7 +96,7 @@ const PostCard = ({
             <Typography
               className={classes.userNameText}
               component={RouterLink}
-              to={"/"}
+              to={`${RouteNames.user}/${User?.UserName}`}
             >
               u/{User?.UserName || ""}
             </Typography>

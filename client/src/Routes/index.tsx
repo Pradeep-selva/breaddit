@@ -1,7 +1,14 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { RouteNames, RouteParams } from "../Configs";
-import { Home, Login, Signup, Subreaddit, TermsConditions } from "../Pages";
+import {
+  Home,
+  Login,
+  Signup,
+  Subreaddit,
+  TermsConditions,
+  User
+} from "../Pages";
 import { AuthRoute } from "../Services";
 
 export const Routes = () => (
@@ -11,6 +18,11 @@ export const Routes = () => (
       exact
       path={`${RouteNames.sub}${RouteParams.id}`}
       component={Subreaddit}
+    />
+    <Route
+      exact
+      path={`${RouteNames.user}${RouteParams.id}`}
+      component={User}
     />
     <Route exact path={RouteNames.tc} component={TermsConditions} />
     <AuthRoute exact path={RouteNames.login} component={Login} />

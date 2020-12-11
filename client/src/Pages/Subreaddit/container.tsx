@@ -37,7 +37,7 @@ class Subreaddit extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 
-    this.limit = 5;
+    this.limit = 15;
     this.sub = this.props.match?.params?.id || "";
 
     this.state = {

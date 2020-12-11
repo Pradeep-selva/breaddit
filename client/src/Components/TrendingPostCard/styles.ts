@@ -1,5 +1,5 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
-import { DARK_GREY } from "../../Common/colors";
+import { DARK_GREY, SMOKEY_WHITE } from "../../Common/colors";
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +35,8 @@ export const useStyles = makeStyles((theme: Theme) =>
         "-1px -1px 0 #000F, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
     },
     name: {
-      fontWeight: 700
+      fontWeight: 700,
+      color: SMOKEY_WHITE
     }
   })
 );

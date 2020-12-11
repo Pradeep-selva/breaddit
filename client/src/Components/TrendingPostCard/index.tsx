@@ -79,10 +79,10 @@ const TrendingPostCard = ({
                 {algebraicTotal}
               </Grid>
               <Grid item xs={2}>
-                <Avatar size={"xs"} url={User.Avatar} />
+                <Avatar size={"xs"} url={User?.Avatar} />
               </Grid>
               <Grid item xs={3}>
-                <Box className={classes.name}>u/{User.UserName}</Box>
+                <Box className={classes.name}>u/{User?.UserName}</Box>
               </Grid>
             </Grid>
           </Container>
