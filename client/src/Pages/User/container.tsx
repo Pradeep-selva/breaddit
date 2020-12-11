@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import React, { Component } from "react";
 import { getUserPosts } from "../../APIs";
-import { PostCard } from "../../Components";
+import { PostCard, PostSkeleton } from "../../Components";
 import { STATUS_SUCCESS } from "../../Configs";
 import { IPost } from "../../Types";
 import { IProps as ReduxProps } from "./index";
@@ -64,10 +64,13 @@ class Subreaddit extends Component<IProps, IState> {
             <Typography color={"textPrimary"} className={classes.postsTitle}>
               Posts from {this.userName}
               <Box style={{ marginTop: "1.5rem" }}>
-                {!!posts.length &&
-                  posts.map((item, index) => (
-                    <PostCard {...item} key={index} />
-                  ))}
+                {!!posts.length
+                  ? posts.map((item, index) => (
+                      <PostCard {...item} key={index} />
+                    ))
+                  : Array.from({ length: 10 }).map((_, index) => (
+                      <PostSkeleton key={index} />
+                    ))}
               </Box>
             </Typography>
           </Grid>
