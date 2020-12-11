@@ -44,6 +44,9 @@ const NotificationBadge = ({ notifications }: IProps) => {
             backgroundColor: DARK_GREY
           }
         }}
+        style={{
+          marginTop: "2rem"
+        }}
       >
         {notifications.map((item) => (
           <MenuItem onClick={() => onNotificationClick(item.Sender)}>

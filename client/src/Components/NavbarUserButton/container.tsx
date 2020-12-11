@@ -56,6 +56,9 @@ const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
             backgroundColor: DARK_GREY
           }
         }}
+        style={{
+          marginTop: "2rem"
+        }}
       >
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
