@@ -518,7 +518,7 @@ func CommentOnPostHandler(c *gin.Context) {
 	}
 
 	notification := entities.Notification{
-		Content: UID + " has commented on your post - " + post.Title,
+		Content: "u/"+UID + " has commented on your post",
 		Sender:  UID,
 		Time:    ptypes.TimestampNow(),
 		Seen:    false,
