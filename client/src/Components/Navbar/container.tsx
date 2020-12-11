@@ -17,6 +17,7 @@ import { NavLink } from "react-router-dom";
 import { RouteNames } from "../../Configs";
 import AddPost from "../AddPost";
 import NavbarUserButton from "../NavbarUserButton";
+import NotificationBadge from "../NotificationBadge";
 
 const Navbar = ({ isAuthenticated, logoutUser }: IProps) => {
   const classes = useStyles();
@@ -46,6 +47,7 @@ const Navbar = ({ isAuthenticated, logoutUser }: IProps) => {
 
   const renderAuthenticatedButtons = () => (
     <div className={classes.sectionDesktop}>
+      <NotificationBadge />
       <AddPost />
       <NavbarUserButton />
     </div>

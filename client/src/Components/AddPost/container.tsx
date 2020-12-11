@@ -14,6 +14,7 @@ import {
   Tab,
   Tabs,
   Toolbar,
+  Tooltip,
   Typography,
   withStyles
 } from "@material-ui/core";
@@ -27,7 +28,7 @@ import { FaThList } from "react-icons/fa";
 import { getFormPayload, getTruncatedContent, tabProps } from "../../Services";
 import Transition from "../Transition";
 import TabPanel from "../TabPanel";
-import { DARK_GREY, LIGHT_BLACK } from "../../Common/colors";
+import { DARK_GREY, LIGHT_BLACK, SMOKEY_WHITE } from "../../Common/colors";
 import BoxedTextField from "../BoxedTextField";
 import validate from "validate.js";
 import { addPostToSub } from "../../APIs/posts";
@@ -300,13 +301,15 @@ class AddPost extends Component<IClass & IProps, IState> {
 
     return (
       <React.Fragment>
-        <IconButton
-          onClick={this.handleOpen}
-          color={"inherit"}
-          style={{ flex: 1, marginRight: 20 }}
-        >
-          <AiTwotoneEdit />
-        </IconButton>
+        <Tooltip title={"Add a post"}>
+          <IconButton
+            onClick={this.handleOpen}
+            color={"inherit"}
+            style={{ flex: 1, marginRight: 20 }}
+          >
+            <AiTwotoneEdit color={SMOKEY_WHITE} />
+          </IconButton>
+        </Tooltip>
         <Dialog
           open={open}
           fullScreen
