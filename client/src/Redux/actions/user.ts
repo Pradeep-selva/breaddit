@@ -72,3 +72,13 @@ export const startUserLoading = () => ({
 export const stopUserLoading = () => ({
   type: userActionTypes.STOP_USER_LOADING
 });
+
+export const joinSub = (subName: string) => ({
+  type: userActionTypes.JOIN_SUB,
+  subName
+});
+
+export const appendSub = (subName: string) => ({
+  type: userActionTypes.APPEND_SUB,
+  subName
+});

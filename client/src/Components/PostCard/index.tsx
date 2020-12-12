@@ -2,6 +2,7 @@ import PostCard from "./container";
 import { connect } from "react-redux";
 import { IReduxState } from "../../Redux";
 import { removePostFromFeed } from "../../Redux/Actions/feed";
+import { joinSub } from "../../Redux/Actions/user";
 
 const mapStateToProps = (state: IReduxState) => ({
   joinedSubs: state.user.userData?.JoinedSubs,
@@ -10,7 +11,8 @@ const mapStateToProps = (state: IReduxState) => ({
 });
 
 const mapActionsToProps = {
-  removePostFromFeed
+  removePostFromFeed,
+  joinSub
 };
 
 export type IProps = ReturnType<typeof mapStateToProps> &

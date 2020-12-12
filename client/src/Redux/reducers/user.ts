@@ -1,4 +1,4 @@
-import { IUserState } from "../../Types";
+import { IUserData, IUserState } from "../../Types";
 import { userActionTypes } from "../types";
 
 const initialState: IUserState = {
@@ -104,6 +104,15 @@ export default function user(state = { ...initialState }, action: any) {
         ...state,
         upvotes: newUpvotes,
         downvotes: newDownvotes
+      };
+
+    case userActionTypes.APPEND_SUB:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          JoinedSubs: [...(state.userData?.JoinedSubs || []), action.subName]
+        } as IUserData
       };
 
     case userActionTypes.START_USER_LOADING:
