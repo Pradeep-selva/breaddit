@@ -89,6 +89,7 @@ type Comment struct {
 
 type Notification struct {
 	Sender string
+	PostId string
 	Time *timestamppb.Timestamp
 	Content string
 	Seen bool
