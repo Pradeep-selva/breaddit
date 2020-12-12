@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 import { setUserNotificationsSeen } from "../../APIs";
 import { DARK_GREY, GREY, SMOKEY_WHITE } from "../../Common/colors";
 import { RouteNames } from "../../Configs";
+import { formatNumberNotation } from "../../Services";
 import { IProps } from "./index";
 
 const NotificationBadge = ({
@@ -39,7 +40,10 @@ const NotificationBadge = ({
   return (
     <React.Fragment>
       <IconButton style={{ flex: 1, marginRight: 15 }} onClick={handleClick}>
-        <Badge badgeContent={unseenNotificationCount} color={"error"}>
+        <Badge
+          badgeContent={formatNumberNotation(unseenNotificationCount)}
+          color={"error"}
+        >
           <GrMail color={SMOKEY_WHITE} />
         </Badge>
       </IconButton>

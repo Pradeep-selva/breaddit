@@ -32,8 +32,8 @@ import { DARK_GREY, LIGHT_BLACK, SMOKEY_WHITE } from "../../Common/colors";
 import BoxedTextField from "../BoxedTextField";
 import validate from "validate.js";
 import { addPostToSub } from "../../APIs/posts";
-import { STATUS_SUCCESS } from "../../Configs";
-import { IProps } from "./index";
+import { RouteNames, STATUS_SUCCESS } from "../../Configs";
+import { IProps as ReduxProps } from "./index";
 import { BoxedInput } from "../BoxedTextField/styles";
 import Dropdown from "../Dropdown";
 
@@ -46,9 +46,19 @@ interface IState {
   showToast: boolean;
 }
 
-class AddPost extends Component<IClass & IProps, IState> {
-  constructor(props: any) {
+type IProps = IClass &
+  ReduxProps & {
+    sub?: string;
+    subPageCallBack?: Function;
+    history?: any;
+  };
+
+class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
+  sub: string | null;
+  constructor(props: IClass & IProps) {
     super(props);
+
+    this.sub = this.props.sub || null;
 
     this.state = {
       values: {
@@ -60,6 +70,17 @@ class AddPost extends Component<IClass & IProps, IState> {
       open: false,
       showToast: false
     };
+  }
+
+  componentDidMount() {
+    if (!!this.sub) {
+      this.setState({
+        values: {
+          ...this.state.values,
+          Sub: this.sub
+        }
+      });
+    }
   }
 
   handleOpen = () => this.setState({ open: true });
@@ -151,6 +172,11 @@ class AddPost extends Component<IClass & IProps, IState> {
                       );
                     }
                   );
+
+                  !!this.sub &&
+                    !!this.props.subPageCallBack &&
+                    this.props.subPageCallBack();
+
                   this.props.addPostToFeed(data);
                 } else {
                   this.setState({
@@ -184,18 +210,20 @@ class AddPost extends Component<IClass & IProps, IState> {
   renderTitleAndSubFields = () => (
     <React.Fragment>
       <Grid container>
-        <Grid item xs={3}>
-          <Dropdown
-            label={"Subreaddit"}
-            value={this.state.values.Sub}
-            onChange={this.handleSubChange}
-            input={<BoxedInput fullWidth />}
-            backgroundColor={DARK_GREY}
-            items={this.props.joinedSubs}
-            helperText={this.state.errors.Sub}
-          />
-        </Grid>
-        <Grid item xs={9}>
+        {!this.sub && (
+          <Grid item xs={3}>
+            <Dropdown
+              label={"Subreaddit"}
+              value={this.state.values.Sub}
+              onChange={this.handleSubChange}
+              input={<BoxedInput fullWidth />}
+              backgroundColor={DARK_GREY}
+              items={this.props.joinedSubs}
+              helperText={this.state.errors.Sub}
+            />
+          </Grid>
+        )}
+        <Grid item xs={!!this.sub ? 12 : 9}>
           <BoxedTextField
             fullWidth
             id={"Title"}
@@ -419,7 +447,15 @@ class AddPost extends Component<IClass & IProps, IState> {
             variant='filled'
             severity='success'
             action={
-              <Button color='inherit' size='small'>
+              <Button
+                color='inherit'
+                size='small'
+                onClick={() =>
+                  this.props.history.push(
+                    `${RouteNames.sub}/${this.state.values.Sub}`
+                  )
+                }
+              >
                 GO TO SUB
               </Button>
             }

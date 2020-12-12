@@ -8,7 +8,12 @@ import {
 } from "@material-ui/core";
 import React, { Component } from "react";
 import { getSubPosts } from "../../APIs";
-import { PaginationContainer, PostCard, PostSkeleton } from "../../Components";
+import {
+  AddPost,
+  PaginationContainer,
+  PostCard,
+  PostSkeleton
+} from "../../Components";
 import { DEFAULT_TITLE, STATUS_SUCCESS } from "../../Configs";
 import { getTabTitle } from "../../Services";
 import { IPost } from "../../Types";
@@ -52,6 +57,14 @@ class Subreaddit extends Component<IProps, IState> {
 
   componentDidMount() {
     document.title = getTabTitle(`b/${this.sub}`);
+    this.fetchAll();
+  }
+
+  componentWillUnmount() {
+    document.title = DEFAULT_TITLE;
+  }
+
+  fetchAll = () => {
     getSubPosts(this.sub, this.state.offset, this.limit).then(
       ({ data, statusCode }) => {
         if (statusCode === STATUS_SUCCESS) {
@@ -69,11 +82,7 @@ class Subreaddit extends Component<IProps, IState> {
         }
       }
     );
-  }
-
-  componentWillUnmount() {
-    document.title = DEFAULT_TITLE;
-  }
+  };
 
   fetchMore = () => {
     if (this.state.hasMoreToFetch) {
@@ -99,16 +108,27 @@ class Subreaddit extends Component<IProps, IState> {
 
   render() {
     const { posts, hasFetched } = this.state;
-    const { classes } = this.props;
+    const { classes, user } = this.props;
 
     return (
       <PaginationContainer handlePagination={this.fetchMore}>
         <Container>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={8}>
-              <Typography color={"textPrimary"} className={classes.postsTitle}>
-                Posts from {this.sub}
-              </Typography>
+              <Box display={"flex"} marginTop={"5vh"}>
+                <Typography
+                  color={"textPrimary"}
+                  className={classes.postsTitle}
+                  style={{ flex: 10 }}
+                >
+                  Posts from {this.sub}
+                </Typography>
+                {(user?.JoinedSubs || []).includes(this.sub) && (
+                  <Box alignContent={"flex-end"}>
+                    <AddPost sub={this.sub} subPageCallBack={this.fetchAll} />
+                  </Box>
+                )}
+              </Box>
               <Box style={{ marginTop: "1.5rem" }}>
                 {!!posts.length ? (
                   posts.map((item, index) => <PostCard {...item} key={index} />)
