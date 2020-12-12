@@ -36,9 +36,13 @@ function* loginUserAndSetReduxState({
   yield put(startUserLoading());
 
   const userData = yield getUserData();
-  const notificationData = yield getUserNotifications();
+  let notificationData = yield getUserNotifications();
   const upvotesData = yield getUserUpvotes();
   const downvotesData = yield getUserDownvotes();
+
+  notificationData = !Array.isArray(notificationData.data)
+    ? []
+    : notificationData.data;
 
   const didAnyFail = [userData, notificationData, upvotesData, downvotesData]
     .map((response) => response.statusCode !== STATUS_SUCCESS)
@@ -51,7 +55,7 @@ function* loginUserAndSetReduxState({
   } else {
     yield put(loadPrivateFeed({ limit: 25, offset: 0 }));
     yield put(setUserData(userData.data));
-    yield put(setNotificationData(notificationData.data));
+    yield put(setNotificationData(notificationData));
     yield put(setUserUpvotes(upvotesData.data));
     yield put(setUserDownvotes(downvotesData.data));
     yield put(setUserAuthenticated());

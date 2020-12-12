@@ -2,19 +2,29 @@ import { Badge, IconButton, Menu, MenuItem } from "@material-ui/core";
 import React from "react";
 import { GrMail } from "react-icons/gr";
 import { useHistory } from "react-router";
-import { DARK_GREY, SMOKEY_WHITE } from "../../Common/colors";
+import { setUserNotificationsSeen } from "../../APIs";
+import { DARK_GREY, GREY, SMOKEY_WHITE } from "../../Common/colors";
 import { RouteNames } from "../../Configs";
 import { IProps } from "./index";
 
-const NotificationBadge = ({ notifications }: IProps) => {
+const NotificationBadge = ({
+  notifications = [],
+  markNotificationsRead
+}: IProps) => {
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const unseenNotificationCount = notifications.filter((item) => !!item.Seen)
-    .length;
+  const unseenNotificationCount =
+    notifications?.filter((item) => !item.Seen).length || 0;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+    unseenNotificationCount > 0 && setUserNotificationsSeen();
+
+    setTimeout(
+      () => (unseenNotificationCount > 0 ? markNotificationsRead() : null),
+      4000
+    );
   };
 
   const handleClose = () => {
@@ -48,11 +58,18 @@ const NotificationBadge = ({ notifications }: IProps) => {
           marginTop: "2rem"
         }}
       >
-        {notifications.map((item) => (
-          <MenuItem onClick={() => onNotificationClick(item.Sender)}>
-            {item.Content}
-          </MenuItem>
-        ))}
+        {!!notifications.length ? (
+          notifications.map((item) => (
+            <MenuItem
+              onClick={() => onNotificationClick(item.Sender)}
+              style={{ backgroundColor: !item.Seen ? GREY : DARK_GREY }}
+            >
+              {item.Content}
+            </MenuItem>
+          ))
+        ) : (
+          <MenuItem disabled>No notifications yet :O</MenuItem>
+        )}
       </Menu>
     </React.Fragment>
   );

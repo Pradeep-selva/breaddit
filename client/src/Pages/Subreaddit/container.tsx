@@ -26,6 +26,7 @@ interface IState {
   offset: number;
   posts: Array<IPost>;
   hasMoreToFetch: boolean;
+  hasFetched: boolean;
 }
 
 type IProps = SelfProps & IClass & ReduxProps;
@@ -43,7 +44,8 @@ class Subreaddit extends Component<IProps, IState> {
     this.state = {
       offset: 0,
       posts: [],
-      hasMoreToFetch: true
+      hasMoreToFetch: true,
+      hasFetched: false
     };
   }
 
@@ -51,11 +53,17 @@ class Subreaddit extends Component<IProps, IState> {
     getSubPosts(this.sub, this.state.offset, this.limit).then(
       ({ data, statusCode }) => {
         if (statusCode === STATUS_SUCCESS) {
-          this.setState({ posts: data as Array<IPost> }, () => {
-            if (data?.length < this.limit) {
-              this.setState({ hasMoreToFetch: false });
+          this.setState(
+            {
+              posts: data as Array<IPost>,
+              hasFetched: true
+            },
+            () => {
+              if (data?.length < this.limit) {
+                this.setState({ hasMoreToFetch: false });
+              }
             }
-          });
+          );
         }
       }
     );
@@ -84,7 +92,7 @@ class Subreaddit extends Component<IProps, IState> {
   };
 
   render() {
-    const { posts } = this.state;
+    const { posts, hasFetched } = this.state;
     const { classes } = this.props;
 
     return (
@@ -94,16 +102,20 @@ class Subreaddit extends Component<IProps, IState> {
             <Grid item xs={12} sm={8}>
               <Typography color={"textPrimary"} className={classes.postsTitle}>
                 Posts from {this.sub}
-                <Box style={{ marginTop: "1.5rem" }}>
-                  {!!posts.length
-                    ? posts.map((item, index) => (
-                        <PostCard {...item} key={index} />
-                      ))
-                    : Array.from({ length: 10 }).map((_, index) => (
-                        <PostSkeleton key={index} />
-                      ))}
-                </Box>
               </Typography>
+              <Box style={{ marginTop: "1.5rem" }}>
+                {!!posts.length ? (
+                  posts.map((item, index) => <PostCard {...item} key={index} />)
+                ) : !hasFetched ? (
+                  Array.from({ length: 10 }).map((_, index) => (
+                    <PostSkeleton key={index} />
+                  ))
+                ) : (
+                  <Typography variant={"h6"} color={"textPrimary"}>
+                    b/{this.sub} has no posts yet.
+                  </Typography>
+                )}
+              </Box>
             </Grid>
             <Grid item xs={12} sm={3}>
               <Paper></Paper>

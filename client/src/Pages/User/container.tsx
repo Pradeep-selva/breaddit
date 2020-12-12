@@ -25,6 +25,7 @@ interface SelfProps {
 interface IState {
   offset: number;
   posts: Array<IPost>;
+  hasFetched: boolean;
 }
 
 type IProps = SelfProps & IClass & ReduxProps;
@@ -41,20 +42,24 @@ class Subreaddit extends Component<IProps, IState> {
 
     this.state = {
       offset: 0,
-      posts: []
+      posts: [],
+      hasFetched: false
     };
   }
 
   componentDidMount() {
     getUserPosts(this.userName).then(({ data, statusCode }) => {
       if (statusCode === STATUS_SUCCESS) {
-        this.setState({ posts: data as Array<IPost> });
+        this.setState({
+          posts: data as Array<IPost>,
+          hasFetched: true
+        });
       }
     });
   }
 
   render() {
-    const { posts } = this.state;
+    const { posts, hasFetched } = this.state;
     const { classes } = this.props;
 
     return (
@@ -63,16 +68,20 @@ class Subreaddit extends Component<IProps, IState> {
           <Grid item xs={12} sm={8}>
             <Typography color={"textPrimary"} className={classes.postsTitle}>
               Posts from {this.userName}
-              <Box style={{ marginTop: "1.5rem" }}>
-                {!!posts.length
-                  ? posts.map((item, index) => (
-                      <PostCard {...item} key={index} />
-                    ))
-                  : Array.from({ length: 10 }).map((_, index) => (
-                      <PostSkeleton key={index} />
-                    ))}
-              </Box>
             </Typography>
+            <Box style={{ marginTop: "1.5rem" }}>
+              {!!posts.length ? (
+                posts.map((item, index) => <PostCard {...item} key={index} />)
+              ) : !hasFetched ? (
+                Array.from({ length: 10 }).map((_, index) => (
+                  <PostSkeleton key={index} />
+                ))
+              ) : (
+                <Typography variant={"h6"} color={"textPrimary"}>
+                  u/{this.userName} has not posted anything yet.
+                </Typography>
+              )}
+            </Box>
           </Grid>
           <Grid item xs={12} sm={3}>
             <Paper></Paper>
