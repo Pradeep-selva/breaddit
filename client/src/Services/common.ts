@@ -24,3 +24,5 @@ export const tabProps = (index: any) => {
     "aria-controls": `full-width-tabpanel-${index}`
   };
 };
+
+export const getTabTitle = (title: any) => `breaddit: ${title}`;

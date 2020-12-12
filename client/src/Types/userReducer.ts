@@ -17,6 +17,7 @@ export interface INotification {
   Content: string;
   Seen: Boolean;
   Sender: string;
+  PostId: string;
   Time: Date;
 }
 

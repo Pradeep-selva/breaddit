@@ -9,7 +9,8 @@ import {
 import React, { Component } from "react";
 import { getSubPosts } from "../../APIs";
 import { PaginationContainer, PostCard, PostSkeleton } from "../../Components";
-import { STATUS_SUCCESS } from "../../Configs";
+import { DEFAULT_TITLE, STATUS_SUCCESS } from "../../Configs";
+import { getTabTitle } from "../../Services";
 import { IPost } from "../../Types";
 import { IProps as ReduxProps } from "./index";
 import { IClass, styles } from "./styles";
@@ -50,6 +51,7 @@ class Subreaddit extends Component<IProps, IState> {
   }
 
   componentDidMount() {
+    document.title = getTabTitle(`b/${this.sub}`);
     getSubPosts(this.sub, this.state.offset, this.limit).then(
       ({ data, statusCode }) => {
         if (statusCode === STATUS_SUCCESS) {
@@ -67,6 +69,10 @@ class Subreaddit extends Component<IProps, IState> {
         }
       }
     );
+  }
+
+  componentWillUnmount() {
+    document.title = DEFAULT_TITLE;
   }
 
   fetchMore = () => {
