@@ -119,7 +119,7 @@ const PostCard = ({
               <Typography className={classes.postedText}>
                 {dayjs(CreatedAt).fromNow()}
               </Typography>
-              {!joinedSubs?.includes(Sub) && (
+              {!joinedSubs?.includes(Sub) && (User?.UserName || "") !== userId && (
                 <Button
                   size={"small"}
                   variant={"outlined"}

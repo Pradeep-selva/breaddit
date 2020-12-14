@@ -1,24 +1,31 @@
 import {
   Box,
+  Button,
   Container,
+  fade,
   Grid,
   Paper,
   Typography,
   withStyles
 } from "@material-ui/core";
+import dayjs from "dayjs";
 import React, { Component } from "react";
-import { getSubPosts } from "../../APIs";
+import { getSubById, getSubPosts } from "../../APIs";
+import { WHITE } from "../../Common/colors";
 import {
   AddPost,
+  DetailCard,
   PaginationContainer,
   PostCard,
-  PostSkeleton
+  PostSkeleton,
+  Avatar
 } from "../../Components";
-import { DEFAULT_TITLE, STATUS_SUCCESS } from "../../Configs";
-import { getTabTitle } from "../../Services";
-import { IPost } from "../../Types";
+import { DEFAULT_TITLE, RouteNames, STATUS_SUCCESS } from "../../Configs";
+import { formatNumberNotation, getTabTitle } from "../../Services";
+import { IPost, ISubData } from "../../Types";
 import { IProps as ReduxProps } from "./index";
 import { IClass, styles } from "./styles";
+import { ImageURLS } from "../../Assets";
 
 interface SelfProps {
   match: {
@@ -26,6 +33,7 @@ interface SelfProps {
       [x: string]: string;
     };
   };
+  history: any;
 }
 
 interface IState {
@@ -33,6 +41,7 @@ interface IState {
   posts: Array<IPost>;
   hasMoreToFetch: boolean;
   hasFetched: boolean;
+  subData: ISubData | null;
 }
 
 type IProps = SelfProps & IClass & ReduxProps;
@@ -51,7 +60,8 @@ class Subreaddit extends Component<IProps, IState> {
       offset: 0,
       posts: [],
       hasMoreToFetch: true,
-      hasFetched: false
+      hasFetched: false,
+      subData: null
     };
   }
 
@@ -65,6 +75,14 @@ class Subreaddit extends Component<IProps, IState> {
   }
 
   fetchAll = () => {
+    getSubById(this.sub).then(({ data, statusCode }) => {
+      if (statusCode === STATUS_SUCCESS) {
+        this.setState({
+          subData: data as ISubData
+        });
+      }
+    });
+
     getSubPosts(this.sub, this.state.offset, this.limit).then(
       ({ data, statusCode }) => {
         if (statusCode === STATUS_SUCCESS) {
@@ -106,16 +124,88 @@ class Subreaddit extends Component<IProps, IState> {
     }
   };
 
+  joinSub = () => {
+    if (this.props.isAuthenticated) {
+      this.props.joinSub(this.sub);
+    } else {
+      this.props.history.push({
+        pathname: RouteNames.login,
+        state: { heading: "Login to join subreaddits you like!" }
+      });
+    }
+  };
+
+  leaveSub = () => {
+    this.props.leaveSub(this.sub);
+  };
+
   render() {
-    const { posts, hasFetched } = this.state;
+    const { posts, hasFetched, subData } = this.state;
     const { classes, user } = this.props;
+    const isUserMember = user?.JoinedSubs.includes(this.sub);
 
     return (
       <PaginationContainer handlePagination={this.fetchMore}>
-        <Container>
-          <Grid container spacing={2}>
+        <Paper
+          className={classes.bannerContainer}
+          style={{ position: "relative" }}
+        >
+          <Box className={classes.overlay} style={{ position: "absolute" }} />
+          <Box
+            {...{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1
+            }}
+          >
+            <Grid container spacing={10}>
+              <Grid item xs={5} direction={"column"}>
+                <Avatar
+                  url={subData?.Thumbnail || ImageURLS.defaultSubThumbnail}
+                  size={"xl"}
+                  className={classes.thumbnail}
+                />
+                <Typography
+                  variant={"h4"}
+                  color={"textPrimary"}
+                  className={classes.subTitle}
+                >
+                  b/{this.sub}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={7}
+                direction={"column"}
+                style={{ marginTop: "5%" }}
+              >
+                {!!subData && (
+                  <Typography variant={"body1"} align={"center"}>
+                    {formatNumberNotation(subData?.Users.length)} bakers
+                  </Typography>
+                )}
+                <Grid container>
+                  <Grid item xs={6}>
+                    <Button
+                      variant={"contained"}
+                      onClick={isUserMember ? this.leaveSub : this.joinSub}
+                    >
+                      {!isUserMember ? "JOIN" : "LEAVE"}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <AddPost textButton sub={this.sub} />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+        <Container maxWidth={"md"}>
+          <Grid container spacing={5} style={{ marginTop: "3vh" }}>
             <Grid item xs={12} sm={8}>
-              <Box display={"flex"} marginTop={"5vh"}>
+              <Box display={"flex"}>
                 <Typography
                   color={"textPrimary"}
                   className={classes.postsTitle}
@@ -123,15 +213,22 @@ class Subreaddit extends Component<IProps, IState> {
                 >
                   Posts from {this.sub}
                 </Typography>
-                {(user?.JoinedSubs || []).includes(this.sub) && (
+                {/* {(user?.JoinedSubs || []).includes(this.sub) && (
                   <Box alignContent={"flex-end"}>
                     <AddPost sub={this.sub} subPageCallBack={this.fetchAll} />
                   </Box>
-                )}
+                )} */}
               </Box>
               <Box style={{ marginTop: "1.5rem" }}>
                 {!!posts.length ? (
-                  posts.map((item, index) => <PostCard {...item} key={index} />)
+                  posts.map((item, index) => (
+                    <PostCard
+                      {...item}
+                      key={index}
+                      contentTruncation={60}
+                      titleTruncation={120}
+                    />
+                  ))
                 ) : !hasFetched ? (
                   Array.from({ length: 10 }).map((_, index) => (
                     <PostSkeleton key={index} />
@@ -143,8 +240,55 @@ class Subreaddit extends Component<IProps, IState> {
                 )}
               </Box>
             </Grid>
-            <Grid item xs={12} sm={3}>
-              <Paper></Paper>
+            <Grid item xs={12} sm={4}>
+              {!!subData && (
+                <DetailCard
+                  avatar={subData?.Thumbnail}
+                  name={`b/${subData.Name}`}
+                  subLines={[
+                    `baking since ${dayjs(subData.CreatedAt).format("MMM DD")}`,
+                    `${
+                      !!subData.Users.length
+                        ? formatNumberNotation(subData.Users.length)
+                        : 0
+                    } bakers`
+                  ]}
+                  description={subData.Description}
+                  renderBottom={() =>
+                    !!subData.Tags.length ? (
+                      <Box
+                        {...{
+                          display: "flex",
+                          justifyContent: "center",
+                          paddingLeft: 5,
+                          paddingRight: 5
+                        }}
+                      >
+                        <Typography
+                          style={{
+                            fontWeight: 500,
+                            fontSize: "1rem",
+                            marginRight: 5
+                          }}
+                        >
+                          Tags:
+                        </Typography>
+                        <Typography
+                          style={{
+                            fontWeight: 400,
+                            fontSize: "0.9rem",
+                            color: fade(WHITE, 0.9)
+                          }}
+                        >
+                          {subData.Tags.join(", ")}
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <></>
+                    )
+                  }
+                />
+              )}
             </Grid>
           </Grid>
         </Container>

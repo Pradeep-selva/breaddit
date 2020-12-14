@@ -61,19 +61,19 @@ class Subreaddit extends Component<IProps, IState> {
   }
 
   fetchAll = () => {
+    getUserById(this.userName).then(({ data, statusCode }) => {
+      if (statusCode === STATUS_SUCCESS) {
+        this.setState({
+          userData: data
+        });
+      }
+    });
+
     getUserPosts(this.userName).then(({ data, statusCode }) => {
       if (statusCode === STATUS_SUCCESS) {
         this.setState({
           posts: data as Array<IPost>,
           hasFetched: true
-        });
-      }
-    });
-
-    getUserById(this.userName).then(({ data, statusCode }) => {
-      if (statusCode === STATUS_SUCCESS) {
-        this.setState({
-          userData: data
         });
       }
     });

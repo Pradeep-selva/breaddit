@@ -16,7 +16,9 @@ export const userActionTypes = {
   START_UPVOTE: "START_UPVOTE",
   START_DOWNVOTE: "START_DOWNVOTE",
   JOIN_SUB: "JOIN_SUB",
-  APPEND_SUB: "APPEND_SUB"
+  APPEND_SUB: "APPEND_SUB",
+  LEAVE_SUB: "LEAVE_SUB",
+  REMOVE_SUB: "REMOVE_SUB"
 };
 
 export const feedActionTypes = {

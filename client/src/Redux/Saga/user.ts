@@ -16,7 +16,9 @@ import {
   stopUserLoading,
   upvotePost,
   joinSub,
-  appendSub
+  appendSub,
+  leaveSub,
+  removeSub
 } from "../Actions";
 import {
   getUserData,
@@ -25,7 +27,8 @@ import {
   getUserUpvotes,
   upvotePost as upvotePostAPI,
   downvotePost as downvotePostAPI,
-  joinSub as joinSubAPI
+  joinSub as joinSubAPI,
+  leaveSub as leaveSubAPI
 } from "../../APIs";
 import { userActionTypes } from "../types";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
@@ -88,6 +91,11 @@ function* joinSubSaga({ subName }: ReturnType<typeof joinSub>) {
   yield joinSubAPI(subName);
 }
 
+function* leaveSubSaga({ subName }: ReturnType<typeof leaveSub>) {
+  yield put(removeSub(subName));
+  yield leaveSubAPI(subName);
+}
+
 export default function* feedSaga() {
   yield all([
     takeLatest(userActionTypes.LOGIN_USER, loginUserAndSetReduxState)
@@ -96,4 +104,5 @@ export default function* feedSaga() {
   yield all([takeLatest(userActionTypes.START_UPVOTE, upvotePostSaga)]);
   yield all([takeLatest(userActionTypes.START_DOWNVOTE, downvotePostSaga)]);
   yield all([takeLatest(userActionTypes.JOIN_SUB, joinSubSaga)]);
+  yield all([takeLatest(userActionTypes.LEAVE_SUB, leaveSubSaga)]);
 }

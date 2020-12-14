@@ -82,3 +82,13 @@ export const appendSub = (subName: string) => ({
   type: userActionTypes.APPEND_SUB,
   subName
 });
+
+export const leaveSub = (subName: string) => ({
+  type: userActionTypes.LEAVE_SUB,
+  subName
+});
+
+export const removeSub = (subName: string) => ({
+  type: userActionTypes.REMOVE_SUB,
+  subName
+});

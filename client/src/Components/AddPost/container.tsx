@@ -51,6 +51,7 @@ type IProps = IClass &
     sub?: string;
     subPageCallBack?: Function;
     history?: any;
+    textButton?: boolean;
   };
 
 class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
@@ -325,19 +326,25 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
 
   render() {
     const { loading, open, tabValue, showToast } = this.state;
-    const { classes, joinedSubs } = this.props;
+    const { classes, joinedSubs, textButton = false } = this.props;
 
     return (
       <React.Fragment>
-        <Tooltip title={"Add a post"}>
-          <IconButton
-            onClick={this.handleOpen}
-            color={"inherit"}
-            style={{ flex: 1, marginRight: 20 }}
-          >
-            <AiTwotoneEdit color={SMOKEY_WHITE} />
-          </IconButton>
-        </Tooltip>
+        {textButton ? (
+          <Button variant={"contained"} onClick={this.handleOpen}>
+            POST
+          </Button>
+        ) : (
+          <Tooltip title={"Add a post"}>
+            <IconButton
+              onClick={this.handleOpen}
+              color={"inherit"}
+              style={{ flex: 1, marginRight: 20 }}
+            >
+              <AiTwotoneEdit color={SMOKEY_WHITE} />
+            </IconButton>
+          </Tooltip>
+        )}
         <Dialog
           open={open}
           fullScreen

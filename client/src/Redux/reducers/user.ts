@@ -115,6 +115,19 @@ export default function user(state = { ...initialState }, action: any) {
         } as IUserData
       };
 
+    case userActionTypes.REMOVE_SUB:
+      let newSubs = (state.userData?.JoinedSubs || []).filter(
+        (item) => item !== action.subName
+      );
+
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          JoinedSubs: newSubs
+        }
+      };
+
     case userActionTypes.START_USER_LOADING:
       return {
         ...state,
