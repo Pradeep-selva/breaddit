@@ -14,4 +14,5 @@ export { default as NavbarUserButton } from "./NavbarUserButton";
 export { default as ConfirmDialogWithAlert } from "./ConfirmDialogWithAlert";
 export { default as PaginationContainer } from "./PaginationContainer";
 export { default as NotificationBadge } from "./NotificationBadge";
+export { default as DetailCard } from "./DetailCard";
 export * from "./Skeletons";

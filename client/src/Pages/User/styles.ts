@@ -3,7 +3,6 @@ import { createStyles } from "@material-ui/core";
 
 const rawStyles = {
   postsTitle: {
-    marginTop: "5vh",
     fontWeight: 700,
     fontSize: "1rem"
   }

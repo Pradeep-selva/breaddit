@@ -2,16 +2,17 @@ import {
   Box,
   Container,
   Grid,
-  Paper,
   Typography,
   withStyles
 } from "@material-ui/core";
+import dayjs from "dayjs";
 import React, { Component } from "react";
-import { getUserPosts } from "../../APIs";
-import { PostCard, PostSkeleton } from "../../Components";
+import { RiUserLocationFill } from "react-icons/ri";
+import { getUserById, getUserPosts } from "../../APIs";
+import { DetailCard, PostCard, PostSkeleton } from "../../Components";
 import { DEFAULT_TITLE, STATUS_SUCCESS } from "../../Configs";
-import { getTabTitle } from "../../Services";
-import { IPost } from "../../Types";
+import { formatNumberNotation, getTabTitle } from "../../Services";
+import { IPost, IUserData } from "../../Types";
 import { IProps as ReduxProps } from "./index";
 import { IClass, styles } from "./styles";
 
@@ -27,6 +28,7 @@ interface IState {
   offset: number;
   posts: Array<IPost>;
   hasFetched: boolean;
+  userData: IUserData | null;
 }
 
 type IProps = SelfProps & IClass & ReduxProps;
@@ -44,12 +46,21 @@ class Subreaddit extends Component<IProps, IState> {
     this.state = {
       offset: 0,
       posts: [],
+      userData: null,
       hasFetched: false
     };
   }
 
   componentDidMount() {
     document.title = getTabTitle(`u/${this.userName}`);
+    this.fetchAll();
+  }
+
+  componentWillUnmount() {
+    document.title = DEFAULT_TITLE;
+  }
+
+  fetchAll = () => {
     getUserPosts(this.userName).then(({ data, statusCode }) => {
       if (statusCode === STATUS_SUCCESS) {
         this.setState({
@@ -58,26 +69,37 @@ class Subreaddit extends Component<IProps, IState> {
         });
       }
     });
-  }
 
-  componentWillUnmount() {
-    document.title = DEFAULT_TITLE;
-  }
+    getUserById(this.userName).then(({ data, statusCode }) => {
+      if (statusCode === STATUS_SUCCESS) {
+        this.setState({
+          userData: data
+        });
+      }
+    });
+  };
 
   render() {
-    const { posts, hasFetched } = this.state;
+    const { posts, hasFetched, userData } = this.state;
     const { classes } = this.props;
 
     return (
-      <Container>
-        <Grid container spacing={2}>
+      <Container maxWidth={"md"}>
+        <Grid container spacing={5} style={{ marginTop: "5vh" }}>
           <Grid item xs={12} sm={8}>
             <Typography color={"textPrimary"} className={classes.postsTitle}>
               Posts from {this.userName}
             </Typography>
             <Box style={{ marginTop: "1.5rem" }}>
               {!!posts.length ? (
-                posts.map((item, index) => <PostCard {...item} key={index} />)
+                posts.map((item, index) => (
+                  <PostCard
+                    {...item}
+                    key={index}
+                    contentTruncation={60}
+                    titleTruncation={120}
+                  />
+                ))
               ) : !hasFetched ? (
                 Array.from({ length: 10 }).map((_, index) => (
                   <PostSkeleton key={index} />
@@ -89,8 +111,30 @@ class Subreaddit extends Component<IProps, IState> {
               )}
             </Box>
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <Paper></Paper>
+          <Grid item xs={12} sm={4}>
+            {!!userData && (
+              <DetailCard
+                avatar={userData.Avatar}
+                name={`u/${userData.UserName}`}
+                subLines={[
+                  `bake day on ${dayjs(userData.CreatedAt).format("MMM DD")}`,
+                  `${formatNumberNotation(Math.round(userData.Breads))} breads`,
+                  userData.Status
+                ]}
+                description={userData.Bio}
+                renderBottom={() => (
+                  <Box {...{ display: "flex", justifyContent: "center" }}>
+                    <RiUserLocationFill
+                      style={{ marginRight: 10 }}
+                      size={"1.5rem"}
+                    />
+                    <Typography style={{ fontWeight: 500, fontSize: "1rem" }}>
+                      {userData.Location || "No dox"}
+                    </Typography>
+                  </Box>
+                )}
+              />
+            )}
           </Grid>
         </Grid>
       </Container>

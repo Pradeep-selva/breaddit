@@ -3,11 +3,12 @@ import { avatarStyle } from "./styles";
 
 interface IProps {
   url: string;
-  size?: "xs" | "sm" | "lg";
+  size?: "xs" | "sm" | "lg" | "xl" | "xxl";
   style?: React.CSSProperties;
+  className?: string;
 }
 
-const Avatar = ({ url, size, style }: IProps) => (
+const Avatar = ({ url, size, style, className }: IProps) => (
   <img
     src={url}
     style={{
@@ -15,6 +16,7 @@ const Avatar = ({ url, size, style }: IProps) => (
       ...style
     }}
     alt={"avatar"}
+    className={className || ""}
   />
 );
 

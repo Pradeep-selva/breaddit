@@ -19,7 +19,7 @@ import AddPost from "../AddPost";
 import NavbarUserButton from "../NavbarUserButton";
 import NotificationBadge from "../NotificationBadge";
 
-const Navbar = ({ isAuthenticated, logoutUser }: IProps) => {
+const Navbar = ({ isAuthenticated }: IProps) => {
   const classes = useStyles();
 
   const renderUnauthenticatedButtons = () => (
