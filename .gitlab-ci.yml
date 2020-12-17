@@ -8,6 +8,7 @@ deploy-client:
     - npm install
     - rm -rf build/
     - npm run build
+    - echo $FIREBASE_TOKEN
     - firebase deploy --token $FIREBASE_TOKEN
   only:
     refs:
