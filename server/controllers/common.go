@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
@@ -40,7 +39,6 @@ func HomeHandler(c *gin.Context) {
 //GET /api/v/search?q=
 func SearchKeywordHandler(c *gin.Context) {
 	key := strings.ToLower(c.Request.URL.Query().Get("q"))
-	log.Println(key)
 
 	users := []userSearch{}
 	subs := []subsSearch{}

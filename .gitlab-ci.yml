@@ -26,8 +26,10 @@ deploy-server:
     - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
     - apt-get update
     - apt-get -qq -y install google-cloud-sdk
+    - sudo apt-get install google-cloud-sdk-app-engine-go
   script:
     - cd server
+    - go mod vendor
     - echo $GCD_KEY_FILE > /tmp/$CI_PIPELINE_ID.json
     - gcloud auth activate-service-account --key-file=/tmp/$CI_PIPELINE_ID.json
     - gcloud --quiet --project $GCD_PROJECT_ID app deploy
