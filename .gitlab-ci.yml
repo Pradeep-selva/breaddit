@@ -26,7 +26,7 @@ deploy-server:
     - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
     - apt-get update
     - apt-get -qq -y install google-cloud-sdk
-    - apt-get install google-cloud-sdk-app-engine-go
+    - apt-get -qq -y install google-cloud-sdk-app-engine-go
   script:
     - cd server
     - go mod vendor
