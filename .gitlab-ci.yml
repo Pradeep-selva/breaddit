@@ -1,0 +1,39 @@
+deploy-client:
+  stage: client-deploy
+  image: node:12.13.0-alpine
+  before_script:
+    - npm i -g firebase-tools
+  script:
+    - cd client
+    - npm install
+    - rm -rf build/
+    - npm run build
+    - firebase deploy --token $FIREBASE_TOKEN
+  only:
+    refs:
+      - master
+    changes:
+      - client/**/*
+  environment:
+    name: production
+    url: https://breadddit.web.app/
+
+prod-hosting:
+  stage: deploy
+  image: python:2.7
+  before_script:
+    - echo "deb http://packages.cloud.google.com/apt cloud-sdk-jessie main" | tee /etc/apt/sources.list.d/google-cloud-sdk.list
+    - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+    - apt-get update
+    - apt-get -qq -y install google-cloud-sdk
+  script:
+    - echo $GCD_KEY_FILE > /tmp/$CI_PIPELINE_ID.json
+    - gcloud auth activate-service-account --key-file /tmp/$CI_PIPELINE_ID.json
+    - gcloud --quiet --project $GCD_PROJECT_ID app deploy
+  after_script:
+    - rm /tmp/$CI_PIPELINE_ID.json
+  only:
+    refs:
+      - master
+    changes:
+      - server/**/*
