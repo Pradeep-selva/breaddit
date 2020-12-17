@@ -42,6 +42,7 @@ interface IState {
   hasMoreToFetch: boolean;
   hasFetched: boolean;
   subData: ISubData | null;
+  loading: boolean;
 }
 
 type IProps = SelfProps & IClass & ReduxProps;
@@ -61,7 +62,8 @@ class Subreaddit extends Component<IProps, IState> {
       posts: [],
       hasMoreToFetch: true,
       hasFetched: false,
-      subData: null
+      subData: null,
+      loading: false
     };
   }
 
@@ -103,25 +105,31 @@ class Subreaddit extends Component<IProps, IState> {
   };
 
   fetchMore = () => {
-    if (this.state.hasMoreToFetch) {
-      getSubPosts(this.sub, this.state.offset + this.limit).then(
-        ({ data, statusCode }) => {
-          if (statusCode === STATUS_SUCCESS) {
-            this.setState(
-              (state) => ({
-                posts: [...state.posts, ...data],
-                offset: state.offset + this.limit
-              }),
-              () => {
-                if (data?.length < this.limit) {
-                  this.setState((state) => ({ hasMoreToFetch: false }));
-                }
+    this.setState(
+      (state) => ({ loading: true }),
+      () => {
+        if (this.state.hasMoreToFetch) {
+          getSubPosts(this.sub, this.state.offset + this.limit).then(
+            ({ data, statusCode }) => {
+              if (statusCode === STATUS_SUCCESS) {
+                this.setState(
+                  (state) => ({
+                    posts: [...state.posts, ...data],
+                    offset: state.offset + this.limit,
+                    loading: true
+                  }),
+                  () => {
+                    if (data?.length < this.limit) {
+                      this.setState((state) => ({ hasMoreToFetch: false }));
+                    }
+                  }
+                );
               }
-            );
-          }
+            }
+          );
         }
-      );
-    }
+      }
+    );
   };
 
   joinSub = () => {
@@ -140,7 +148,7 @@ class Subreaddit extends Component<IProps, IState> {
   };
 
   render() {
-    const { posts, hasFetched, subData } = this.state;
+    const { posts, hasFetched, subData, loading } = this.state;
     const { classes, user } = this.props;
     const isUserMember = user?.JoinedSubs.includes(this.sub);
 
@@ -238,6 +246,10 @@ class Subreaddit extends Component<IProps, IState> {
                     b/{this.sub} has no posts yet.
                   </Typography>
                 )}
+                {loading &&
+                  Array.from({ length: 10 }).map((_, index) => (
+                    <PostSkeleton key={index} />
+                  ))}
               </Box>
             </Grid>
             <Grid item xs={12} sm={4}>
