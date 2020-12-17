@@ -6,12 +6,12 @@ deploy-client:
   script:
     - cd client
     - npm install
-    - echo $SECRETS_FILE > /src/secrets.ts
+    - echo $SECRETS_FILE > ./src/secrets.ts
     - rm -rf build/
     - npm run build
     - firebase deploy --token $FIREBASE_TOKEN
   after_script:
-    - rm /src/secrets.ts
+    - rm ./src/secrets.ts
   only:
     refs:
       - master
