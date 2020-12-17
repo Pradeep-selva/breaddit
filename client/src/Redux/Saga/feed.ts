@@ -1,4 +1,4 @@
-import { put, takeLatest, all } from "redux-saga/effects";
+import { put, all, takeEvery } from "redux-saga/effects";
 import {
   loadPublicFeed,
   setTrendingPosts,
@@ -99,6 +99,6 @@ function* getAllPrivateFeed({
 }
 
 export default function* feedSaga() {
-  yield all([takeLatest(feedActionTypes.LOAD_PUBLIC_FEED, getAllPublicFeed)]);
-  yield all([takeLatest(feedActionTypes.LOAD_PRIVATE_FEED, getAllPrivateFeed)]);
+  yield all([takeEvery(feedActionTypes.LOAD_PUBLIC_FEED, getAllPublicFeed)]);
+  yield all([takeEvery(feedActionTypes.LOAD_PRIVATE_FEED, getAllPrivateFeed)]);
 }
