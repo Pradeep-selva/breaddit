@@ -18,7 +18,7 @@ deploy-client:
     name: production
     url: https://breadddit.web.app/
 
-prod-hosting:
+deploy_server:
   stage: deploy
   image: python:2.7
   before_script:
