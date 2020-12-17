@@ -7,6 +7,7 @@ deploy-client:
     - cd client
     - npm install
     - echo $SECRETS_FILE > ./src/secrets.ts
+    - ls src
     - rm -rf build/
     - npm run build
     - firebase deploy --token $FIREBASE_TOKEN
