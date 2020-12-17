@@ -8,7 +8,6 @@ deploy-client:
     - npm install
     - rm -rf build/
     - npm run build
-    - echo $FIREBASE_TOKEN
     - firebase deploy --token $FIREBASE_TOKEN
   only:
     refs:
@@ -29,7 +28,7 @@ prod-hosting:
     - apt-get -qq -y install google-cloud-sdk
   script:
     - echo $GCD_KEY_FILE > /tmp/$CI_PIPELINE_ID.json
-    - gcloud auth activate-service-account --key-file /tmp/$CI_PIPELINE_ID.json
+    - gcloud auth activate-service-account --key-file=/tmp/$CI_PIPELINE_ID.json
     - gcloud --quiet --project $GCD_PROJECT_ID app deploy
   after_script:
     - rm /tmp/$CI_PIPELINE_ID.json
