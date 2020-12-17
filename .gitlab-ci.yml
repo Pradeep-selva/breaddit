@@ -27,6 +27,7 @@ deploy-server:
     - apt-get update
     - apt-get -qq -y install google-cloud-sdk
   script:
+    - cd server
     - echo $GCD_KEY_FILE > /tmp/$CI_PIPELINE_ID.json
     - gcloud auth activate-service-account --key-file=/tmp/$CI_PIPELINE_ID.json
     - gcloud --quiet --project $GCD_PROJECT_ID app deploy
