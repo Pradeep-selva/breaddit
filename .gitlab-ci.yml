@@ -31,7 +31,6 @@ deploy-server:
     - cd server
     - echo $GCD_KEY_FILE > /tmp/$CI_PIPELINE_ID.json
     - gcloud auth activate-service-account --key-file=/tmp/$CI_PIPELINE_ID.json
-    - gcloud iam service-accounts add-iam-policy-binding
     - gcloud --quiet --project $GCD_PROJECT_ID app deploy
   after_script:
     - rm /tmp/$CI_PIPELINE_ID.json
