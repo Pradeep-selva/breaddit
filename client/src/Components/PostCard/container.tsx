@@ -27,11 +27,6 @@ import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import DeletePostButton from "../DeletePostButton";
 import { Alert } from "@material-ui/lab";
 
-interface CardProps extends IProps {
-  titleTruncation?: number;
-  contentTruncation?: number;
-}
-
 const PostCard = ({
   Title,
   CreatedAt,
@@ -48,10 +43,8 @@ const PostCard = ({
   userId,
   isAuthenticated,
   removePostFromFeed,
-  joinSub,
-  titleTruncation,
-  contentTruncation
-}: IPost & CardProps) => {
+  joinSub
+}: IPost & IProps) => {
   const classes = useStyles();
   const history = useHistory();
   const cumulativeVotes = Upvotes - Downvotes;
@@ -145,7 +138,7 @@ const PostCard = ({
                   color={"textPrimary"}
                   style={{ marginTop: "1vh" }}
                 >
-                  {getTruncatedContent(Title, titleTruncation || 145)}
+                  {Title}
                 </Typography>
                 {!!Link ? (
                   <Box
@@ -167,7 +160,7 @@ const PostCard = ({
                     color={"textPrimary"}
                     style={{ marginTop: "1vh" }}
                   >
-                    {getTruncatedContent(Content, contentTruncation || 100)}
+                    {getTruncatedContent(Content, 600)}
                   </Typography>
                 )}
               </Box>
