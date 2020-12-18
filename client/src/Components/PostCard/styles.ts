@@ -97,6 +97,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: LIGHT_BLACK,
       display: "flex",
       paddingLeft: "1rem",
+      marginTop: "1rem",
       borderBottomRightRadius: 5
     },
     bottomBarElement: {
