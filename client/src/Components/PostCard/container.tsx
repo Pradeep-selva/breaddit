@@ -151,7 +151,7 @@ const PostCard = ({
                       onClick={preventDefault}
                       style={{ color: LIGHT_BLUE }}
                     >
-                      {getTruncatedContent(Link, 50)}
+                      {getTruncatedContent(Link, 80)}
                     </MuiLink>
                   </Box>
                 ) : (

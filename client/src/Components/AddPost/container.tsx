@@ -44,6 +44,8 @@ interface IState {
   loading: boolean;
   open: boolean;
   showToast: boolean;
+  titleCount: number;
+  contentCount: number;
 }
 
 type IProps = IClass &
@@ -69,7 +71,9 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
       loading: false,
       tabValue: 0,
       open: false,
-      showToast: false
+      showToast: false,
+      titleCount: 200,
+      contentCount: 1000
     };
   }
 
@@ -233,8 +237,17 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
             type={"text"}
             placeholder={"Give your post a title"}
             value={this.state.values.Title}
-            onChange={this.onFieldChange}
+            onChange={(event: any) => {
+              this.onFieldChange(event);
+              this.setState((state) => ({
+                titleCount: 200 - event.target.value.length
+              }));
+            }}
             helperText={this.state.errors.Title}
+            textCount={this.state.titleCount}
+            textCountStyle={
+              this.state.titleCount >= 0 ? { color: "green" } : { color: "red" }
+            }
           />
         </Grid>
       </Grid>
@@ -253,9 +266,18 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
         placeholder={"What do you want to say?"}
         rows={10}
         value={this.state.values.Content}
-        onChange={this.onFieldChange}
+        onChange={(event: any) => {
+          this.onFieldChange(event);
+          this.setState((state) => ({
+            contentCount: 1000 - event.target.value.length
+          }));
+        }}
         helperText={this.state.errors.Content}
         style={{ marginTop: "1vh" }}
+        textCount={this.state.contentCount}
+        textCountStyle={
+          this.state.contentCount >= 0 ? { color: "green" } : { color: "red" }
+        }
       />
       {this.renderGeneralErrors()}
     </Container>
