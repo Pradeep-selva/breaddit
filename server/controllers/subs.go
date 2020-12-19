@@ -26,7 +26,7 @@ func CreateSubHandler(c *gin.Context) {
 
 	_tags := c.PostForm("Tags")
 	if _tags != "" {
-		body.Tags = strings.Split(strings.ToLower(_tags), ", ")
+		body.Tags = strings.Split(strings.ToLower(_tags), " ")
 	}
 
 	subRef := utils.Client.Collection("subs").Doc(body.Name)
