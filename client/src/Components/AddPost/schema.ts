@@ -14,13 +14,16 @@ export const tabTypes: any = {
 
 export const FormSchema = (tabValue: number) => ({
   Title: {
-    presence: { allowEmpty: false, message: "can't be blank. " }
+    presence: { allowEmpty: false, message: "can't be blank. " },
+    length: { maximum: 200 }
   },
   Sub: {
     presence: { allowEmpty: false, message: "can't be blank. " }
   },
   [`${tabTypes[tabValue]}`]: {
-    presence: { allowEmpty: false, message: "can't be blank. " }
+    presence: { allowEmpty: false, message: "can't be blank. " },
+    length:
+      tabTypes[tabValue] === "Content" ? { maximum: 1000 } : { minimum: 0 }
   },
   Link:
     tabValue === 2

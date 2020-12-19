@@ -195,7 +195,11 @@ class Subreaddit extends Component<IProps, IState> {
                     </Button>
                   </Grid>
                   <Grid item xs={6}>
-                    <AddPost textButton sub={this.sub} />
+                    <AddPost
+                      textButton
+                      sub={this.sub}
+                      subPageCallBack={() => this.props.history.go(0)}
+                    />
                   </Grid>
                 </Grid>
               </Grid>
@@ -213,11 +217,6 @@ class Subreaddit extends Component<IProps, IState> {
                 >
                   Posts from {this.sub}
                 </Typography>
-                {/* {(user?.JoinedSubs || []).includes(this.sub) && (
-                  <Box alignContent={"flex-end"}>
-                    <AddPost sub={this.sub} subPageCallBack={this.fetchAll} />
-                  </Box>
-                )} */}
               </Box>
               <Box style={{ marginTop: "1.5rem" }}>
                 {!!posts.length ? (
@@ -225,8 +224,7 @@ class Subreaddit extends Component<IProps, IState> {
                     <PostCard
                       {...item}
                       key={index}
-                      contentTruncation={60}
-                      titleTruncation={120}
+                      deleteCallback={() => this.props.history.go(0)}
                     />
                   ))
                 ) : !hasFetched ? (
@@ -255,7 +253,7 @@ class Subreaddit extends Component<IProps, IState> {
                   ]}
                   description={subData.Description}
                   renderBottom={() =>
-                    !!subData.Tags.length ? (
+                    !!subData.Tags?.length ? (
                       <Box
                         {...{
                           display: "flex",

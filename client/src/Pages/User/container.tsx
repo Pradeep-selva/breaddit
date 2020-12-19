@@ -92,14 +92,7 @@ class Subreaddit extends Component<IProps, IState> {
             </Typography>
             <Box style={{ marginTop: "1.5rem" }}>
               {!!posts.length ? (
-                posts.map((item, index) => (
-                  <PostCard
-                    {...item}
-                    key={index}
-                    contentTruncation={60}
-                    titleTruncation={120}
-                  />
-                ))
+                posts.map((item, index) => <PostCard {...item} key={index} />)
               ) : !hasFetched ? (
                 Array.from({ length: 10 }).map((_, index) => (
                   <PostSkeleton key={index} />

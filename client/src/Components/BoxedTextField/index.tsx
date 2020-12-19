@@ -4,7 +4,8 @@ import {
   FormControlProps,
   InputLabelProps,
   TextFieldProps,
-  Typography
+  Typography,
+  Box
 } from "@material-ui/core";
 import React from "react";
 import { SMOKEY_WHITE } from "../../Common/colors";
@@ -14,6 +15,8 @@ interface IProps {
   textColor?: string;
   label: string;
   style?: React.CSSProperties;
+  textCount?: number;
+  textCountStyle?: React.CSSProperties;
 }
 
 const BoxedTextField = ({
@@ -29,7 +32,9 @@ const BoxedTextField = ({
   helperText,
   value,
   rows,
-  style
+  style,
+  textCount,
+  textCountStyle
 }: FormControlProps & InputLabelProps & TextFieldProps & IProps) => (
   <FormControl fullWidth={fullWidth} style={style}>
     <InputLabel
@@ -54,9 +59,14 @@ const BoxedTextField = ({
         multiline: !!rows
       }}
     />
-    <Typography variant={"caption"} color={"error"}>
-      {helperText}
-    </Typography>
+    <Box display={"flex"}>
+      <Typography variant={"caption"} color={"error"} style={{ flex: 10 }}>
+        {helperText}
+      </Typography>
+      <Typography variant={"caption"} style={textCountStyle}>
+        {textCount}
+      </Typography>
+    </Box>
   </FormControl>
 );
 

@@ -9,7 +9,9 @@ import React from "react";
 import { AiFillCaretDown } from "react-icons/ai";
 import { BiLogOut } from "react-icons/bi";
 import { FaUserAlt } from "react-icons/fa";
+import { useHistory } from "react-router";
 import { DARK_GREY, SMOKEY_WHITE } from "../../Common/colors";
+import { RouteNames } from "../../Configs";
 import Avatar from "../Avatar";
 import ConfirmDialogWithAlert from "../ConfirmDialogWithAlert";
 import { IProps } from "./index";
@@ -17,6 +19,7 @@ import { useStyles } from "./styles";
 
 const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openDialog, setOpenDialog] = React.useState(false);
 
@@ -33,6 +36,11 @@ const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
   ) => {
     logoutUser();
     setOpenDialog(false);
+  };
+
+  const profileClick = () => {
+    history.push(`${RouteNames.user}/${userData?.UserName}`);
+    handleClose();
   };
 
   return (
@@ -60,7 +68,7 @@ const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
           marginTop: "2rem"
         }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={profileClick}>
           <ListItemIcon>
             <FaUserAlt color={SMOKEY_WHITE} />
           </ListItemIcon>

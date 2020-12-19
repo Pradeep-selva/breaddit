@@ -12,7 +12,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       backgroundColor: DARK_GREY,
-      height: "11rem",
+      // height: "11rem",
       minWidth: "100%",
       marginBottom: "2.5vh",
       display: "flex",
@@ -73,7 +73,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: `1px solid ${SEMI_GREY}`,
       minWidth: "5rem",
       minHeight: "5rem",
-      marginTop: "1vh",
+      margin: "1vh 0",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -97,6 +97,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: LIGHT_BLACK,
       display: "flex",
       paddingLeft: "1rem",
+      marginTop: "1rem",
       borderBottomRightRadius: 5
     },
     bottomBarElement: {

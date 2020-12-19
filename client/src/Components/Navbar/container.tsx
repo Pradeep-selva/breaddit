@@ -18,6 +18,7 @@ import { RouteNames } from "../../Configs";
 import AddPost from "../AddPost";
 import NavbarUserButton from "../NavbarUserButton";
 import NotificationBadge from "../NotificationBadge";
+import { CreateSub } from "..";
 
 const Navbar = ({ isAuthenticated }: IProps) => {
   const classes = useStyles();
@@ -47,6 +48,7 @@ const Navbar = ({ isAuthenticated }: IProps) => {
 
   const renderAuthenticatedButtons = () => (
     <div className={classes.sectionDesktop}>
+      <CreateSub />
       <NotificationBadge />
       <AddPost />
       <NavbarUserButton />

@@ -27,11 +27,6 @@ import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import DeletePostButton from "../DeletePostButton";
 import { Alert } from "@material-ui/lab";
 
-interface CardProps extends IProps {
-  titleTruncation?: number;
-  contentTruncation?: number;
-}
-
 const PostCard = ({
   Title,
   CreatedAt,
@@ -49,9 +44,8 @@ const PostCard = ({
   isAuthenticated,
   removePostFromFeed,
   joinSub,
-  titleTruncation,
-  contentTruncation
-}: IPost & CardProps) => {
+  deleteCallback
+}: IPost & IProps & { deleteCallback?: Function }) => {
   const classes = useStyles();
   const history = useHistory();
   const cumulativeVotes = Upvotes - Downvotes;
@@ -69,6 +63,7 @@ const PostCard = ({
 
     if (statusCode === STATUS_SUCCESS) {
       removePostFromFeed(ID);
+      !!deleteCallback && deleteCallback();
     }
   };
 
@@ -145,7 +140,7 @@ const PostCard = ({
                   color={"textPrimary"}
                   style={{ marginTop: "1vh" }}
                 >
-                  {getTruncatedContent(Title, titleTruncation || 145)}
+                  {Title}
                 </Typography>
                 {!!Link ? (
                   <Box
@@ -158,7 +153,7 @@ const PostCard = ({
                       onClick={preventDefault}
                       style={{ color: LIGHT_BLUE }}
                     >
-                      {getTruncatedContent(Link, 50)}
+                      {getTruncatedContent(Link, 80)}
                     </MuiLink>
                   </Box>
                 ) : (
@@ -167,7 +162,7 @@ const PostCard = ({
                     color={"textPrimary"}
                     style={{ marginTop: "1vh" }}
                   >
-                    {getTruncatedContent(Content, contentTruncation || 100)}
+                    {getTruncatedContent(Content, 600)}
                   </Typography>
                 )}
               </Box>

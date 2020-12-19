@@ -1,4 +1,4 @@
-import { Badge, IconButton, Menu, MenuItem } from "@material-ui/core";
+import { Badge, IconButton, Menu, MenuItem, Tooltip } from "@material-ui/core";
 import React from "react";
 import { GrMail } from "react-icons/gr";
 import { useHistory } from "react-router";
@@ -39,14 +39,16 @@ const NotificationBadge = ({
 
   return (
     <React.Fragment>
-      <IconButton style={{ flex: 1, marginRight: 15 }} onClick={handleClick}>
-        <Badge
-          badgeContent={formatNumberNotation(unseenNotificationCount)}
-          color={"error"}
-        >
-          <GrMail color={SMOKEY_WHITE} />
-        </Badge>
-      </IconButton>
+      <Tooltip title={"Notifications"}>
+        <IconButton style={{ flex: 1, marginRight: 15 }} onClick={handleClick}>
+          <Badge
+            badgeContent={formatNumberNotation(unseenNotificationCount)}
+            color={"error"}
+          >
+            <GrMail color={SMOKEY_WHITE} />
+          </Badge>
+        </IconButton>
+      </Tooltip>
       <Menu
         id='simple-menu'
         anchorEl={anchorEl}
