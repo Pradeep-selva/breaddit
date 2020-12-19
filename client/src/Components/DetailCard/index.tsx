@@ -28,7 +28,9 @@ const DetailCard = ({
         <Typography className={classes.subTexts}>{line}</Typography>
       ))}
       <Typography className={classes.description}>" {description} "</Typography>
-      <Box style={{ paddingTop: "1.5rem" }}>{renderBottom()}</Box>
+      <Box style={{ paddingTop: "1.5rem", paddingBottom: "1rem" }}>
+        {renderBottom()}
+      </Box>
     </Paper>
   );
 };

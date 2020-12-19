@@ -28,7 +28,12 @@ import { FaThList } from "react-icons/fa";
 import { getFormPayload, getTruncatedContent, tabProps } from "../../Services";
 import Transition from "../Transition";
 import TabPanel from "../TabPanel";
-import { DARK_GREY, LIGHT_BLACK, SMOKEY_WHITE } from "../../Common/colors";
+import {
+  DARK_GREY,
+  LIGHT_BLACK,
+  SMOKEY_WHITE,
+  WHITE
+} from "../../Common/colors";
 import BoxedTextField from "../BoxedTextField";
 import validate from "validate.js";
 import { addPostToSub } from "../../APIs/posts";
@@ -36,6 +41,7 @@ import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import { IProps as ReduxProps } from "./index";
 import { BoxedInput } from "../BoxedTextField/styles";
 import Dropdown from "../Dropdown";
+import { Link } from "react-router-dom";
 
 interface IState {
   values: typeof FormDefaultValues;
@@ -193,7 +199,9 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
                 }
               })
               .catch(console.log)
-              .finally(() => this.setState({ loading: false }));
+              .finally(() => {
+                this.setState({ loading: false });
+              });
           } else {
             this.setState({ loading: false });
           }
@@ -476,17 +484,11 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
             variant='filled'
             severity='success'
             action={
-              <Button
-                color='inherit'
-                size='small'
-                onClick={() =>
-                  this.props.history.push(
-                    `${RouteNames.sub}/${this.state.values.Sub}`
-                  )
-                }
-              >
-                GO TO SUB
-              </Button>
+              <Link to={`${RouteNames.sub}/${this.state.values.Sub}`}>
+                <Button style={{ color: WHITE }} size='small'>
+                  GO TO SUB
+                </Button>
+              </Link>
             }
           >
             Post successfully added to b/{this.state.values.Sub}!

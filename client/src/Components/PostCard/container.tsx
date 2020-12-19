@@ -43,8 +43,9 @@ const PostCard = ({
   userId,
   isAuthenticated,
   removePostFromFeed,
-  joinSub
-}: IPost & IProps) => {
+  joinSub,
+  deleteCallback
+}: IPost & IProps & { deleteCallback?: Function }) => {
   const classes = useStyles();
   const history = useHistory();
   const cumulativeVotes = Upvotes - Downvotes;
@@ -62,6 +63,7 @@ const PostCard = ({
 
     if (statusCode === STATUS_SUCCESS) {
       removePostFromFeed(ID);
+      !!deleteCallback && deleteCallback();
     }
   };
 

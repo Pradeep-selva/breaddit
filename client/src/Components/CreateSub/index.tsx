@@ -29,6 +29,7 @@ import BoxedTextField from "../BoxedTextField";
 import validate from "validate.js";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import { createSub } from "../../APIs";
+import { Link } from "react-router-dom";
 
 interface IState {
   values: typeof FormDefaultValues;
@@ -44,7 +45,6 @@ interface IState {
 
 type IProps = IClass & {
   sub?: string;
-  subPageCallBack?: Function;
   history?: any;
   textButton?: boolean;
 };
@@ -387,17 +387,11 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
             variant='filled'
             severity='success'
             action={
-              <Button
-                color='inherit'
-                size='small'
-                onClick={() =>
-                  this.props.history.push(
-                    `${RouteNames.sub}/${this.state.values.Name}`
-                  )
-                }
-              >
-                GO TO SUB
-              </Button>
+              <Link to={`${RouteNames.sub}/${this.state.values.Name}`}>
+                <Button style={{ color: WHITE }} size='small'>
+                  GO TO SUB
+                </Button>
+              </Link>
             }
           >
             Post successfully added to b/{this.state.values.Name}!
