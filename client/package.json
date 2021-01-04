@@ -34,7 +34,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "rm -rf build/ && react-scripts build && firebase deploy"
+    "deploy": "rm -rf build/ && react-scripts build && firebase deploy",
+    "dev": "docker start breaddit && react-scripts start"
   },
   "eslintConfig": {
     "extends": [

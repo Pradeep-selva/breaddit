@@ -1,4 +1,8 @@
-export const BASE_URL = "https://breadddit.el.r.appspot.com";
+import { PRODUCTION } from "./environment";
+
+export const BASE_URL = PRODUCTION
+  ? "https://breadddit.el.r.appspot.com"
+  : "http://0.0.0.0:8080";
 
 export const DEPLOYED_URL = window.location.origin;
 
