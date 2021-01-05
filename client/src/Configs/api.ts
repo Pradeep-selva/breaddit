@@ -19,7 +19,7 @@ export const ENDPOINTS = {
   search: (query: string) => `/search?q=${query}`,
 
   //user endpoints
-  user: "/user",
+  user: "/user", // ***UPDATE PENDING***
   userById: (id: string) => `/users/${id}`, //done
   publicUserPosts: (id: string) => `/users/${id}/posts`, //done
   userUpvotes: "/user/upvotes", //done
@@ -27,7 +27,7 @@ export const ENDPOINTS = {
   userNotifications: "/user/notifications", //done
 
   //sub endpoints,
-  sub: "/sub", //done
+  sub: "/sub", //done ***UPDATE PENDING***
   subById: (id: string) => `/sub/${id}`, //done
   publicSubPosts: (id: string, offset = 0, limit = 25) =>
     `/sub/${id}/posts?limit=${limit}&offset=${offset}`, //done
@@ -35,11 +35,11 @@ export const ENDPOINTS = {
   leaveSub: (id: string) => `/sub/${id}/leave`, //done
 
   //post endpoints
-  postById: (id: string) => `/posts/${id}`,
+  postById: (id: string) => `/posts/${id}`, //done
   postToSub: (id: string) => `/sub/${id}/post`, //done
   upvotePost: (id: string) => `/posts/${id}/upvote`, //done
   downvotePost: (id: string) => `/posts/${id}/downvote`, //done
-  commentOnPost: (id: string) => `/posts/${id}/comment`,
+  commentOnPost: (id: string) => `/posts/${id}/comment`, //done
 
   //feed
   publicFeed: (offset = 0, limit = 25) =>

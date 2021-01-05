@@ -26,8 +26,7 @@ const rawStyles = {
   bottomBarElement: null,
   bottomBarText: null,
   wrapper: null,
-  imageContainer: null,
-  commentButton: null
+  imageContainer: null
 };
 
 export const styles = () =>
@@ -137,10 +136,6 @@ export const styles = () =>
       fontSize: "0.8rem",
       fontWeight: 700,
       marginLeft: "0.4rem"
-    },
-    commentButton: {
-      border: `1px solid ${SMOKEY_WHITE}`,
-      marginTop: "10px"
     }
   });
 

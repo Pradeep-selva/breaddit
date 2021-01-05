@@ -31,7 +31,7 @@ import {
   leaveSub as leaveSubAPI
 } from "../../APIs";
 import { userActionTypes } from "../types";
-import { RouteNames, STATUS_SUCCESS } from "../../Configs";
+import { DEPLOYED_URL, RouteNames, STATUS_SUCCESS } from "../../Configs";
 // import store from "../index";
 
 function* loginUserAndSetReduxState({
@@ -74,6 +74,7 @@ function* logoutUser() {
   localStorage.removeItem("AuthToken");
   yield put(clearUserData());
   yield put(loadPublicFeed({ limit: 25, offset: 0 }));
+  window.location.href = DEPLOYED_URL;
 }
 
 function* upvotePostSaga({ id }: ReturnType<typeof startUpvote>) {

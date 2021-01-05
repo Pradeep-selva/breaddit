@@ -354,7 +354,6 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
                       value={this.state.values.Tags}
                       onChange={(event: any) => {
                         this.onFieldChange(event);
-                        console.log(event.target.value.split(" "));
                         this.setState((state) => ({
                           tagCount: 10 - event.target.value.split(" ").length
                         }));

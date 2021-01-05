@@ -15,7 +15,7 @@ import { deletePostById, getPostById } from "../../APIs";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import {
   Avatar,
-  BoxedTextField,
+  CommentBox,
   CommentCard,
   DeletePostButton,
   PostSkeleton,
@@ -67,7 +67,6 @@ class ExpandedPost extends Component<IProps, IState> {
     getPostById(this.postId)
       .then((response) => {
         if (response.statusCode === STATUS_SUCCESS) {
-          console.log(response.data);
           this.setState({
             postData: response.data
           });
@@ -261,16 +260,10 @@ class ExpandedPost extends Component<IProps, IState> {
                 <PostSkeleton height={"30rem"} />
               )}
               <Grid item xs={12}>
-                <BoxedTextField
-                  multiline
-                  rows={5}
-                  label={"Whats your thoughts on this bread?"}
-                  style={{ minWidth: "100%" }}
-                  autoFocus
+                <CommentBox
+                  ID={this.props.match.params.id}
+                  isAuthenticated={this.props.isAuthenticated}
                 />
-                <Button variant={"outlined"} className={classes.commentButton}>
-                  Comment
-                </Button>
               </Grid>
               <Grid item xs={12} style={{ marginTop: "2rem" }}>
                 {postData?.Comments?.map((comment) => (

@@ -33,7 +33,7 @@ export const downvotePost = (id: string) =>
     .post<RawResponse>(ENDPOINTS.downvotePost(id))
     .then((response) => retrieveResponse(response.data));
 
-export const CommentOnPost = (id: string, payload: IComment) =>
+export const commentOnPost = (id: string, payload: IComment) =>
   axios
     .getInstance()
     .post<RawResponse>(ENDPOINTS.commentOnPost(id), payload)
