@@ -162,7 +162,7 @@ const PostCard = ({
                     color={"textPrimary"}
                     style={{ marginTop: "1vh" }}
                   >
-                    {getTruncatedContent(Content, 600)}
+                    {getTruncatedContent(Content, 300)}
                   </Typography>
                 )}
               </Box>
@@ -193,9 +193,11 @@ const PostCard = ({
                 </Typography>
               </Box>
               <Box style={{ flex: 6 }} className={classes.bottomBarElement}>
-                <IconButton color={"inherit"} style={{ padding: 5 }}>
-                  <FaExpand size={15} />
-                </IconButton>
+                <RouterLink to={`${RouteNames.post}/${ID}`}>
+                  <IconButton color={"inherit"} style={{ padding: 5 }}>
+                    <FaExpand size={15} color='white' />
+                  </IconButton>
+                </RouterLink>
                 <Typography
                   color={"textPrimary"}
                   className={classes.bottomBarText}

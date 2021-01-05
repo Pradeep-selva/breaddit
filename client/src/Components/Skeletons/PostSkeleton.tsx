@@ -3,12 +3,16 @@ import { Skeleton } from "@material-ui/lab";
 import React from "react";
 import { useStyles } from "../PostCard/styles";
 
-const PostSkeleton = () => {
+interface IProps {
+  height?: string | number;
+}
+
+const PostSkeleton = ({ height }: IProps) => {
   const classes = useStyles();
 
   return (
     <Grid item>
-      <Paper className={classes.container}>
+      <Paper className={classes.container} style={!!height ? { height } : {}}>
         <Box className={classes.upvoteSection}>
           <Skeleton
             variant={"circle"}

@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { RouteNames, RouteParams } from "../Configs";
 import {
+  ExpandedPost,
   Home,
   Login,
   Signup,
@@ -23,6 +24,11 @@ export const Routes = () => (
       exact
       path={`${RouteNames.user}${RouteParams.id}`}
       component={User}
+    />
+    <Route
+      exact
+      path={`${RouteNames.post}${RouteParams.id}`}
+      component={ExpandedPost}
     />
     <Route exact path={RouteNames.tc} component={TermsConditions} />
     <AuthRoute exact path={RouteNames.login} component={Login} />
