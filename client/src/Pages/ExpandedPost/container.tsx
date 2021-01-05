@@ -16,6 +16,7 @@ import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import {
   Avatar,
   BoxedTextField,
+  CommentCard,
   DeletePostButton,
   PostSkeleton,
   VotesSection
@@ -270,6 +271,11 @@ class ExpandedPost extends Component<IProps, IState> {
                 <Button variant={"outlined"} className={classes.commentButton}>
                   Comment
                 </Button>
+              </Grid>
+              <Grid item xs={12} style={{ marginTop: "2rem" }}>
+                {postData?.Comments?.map((comment) => (
+                  <CommentCard {...comment} />
+                ))}
               </Grid>
             </React.Fragment>
           </Grid>

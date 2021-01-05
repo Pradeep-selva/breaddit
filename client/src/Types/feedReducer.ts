@@ -20,13 +20,18 @@ export interface IPost extends PostBase {
   Comments: number;
 }
 
+export interface IDetailedComment {
+  PostId: string;
+  Body: string;
+  CreatedAt: {
+    seconds: number;
+    nanos: number;
+  };
+  CreatedBy: string;
+}
+
 export interface IExpandedPost extends PostBase {
-  Comments: Array<{
-    PostId: string;
-    Body: string;
-    CreatedAt: Date;
-    CreatedBy: string;
-  }>;
+  Comments: Array<IDetailedComment>;
 }
 
 export interface IFeedState {
