@@ -70,9 +70,11 @@ class ExpandedPost extends Component<IProps, IState> {
           this.setState({
             postData: response.data
           });
+        } else {
+          this.props.history.push(RouteNames.notFound);
         }
       })
-      .catch(console.log);
+      .catch(() => this.props.history.push(RouteNames.notFound));
   }
 
   preventDefault = (event: React.SyntheticEvent) => event.preventDefault();

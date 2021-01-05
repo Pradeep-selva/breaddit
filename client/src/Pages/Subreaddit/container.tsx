@@ -75,13 +75,17 @@ class Subreaddit extends Component<IProps, IState> {
   }
 
   fetchAll = () => {
-    getSubById(this.sub).then(({ data, statusCode }) => {
-      if (statusCode === STATUS_SUCCESS) {
-        this.setState({
-          subData: data as ISubData
-        });
-      }
-    });
+    getSubById(this.sub)
+      .then(({ data, statusCode }) => {
+        if (statusCode === STATUS_SUCCESS) {
+          this.setState({
+            subData: data as ISubData
+          });
+        } else {
+          this.props.history.push(RouteNames.notFound);
+        }
+      })
+      .catch(() => this.props.history.push(RouteNames.notFound));
 
     getSubPosts(this.sub, this.state.offset, this.limit).then(
       ({ data, statusCode }) => {
