@@ -6,7 +6,7 @@ import axios from "./axios";
 export const searchKeyword = (query: string) =>
   axios
     .getInstance()
-    .get<RawResponse>(`${ENDPOINTS.search}${query}`)
+    .get<RawResponse>(ENDPOINTS.search(query))
     .then((response) => retrieveResponse(response.data));
 
 export const getPublicFeed = (offset = 0, limit = 25) =>

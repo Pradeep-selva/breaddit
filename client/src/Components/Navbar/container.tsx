@@ -6,15 +6,13 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  InputBase,
-  Button,
-  Grid
+  Button
 } from "@material-ui/core";
 import { IProps } from "./index";
-import { BiSearchAlt } from "react-icons/bi";
 import { BLACK } from "../../Common/colors";
 import { NavLink } from "react-router-dom";
 import { RouteNames } from "../../Configs";
+import SearchBar from "../SearchBar";
 import AddPost from "../AddPost";
 import NavbarUserButton from "../NavbarUserButton";
 import NotificationBadge from "../NotificationBadge";
@@ -72,26 +70,7 @@ const Navbar = ({ isAuthenticated }: IProps) => {
           <Typography className={classes.title} variant='h4' noWrap>
             breaddit
           </Typography>
-          <div className={classes.search}>
-            <Grid container>
-              <Grid item xs={1}>
-                <div className={classes.searchIcon}>
-                  <BiSearchAlt size={20} />
-                </div>
-              </Grid>
-              <Grid item xs={11}>
-                <InputBase
-                  fullWidth
-                  placeholder='Search…'
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput
-                  }}
-                  inputProps={{ "aria-label": "search" }}
-                />
-              </Grid>
-            </Grid>
-          </div>
+          <SearchBar />
           <div className={classes.grow} />
           {isAuthenticated
             ? renderAuthenticatedButtons()
