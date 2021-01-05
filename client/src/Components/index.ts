@@ -16,4 +16,6 @@ export { default as PaginationContainer } from "./PaginationContainer";
 export { default as NotificationBadge } from "./NotificationBadge";
 export { default as DetailCard } from "./DetailCard";
 export { default as CreateSub } from "./CreateSub";
+export { default as CommentCard } from "./CommentCard";
+export { default as CommentBox } from "./CommentBox";
 export * from "./Skeletons";

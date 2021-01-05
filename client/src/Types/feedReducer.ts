@@ -3,7 +3,7 @@ export interface IPostUser {
   Avatar: string;
 }
 
-export interface IPost {
+interface PostBase {
   Title: string;
   Link: string;
   Content: string;
@@ -11,10 +11,27 @@ export interface IPost {
   User: IPostUser;
   Sub: string;
   Upvotes: number;
-  Comments: number;
   Downvotes: number;
   CreatedAt: Date;
   ID: string;
+}
+
+export interface IPost extends PostBase {
+  Comments: number;
+}
+
+export interface IDetailedComment {
+  PostId: string;
+  Body: string;
+  CreatedAt: {
+    seconds: number;
+    nanos: number;
+  };
+  CreatedBy: string;
+}
+
+export interface IExpandedPost extends PostBase {
+  Comments: Array<IDetailedComment>;
 }
 
 export interface IFeedState {

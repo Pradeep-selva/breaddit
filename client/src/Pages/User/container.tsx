@@ -10,7 +10,7 @@ import React, { Component } from "react";
 import { RiUserLocationFill } from "react-icons/ri";
 import { getUserById, getUserPosts } from "../../APIs";
 import { DetailCard, PostCard, PostSkeleton } from "../../Components";
-import { DEFAULT_TITLE, STATUS_SUCCESS } from "../../Configs";
+import { DEFAULT_TITLE, RouteNames, STATUS_SUCCESS } from "../../Configs";
 import { formatNumberNotation, getTabTitle } from "../../Services";
 import { IPost, IUserData } from "../../Types";
 import { IProps as ReduxProps } from "./index";
@@ -21,6 +21,9 @@ interface SelfProps {
     params: {
       [x: string]: string;
     };
+  };
+  history: {
+    push: Function;
   };
 }
 
@@ -61,13 +64,17 @@ class Subreaddit extends Component<IProps, IState> {
   }
 
   fetchAll = () => {
-    getUserById(this.userName).then(({ data, statusCode }) => {
-      if (statusCode === STATUS_SUCCESS) {
-        this.setState({
-          userData: data
-        });
-      }
-    });
+    getUserById(this.userName)
+      .then(({ data, statusCode }) => {
+        if (statusCode === STATUS_SUCCESS) {
+          this.setState({
+            userData: data
+          });
+        } else {
+          this.props.history.push(RouteNames.notFound);
+        }
+      })
+      .catch(() => this.props.history.push(RouteNames.notFound));
 
     getUserPosts(this.userName).then(({ data, statusCode }) => {
       if (statusCode === STATUS_SUCCESS) {

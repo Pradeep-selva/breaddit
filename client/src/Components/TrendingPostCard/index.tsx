@@ -14,8 +14,11 @@ import { formatNumberNotation, getTruncatedContent } from "../../Services";
 import { IPost } from "../../Types";
 import { useStyles } from "./styles";
 import { BLUE } from "../../Common/colors";
+import { useHistory } from "react-router";
+import { RouteNames } from "../../Configs";
 
 const TrendingPostCard = ({
+  ID,
   Title,
   Content,
   Image,
@@ -23,19 +26,18 @@ const TrendingPostCard = ({
   Upvotes,
   Downvotes,
   width,
-  Link,
-  onClick = () => alert("clicked post")
+  Link
 }: IPost & {
   width: string;
-  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }) => {
   const classes = useStyles();
+  const history = useHistory();
   const algebraicTotal = formatNumberNotation(Upvotes - Downvotes);
   const truncateLength = width === "xs" ? 40 : 80;
   return (
     <Grid item xs={12} sm={4}>
       <Paper
-        onClick={onClick}
+        onClick={() => history.push(`${RouteNames.post}/${ID}`)}
         className={classes.container}
         style={{ background: `url(${Image})`, backgroundSize: "cover" }}
       >

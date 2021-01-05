@@ -32,7 +32,7 @@ func GetTrendingPostsHandler(c *gin.Context) {
 
 		var post map[string]interface{}
 		dsnap.DataTo(&post)
-		post["id"] = dsnap.Ref.ID
+		post["ID"] = dsnap.Ref.ID
 
 		posts = append(posts, post)
 	}

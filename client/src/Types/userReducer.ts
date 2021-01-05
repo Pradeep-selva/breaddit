@@ -30,7 +30,7 @@ export interface IUpvoteDownvote {
 export interface IUserState {
   userData: IUserData | null;
   userId: string;
-  isAuthenticated: Boolean;
+  isAuthenticated: boolean;
   notifications: Array<INotification>;
   upvotes: Array<IUpvoteDownvote>;
   downvotes: Array<IUpvoteDownvote>;

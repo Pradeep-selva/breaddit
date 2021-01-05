@@ -32,8 +32,8 @@ const NotificationBadge = ({
     setAnchorEl(null);
   };
 
-  const onNotificationClick = (sender: string) => {
-    history.push(`${RouteNames.user}/${sender}`);
+  const onNotificationClick = (postId: string) => {
+    history.push(`${RouteNames.post}/${postId}`);
     handleClose();
   };
 
@@ -67,7 +67,7 @@ const NotificationBadge = ({
         {!!notifications.length ? (
           notifications.map((item) => (
             <MenuItem
-              onClick={() => onNotificationClick(item.Sender)}
+              onClick={() => onNotificationClick(item.PostId)}
               style={{ backgroundColor: !item.Seen ? GREY : DARK_GREY }}
             >
               {item.Content}

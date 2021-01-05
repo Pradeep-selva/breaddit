@@ -6,7 +6,8 @@ export const RouteNames = {
   user: "/u",
   sub: "/b",
   search: "/search",
-  tc: "/terms-and-conditions"
+  tc: "/terms-and-conditions",
+  notFound: "/404"
 };
 
 export const RouteParams = {

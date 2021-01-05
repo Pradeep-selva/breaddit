@@ -4,3 +4,5 @@ export { default as Signup } from "./Signup";
 export { default as TermsConditions } from "./TermsConditions";
 export { default as Subreaddit } from "./Subreaddit";
 export { default as User } from "./User";
+export { default as ExpandedPost } from "./ExpandedPost";
+export { default as NotFound } from "./404";

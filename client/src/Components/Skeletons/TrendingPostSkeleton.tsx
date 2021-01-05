@@ -15,17 +15,26 @@ const TrendingPostSkeleton = () => {
       >
         <Box className={classes.content} display={"flex"}>
           <Container style={{ flex: 4 }}>
-            <Skeleton width={"100%"} />
-            <Skeleton width={"80%"} />
-            <Skeleton width={"90%"} />
+            <Skeleton width={"100%"} animation={"wave"} />
+            <Skeleton width={"80%"} animation={"wave"} />
+            <Skeleton width={"90%"} animation={"wave"} />
           </Container>
           <Container style={{ flex: 1 }}>
             <Grid container>
               <Grid item xs={2} sm={1}>
-                <Skeleton variant={"circle"} width={"100%"} height={"100%"} />
+                <Skeleton
+                  variant={"circle"}
+                  width={"100%"}
+                  height={"100%"}
+                  animation={"wave"}
+                />
               </Grid>
               <Grid item xs={7}>
-                <Skeleton width={"80%"} style={{ marginLeft: "20%" }} />
+                <Skeleton
+                  width={"80%"}
+                  style={{ marginLeft: "20%" }}
+                  animation={"wave"}
+                />
               </Grid>
             </Grid>
           </Container>
