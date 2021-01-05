@@ -20,12 +20,14 @@ const rawStyles = {
   flexContainer: null,
   textDetailsContainer: null,
   imageDetailContainer: null,
-  imageUrlContainer: null,
+  urlContainer: null,
   joinButton: null,
   bottomBarContainer: null,
   bottomBarElement: null,
   bottomBarText: null,
-  wrapper: null
+  wrapper: null,
+  imageContainer: null,
+  commentButton: null
 };
 
 export const styles = () =>
@@ -80,23 +82,22 @@ export const styles = () =>
       marginRight: "0.3rem"
     },
     flexContainer: {
-      display: "flex"
+      display: "flex",
+      flexDirection: "column"
     },
     textDetailsContainer: {
-      flex: 4,
       paddingLeft: "1rem",
       display: "flex",
       flexDirection: "column",
       marginRight: "2rem"
     },
     imageDetailContainer: {
-      flex: 1,
-      paddingRight: "1rem"
+      padding: "0 1rem 0 1rem",
+      flex: 1
     },
-    imageUrlContainer: {
+    urlContainer: {
       border: `1px solid ${SEMI_GREY}`,
-      minWidth: "5rem",
-      minHeight: "5rem",
+      height: "10rem",
       margin: "1vh 0",
       display: "flex",
       alignItems: "center",
@@ -110,6 +111,10 @@ export const styles = () =>
         border: `1.5px solid ${LIGHT_BLUE}`,
         transform: "scale(1.05)"
       }
+    },
+    imageContainer: {
+      padding: "0 1rem 0 1rem",
+      maxWidth: "100%"
     },
     joinButton: {
       marginLeft: "50%",
@@ -132,6 +137,10 @@ export const styles = () =>
       fontSize: "0.8rem",
       fontWeight: 700,
       marginLeft: "0.4rem"
+    },
+    commentButton: {
+      border: `1px solid ${SMOKEY_WHITE}`,
+      marginTop: "10px"
     }
   });
 

@@ -15,11 +15,12 @@ import { deletePostById, getPostById } from "../../APIs";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
 import {
   Avatar,
+  BoxedTextField,
   DeletePostButton,
   PostSkeleton,
   VotesSection
 } from "../../Components";
-import { IPost } from "../../Types";
+import { IExpandedPost } from "../../Types";
 import { styles, IClass } from "./styles";
 import { IProps as IReduxProps } from "./index";
 import dayjs from "dayjs";
@@ -45,7 +46,7 @@ type IProps = {
   IReduxProps;
 
 interface IState {
-  postData: IPost | null;
+  postData: IExpandedPost | null;
 }
 
 class ExpandedPost extends Component<IProps, IState> {
@@ -65,6 +66,7 @@ class ExpandedPost extends Component<IProps, IState> {
     getPostById(this.postId)
       .then((response) => {
         if (response.statusCode === STATUS_SUCCESS) {
+          console.log(response.data);
           this.setState({
             postData: response.data
           });
@@ -121,139 +123,155 @@ class ExpandedPost extends Component<IProps, IState> {
             </IconButton>
           </Grid>
           <Grid item xs={11}>
-            {!!postData ? (
-              <Paper className={classes.container}>
-                <Box className={classes.upvoteSection}>
-                  <VotesSection
-                    cumulativeVotes={cumulativeVotes}
-                    postId={postData?.ID || ""}
-                  />
-                </Box>
-                <Box className={classes.contentSection}>
-                  <Box className={classes.titleSection} style={{ flex: 1 }}>
-                    <Typography
-                      className={classes.subName}
-                      color={"textPrimary"}
-                      component={RouterLink}
-                      to={`${RouteNames.sub}/${postData?.Sub}`}
-                    >
-                      b/{postData?.Sub}
-                    </Typography>
-                    <Typography className={classes.postedText}>
-                      posted by
-                    </Typography>
-                    <Avatar
-                      url={postData?.User?.Avatar || ""}
-                      size={"xs"}
-                      style={{ margin: "0 0.3rem" }}
+            <React.Fragment>
+              {!!postData ? (
+                <Paper className={classes.container}>
+                  <Box className={classes.upvoteSection}>
+                    <VotesSection
+                      cumulativeVotes={cumulativeVotes}
+                      postId={postData?.ID || ""}
                     />
-                    <Typography
-                      className={classes.userNameText}
-                      component={RouterLink}
-                      to={`${RouteNames.user}/${postData?.User?.UserName}`}
-                    >
-                      u/{postData?.User?.UserName || ""}
-                    </Typography>
-                    <Typography className={classes.postedText}>
-                      {dayjs(postData?.CreatedAt).fromNow()}
-                    </Typography>
-                    {!joinedSubs?.includes(postData?.Sub || "") &&
-                      (postData?.User?.UserName || "") !== userId && (
-                        <Button
-                          size={"small"}
-                          variant={"outlined"}
-                          color={"inherit"}
-                          onClick={() => this.onJoin(postData?.Sub || "")}
-                          startIcon={<FaPlus size={10} />}
-                          className={classes.joinButton}
-                        >
-                          JOIN
-                        </Button>
-                      )}
-                    {(postData?.User?.UserName || "") === userId && (
-                      <DeletePostButton
-                        className={classes.joinButton}
-                        onDelete={this.onDelete}
-                      />
-                    )}
                   </Box>
-                  <Box className={classes.flexContainer} style={{ flex: 5 }}>
-                    <Box className={classes.textDetailsContainer}>
+                  <Box className={classes.contentSection}>
+                    <Box className={classes.titleSection} style={{ flex: 1 }}>
                       <Typography
-                        variant={"h6"}
+                        className={classes.subName}
                         color={"textPrimary"}
-                        style={{ marginTop: "1vh" }}
+                        component={RouterLink}
+                        to={`${RouteNames.sub}/${postData?.Sub}`}
                       >
-                        {postData?.Title}
+                        b/{postData?.Sub}
                       </Typography>
-                      {!!postData?.Link ? (
-                        <Box
-                          className={classes.flexContainer}
-                          style={{ marginTop: "2vh" }}
-                        >
-                          <GoLink style={{ marginRight: "1rem" }} />
-                          <MuiLink
-                            href={postData?.Link}
-                            onClick={this.preventDefault}
-                            style={{ color: LIGHT_BLUE }}
+                      <Typography className={classes.postedText}>
+                        posted by
+                      </Typography>
+                      <Avatar
+                        url={postData?.User?.Avatar || ""}
+                        size={"xs"}
+                        style={{ margin: "0 0.3rem" }}
+                      />
+                      <Typography
+                        className={classes.userNameText}
+                        component={RouterLink}
+                        to={`${RouteNames.user}/${postData?.User?.UserName}`}
+                      >
+                        u/{postData?.User?.UserName || ""}
+                      </Typography>
+                      <Typography className={classes.postedText}>
+                        {dayjs(postData?.CreatedAt).fromNow()}
+                      </Typography>
+                      {!joinedSubs?.includes(postData?.Sub || "") &&
+                        (postData?.User?.UserName || "") !== userId && (
+                          <Button
+                            size={"small"}
+                            variant={"outlined"}
+                            color={"inherit"}
+                            onClick={() => this.onJoin(postData?.Sub || "")}
+                            startIcon={<FaPlus size={10} />}
+                            className={classes.joinButton}
                           >
-                            {postData?.Link}
-                          </MuiLink>
-                        </Box>
-                      ) : (
+                            JOIN
+                          </Button>
+                        )}
+                      {(postData?.User?.UserName || "") === userId && (
+                        <DeletePostButton
+                          className={classes.joinButton}
+                          onDelete={this.onDelete}
+                        />
+                      )}
+                    </Box>
+                    <Box className={classes.flexContainer} style={{ flex: 5 }}>
+                      <Box className={classes.textDetailsContainer}>
                         <Typography
-                          variant={"body1"}
+                          variant={"h6"}
                           color={"textPrimary"}
                           style={{ marginTop: "1vh" }}
                         >
-                          {postData?.Content}
+                          {postData?.Title}
                         </Typography>
+                        {!!postData?.Link ? (
+                          <React.Fragment>
+                            <Box
+                              className={classes.flexContainer}
+                              style={{ marginTop: "2vh", flexDirection: "row" }}
+                            >
+                              <GoLink style={{ marginRight: "1rem" }} />
+                              <MuiLink
+                                href={postData?.Link}
+                                onClick={this.preventDefault}
+                                style={{ color: LIGHT_BLUE }}
+                              >
+                                {postData?.Link}
+                              </MuiLink>
+                            </Box>
+                            {!!postData?.Link && (
+                              <Box className={classes.imageDetailContainer}>
+                                <Box
+                                  className={classes.urlContainer}
+                                  style={{
+                                    backgroundColor: SEMI_GREY,
+                                    backgroundSize: "cover"
+                                  }}
+                                  onClick={this.handleImageOrLinkClick}
+                                >
+                                  <FaLink size={50} color={BLUE} />
+                                </Box>
+                              </Box>
+                            )}
+                          </React.Fragment>
+                        ) : (
+                          <Typography
+                            variant={"body1"}
+                            color={"textPrimary"}
+                            style={{ marginTop: "1vh" }}
+                          >
+                            {postData?.Content}
+                          </Typography>
+                        )}
+                      </Box>
+                      {!!postData?.Image && (
+                        <img
+                          src={postData?.Image}
+                          className={classes.imageContainer}
+                          alt={"beautiful bread"}
+                        />
                       )}
                     </Box>
-                    {(!!postData?.Link || !!postData?.Image) && (
-                      <Box className={classes.imageDetailContainer}>
-                        <Box
-                          className={classes.imageUrlContainer}
-                          style={{
-                            background: !!Image
-                              ? `url(${Image})`
-                              : "transparent",
-                            backgroundColor: !!postData?.Link
-                              ? SEMI_GREY
-                              : "transparent",
-                            backgroundSize: "cover"
-                          }}
-                          onClick={this.handleImageOrLinkClick}
-                        >
-                          {!!postData?.Link && (
-                            <FaLink size={50} color={BLUE} />
-                          )}
-                        </Box>
-                      </Box>
-                    )}
-                  </Box>
-                  <Box
-                    style={{ flex: 0.7 }}
-                    className={classes.bottomBarContainer}
-                  >
                     <Box
-                      style={{ flex: 1 }}
-                      className={classes.bottomBarElement}
+                      style={{ flex: 0.7 }}
+                      className={classes.bottomBarContainer}
                     >
-                      <MdComment size={25} />
-                      <Typography
-                        color={"textPrimary"}
-                        className={classes.bottomBarText}
+                      <Box
+                        style={{ flex: 1 }}
+                        className={classes.bottomBarElement}
                       >
-                        {postData?.Comments}
-                      </Typography>
+                        <MdComment size={25} />
+                        <Typography
+                          color={"textPrimary"}
+                          className={classes.bottomBarText}
+                        >
+                          {postData?.Comments?.length || 0} comments
+                        </Typography>
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-              </Paper>
-            ) : (
-              <PostSkeleton height={"30rem"} />
-            )}
+                </Paper>
+              ) : (
+                <PostSkeleton height={"30rem"} />
+              )}
+              <Grid item xs={12}>
+                <BoxedTextField
+                  multiline
+                  rows={5}
+                  label={"Whats your thoughts on this bread?"}
+                  style={{ minWidth: "100%" }}
+                  autoFocus
+                />
+                <Button variant={"outlined"} className={classes.commentButton}>
+                  Comment
+                </Button>
+              </Grid>
+            </React.Fragment>
           </Grid>
         </Grid>
       </Container>
