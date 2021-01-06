@@ -22,18 +22,6 @@ export interface IComment {
   Body: string;
 }
 
-export interface IUserSearchResult {
-  UserName?: string;
-  Avatar?: string;
-  Bio?: string;
-}
-
-export interface ISubSearchResult {
-  Name?: string;
-  Thumbnail?: string;
-  Description?: string;
-}
-
 interface Password {
   password: string;
 }
