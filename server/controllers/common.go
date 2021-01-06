@@ -68,10 +68,10 @@ func SearchKeywordHandler(c *gin.Context) {
 		}
 		data := dsnap.Data()
 		sub := entities.SubsSearch{
-			Name: data["Name"].(string),
-			Thumbnail: data["Thumbnail"].(string),
+			Name:        data["Name"].(string),
+			Thumbnail:   data["Thumbnail"].(string),
 			Description: data["Description"].(string),
-			Members: len(data["Users"].([]interface{})),
+			Members:     len(data["Users"].([]interface{})),
 		}
 
 		subs = append(subs, sub)
@@ -92,14 +92,22 @@ func SearchKeywordHandler(c *gin.Context) {
 		}
 
 		data := dsnap.Data()
-		sub := entities.SubsSearch{
-			Name: data["Name"].(string),
-			Thumbnail: data["Thumbnail"].(string),
-			Description: data["Description"].(string),
-			Members: len(data["Users"].([]interface{})),
+		f := 0
+		for _, v := range subs {
+			if v.Name == data["Name"] {
+				f = 1
+			}
 		}
+		if f != 1 {
+			sub := entities.SubsSearch{
+				Name:        data["Name"].(string),
+				Thumbnail:   data["Thumbnail"].(string),
+				Description: data["Description"].(string),
+				Members:     len(data["Users"].([]interface{})),
+			}
 
-		subs = append(subs, sub)
+			subs = append(subs, sub)
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
