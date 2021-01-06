@@ -10,7 +10,7 @@ export interface IUserData {
   Location: string;
   Status: string;
   UpdatedAt: Date;
-  UserName: Date;
+  UserName: string;
 }
 
 export interface INotification {

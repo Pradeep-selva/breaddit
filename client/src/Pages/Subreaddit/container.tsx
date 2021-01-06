@@ -147,6 +147,7 @@ class Subreaddit extends Component<IProps, IState> {
     const { posts, hasFetched, subData } = this.state;
     const { classes, user } = this.props;
     const isUserMember = user?.JoinedSubs.includes(this.sub);
+    const isUserOwner = subData?.Owner === user?.UserName;
 
     return (
       <PaginationContainer handlePagination={this.fetchMore}>
@@ -246,6 +247,14 @@ class Subreaddit extends Component<IProps, IState> {
               {!!subData && (
                 <DetailCard
                   avatar={subData?.Thumbnail}
+                  isOwner={isUserOwner}
+                  subEditFormValues={{
+                    Description: subData.Description,
+                    Name: subData.Name,
+                    Tags: subData.Tags.join(" "),
+                    Thumbnail: (null as unknown) as File
+                  }}
+                  type={"sub"}
                   name={`b/${subData.Name}`}
                   subLines={[
                     `baking since ${dayjs(subData.CreatedAt).format("MMM DD")}`,
