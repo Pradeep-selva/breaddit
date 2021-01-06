@@ -16,7 +16,7 @@ export const ENDPOINTS = {
   signup: "/signup", //done
 
   //utility endpoints
-  search: (query: string) => `/search?q=${query}`,
+  search: (query: string) => `/search?q=${query}`, //done
 
   //user endpoints
   user: "/user", // ***UPDATE PENDING***
