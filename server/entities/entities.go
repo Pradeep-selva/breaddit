@@ -95,3 +95,16 @@ type Notification struct {
 	Seen bool
 }
 
+type UserSearch struct {
+	UserName string
+	Avatar   string
+	Bio      string
+	Breads int
+}
+
+type SubsSearch struct {
+	Name        string
+	Thumbnail   string
+	Description string
+	Members int
+}
