@@ -2,7 +2,7 @@ import { createStyles } from "@material-ui/core";
 
 const rawStyles = {
   sectionTitle: {
-    margin: "05vh",
+    margin: "5vh 0",
     fontWeight: 700,
     fontSize: "1rem"
   }
