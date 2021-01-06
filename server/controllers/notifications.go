@@ -52,9 +52,8 @@ func SetUserNotificationsSeenHandler(c *gin.Context) {
 	dsnap.DataTo(&notifications)
 	for i := range notifications.Notifications {
 		if notifications.Notifications[i].Seen == true {
-			break
+			continue
 		}
-
 		notifications.Notifications[i].Seen = true
 	}
 

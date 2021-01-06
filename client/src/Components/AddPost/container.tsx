@@ -132,7 +132,7 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
 
   onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const image = event.target && event.target.files![0];
-    if (image.size / Math.pow(10, 6) <= 1) {
+    if (image.size / Math.pow(10, 6) <= 5) {
       this.setState({
         values: {
           ...this.state.values,
@@ -144,7 +144,8 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
       this.setState({
         errors: {
           ...this.state.errors,
-          Image: ["Image cannot be larger than 8mb"]
+          Image: ["Image cannot be larger than 5mb"],
+          General: null
         }
       });
     }

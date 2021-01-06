@@ -22,8 +22,7 @@ export const FormSchema = (tabValue: number) => ({
   },
   [`${tabTypes[tabValue]}`]: {
     presence: { allowEmpty: false, message: "can't be blank. " },
-    length:
-      tabTypes[tabValue] === "Content" ? { maximum: 1000 } : { minimum: 0 }
+    length: tabTypes[tabValue] === "Content" ? { maximum: 1000 } : null
   },
   Link:
     tabValue === 2
