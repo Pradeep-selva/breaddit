@@ -6,3 +6,4 @@ export { default as Subreaddit } from "./Subreaddit";
 export { default as User } from "./User";
 export { default as ExpandedPost } from "./ExpandedPost";
 export { default as NotFound } from "./404";
+export { default as SearchResult } from "./SearchResult";

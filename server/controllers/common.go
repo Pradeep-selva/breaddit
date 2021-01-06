@@ -8,20 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
 
+	entities "github.com/pradeep-selva/Breaddit/server/entities"
 	utils "github.com/pradeep-selva/Breaddit/server/utils"
 )
-
-type userSearch struct {
-	UserName string
-	Avatar   string
-	Bio      string
-}
-
-type subsSearch struct {
-	Name        string
-	Thumbnail   string
-	Description string
-}
 
 //GET /
 func IndexRouteHandler(c *gin.Context) {
@@ -42,8 +31,8 @@ func SearchKeywordHandler(c *gin.Context) {
 	key := strings.ToLower(c.Request.URL.Query().Get("q"))
 	log.Println("search -->", key)
 
-	users := []userSearch{}
-	subs := []subsSearch{}
+	users := []entities.UserSearch{}
+	subs := []entities.SubsSearch{}
 
 	iter := utils.Client.Collection("users").Where("UserName", ">=", key).Where("UserName", "<", key+"\uf8ff").Limit(20).Documents(utils.Ctx)
 
@@ -58,7 +47,7 @@ func SearchKeywordHandler(c *gin.Context) {
 				"statusCode": http.StatusInternalServerError,
 			})
 		}
-		var user userSearch
+		var user entities.UserSearch
 		dsnap.DataTo(&user)
 
 		users = append(users, user)
@@ -77,9 +66,13 @@ func SearchKeywordHandler(c *gin.Context) {
 				"statusCode": http.StatusInternalServerError,
 			})
 		}
-
-		var sub subsSearch
-		dsnap.DataTo(&sub)
+		data := dsnap.Data()
+		sub := entities.SubsSearch{
+			Name:        data["Name"].(string),
+			Thumbnail:   data["Thumbnail"].(string),
+			Description: data["Description"].(string),
+			Members:     len(data["Users"].([]interface{})),
+		}
 
 		subs = append(subs, sub)
 	}
@@ -98,10 +91,23 @@ func SearchKeywordHandler(c *gin.Context) {
 			})
 		}
 
-		var sub subsSearch
-		dsnap.DataTo(&sub)
+		data := dsnap.Data()
+		f := 0
+		for _, v := range subs {
+			if v.Name == data["Name"] {
+				f = 1
+			}
+		}
+		if f != 1 {
+			sub := entities.SubsSearch{
+				Name:        data["Name"].(string),
+				Thumbnail:   data["Thumbnail"].(string),
+				Description: data["Description"].(string),
+				Members:     len(data["Users"].([]interface{})),
+			}
 
-		subs = append(subs, sub)
+			subs = append(subs, sub)
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{

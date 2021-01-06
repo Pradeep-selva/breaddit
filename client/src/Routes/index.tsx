@@ -6,6 +6,7 @@ import {
   Home,
   Login,
   NotFound,
+  SearchResult,
   Signup,
   Subreaddit,
   TermsConditions,
@@ -31,9 +32,15 @@ export const Routes = () => (
       path={`${RouteNames.post}${RouteParams.id}`}
       component={ExpandedPost}
     />
+    <Route
+      exact
+      path={`${RouteNames.search}${RouteParams.id}`}
+      component={SearchResult}
+    />
     <Route exact path={`${RouteNames.notFound}`} component={NotFound} />
     <Route exact path={RouteNames.tc} component={TermsConditions} />
     <AuthRoute exact path={RouteNames.login} component={Login} />
     <AuthRoute exact path={RouteNames.signup} component={Signup} />
+    <Route exact component={ExpandedPost} />
   </Switch>
 );

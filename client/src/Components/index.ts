@@ -18,4 +18,5 @@ export { default as DetailCard } from "./DetailCard";
 export { default as CreateSub } from "./CreateSub";
 export { default as CommentCard } from "./CommentCard";
 export { default as CommentBox } from "./CommentBox";
+export { default as SearchResultCard } from "./SearchResultCard";
 export * from "./Skeletons";
