@@ -70,7 +70,8 @@ func UploadImageHandler(c *gin.Context, fieldName string) (string, error) {
 	uploader := s3manager.NewUploader(sess)
 
 	file, header, err := c.Request.FormFile(fieldName)
-	extension := strings.Split(header.Filename, ".")[1]
+	extensionSlice := strings.Split(header.Filename, ".")
+	extension := extensionSlice[len(extensionSlice)-1]
 
 	if !utils.ArrayContains([]string{"png", "jpg", "jpeg"}, extension) {
 		return "", fmt.Errorf("Only files of types png/jpg/jpeg are allowed for upload!")

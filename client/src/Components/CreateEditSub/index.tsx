@@ -28,7 +28,7 @@ import { GREY, SMOKEY_WHITE, WHITE } from "../../Common/colors";
 import BoxedTextField from "../BoxedTextField";
 import validate from "validate.js";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
-import { createSub } from "../../APIs";
+import { createSub, updateSub } from "../../APIs";
 import { Link } from "react-router-dom";
 
 interface IState {
@@ -47,15 +47,22 @@ type IProps = IClass & {
   sub?: string;
   history?: any;
   textButton?: boolean;
+  edit?: boolean;
+  defaultEditFormValues?: typeof FormDefaultValues;
+  openToEdit?: boolean;
+  closeEdit?: () => void;
 };
 
-class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
+class CreateEditSub extends Component<
+  IClass & IProps & { sub?: string },
+  IState
+> {
   constructor(props: IClass & IProps) {
     super(props);
 
     this.state = {
       values: {
-        ...FormDefaultValues
+        ...(props.defaultEditFormValues || FormDefaultValues)
       },
       errors: {},
       loading: false,
@@ -87,7 +94,7 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
 
   onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const image = event.target && event.target.files![0];
-    if (image.size / Math.pow(10, 6) <= 5) {
+    if ((image?.size || 0) / Math.pow(10, 6) <= 5) {
       this.setState({
         values: {
           ...this.state.values,
@@ -133,9 +140,17 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
               }
             }
 
-            createSub(getFormPayload(payload))
+            console.log(payload);
+            (!this.props.edit
+              ? createSub(getFormPayload(payload))
+              : updateSub(getFormPayload(payload), payload.Name)
+            )
               .then(({ data, statusCode }) => {
                 if (statusCode === STATUS_SUCCESS) {
+                  this.props.edit &&
+                    !!this.props.closeEdit &&
+                    this.props.closeEdit();
+
                   this.setState(
                     {
                       open: false,
@@ -143,7 +158,11 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
                     },
                     () => {
                       setTimeout(
-                        () => this.setState({ showToast: false }),
+                        () =>
+                          this.setState(
+                            { showToast: false },
+                            () => this.props.edit && window.location.reload()
+                          ),
                         3000
                       );
                     }
@@ -179,29 +198,36 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
 
   render() {
     const { loading, open, showToast } = this.state;
-    const { classes, textButton = false } = this.props;
+    const {
+      classes,
+      closeEdit,
+      textButton = false,
+      edit = false,
+      openToEdit = false
+    } = this.props;
 
     return (
       <React.Fragment>
-        {textButton ? (
-          <Button variant={"contained"} onClick={this.handleOpen}>
-            POST
-          </Button>
-        ) : (
-          <Tooltip title={"Create a subreaddit"}>
-            <IconButton
-              onClick={this.handleOpen}
-              color={"inherit"}
-              style={{ flex: 1, marginRight: 20 }}
-            >
-              <BsPlusCircleFill color={SMOKEY_WHITE} />
-            </IconButton>
-          </Tooltip>
-        )}
+        {!edit &&
+          (textButton ? (
+            <Button variant={"contained"} onClick={this.handleOpen}>
+              POST
+            </Button>
+          ) : (
+            <Tooltip title={"Create a subreaddit"}>
+              <IconButton
+                onClick={this.handleOpen}
+                color={"inherit"}
+                style={{ flex: 1, marginRight: 20 }}
+              >
+                <BsPlusCircleFill color={SMOKEY_WHITE} />
+              </IconButton>
+            </Tooltip>
+          ))}
         <Dialog
-          open={open}
+          open={openToEdit || open}
           fullScreen
-          onClose={this.handleClose}
+          onClose={closeEdit || this.handleClose}
           PaperProps={{
             className: classes.dialogContainer
           }}
@@ -214,14 +240,14 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
                 <IconButton
                   edge='start'
                   color='inherit'
-                  onClick={this.handleClose}
+                  onClick={closeEdit || this.handleClose}
                   aria-label='close'
                 >
                   <IoMdArrowBack />
                 </IconButton>
               )}
               <Typography variant='h6' className={classes.title}>
-                Create Subreaddit
+                {edit ? "Edit" : "Create"} Subreaddit
               </Typography>
 
               <Button
@@ -297,28 +323,30 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
                     </Grid>
 
                     <Grid item xs={9}>
-                      <BoxedTextField
-                        fullWidth
-                        id={"Name"}
-                        color={"primary"}
-                        label={"Subreaddit Name"}
-                        type={"text"}
-                        placeholder={"Give your sub a name"}
-                        value={this.state.values.Name}
-                        onChange={(event: any) => {
-                          this.onFieldChange(event);
-                          this.setState((state) => ({
-                            nameCount: 30 - event.target.value.length
-                          }));
-                        }}
-                        helperText={this.state.errors.Name}
-                        textCount={this.state.nameCount}
-                        textCountStyle={
-                          this.state.nameCount >= 0
-                            ? { color: "green" }
-                            : { color: "red" }
-                        }
-                      />
+                      {!edit && (
+                        <BoxedTextField
+                          fullWidth
+                          id={"Name"}
+                          color={"primary"}
+                          label={"Subreaddit Name"}
+                          type={"text"}
+                          placeholder={"Give your sub a name"}
+                          value={this.state.values.Name}
+                          onChange={(event: any) => {
+                            this.onFieldChange(event);
+                            this.setState((state) => ({
+                              nameCount: 30 - event.target.value.length
+                            }));
+                          }}
+                          helperText={this.state.errors.Name}
+                          textCount={this.state.nameCount}
+                          textCountStyle={
+                            this.state.nameCount >= 0
+                              ? { color: "green" }
+                              : { color: "red" }
+                          }
+                        />
+                      )}
                     </Grid>
                     <BoxedTextField
                       fullWidth
@@ -393,7 +421,7 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
               </Link>
             }
           >
-            Post successfully added to b/{this.state.values.Name}!
+            b/{this.state.values.Name} {edit ? "updated" : "created"}!
           </Alert>
         </Snackbar>
       </React.Fragment>
@@ -401,4 +429,4 @@ class CreateSub extends Component<IClass & IProps & { sub?: string }, IState> {
   }
 }
 
-export default withStyles(styles)(CreateSub);
+export default withStyles(styles)(CreateEditSub);

@@ -1,6 +1,5 @@
 import Subreaddit from "./container";
 import { IReduxState } from "../../Redux";
-// import { loginUserAction } from "../../Redux/Actions";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state: IReduxState) => ({

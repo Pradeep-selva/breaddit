@@ -16,7 +16,7 @@ import SearchBar from "../SearchBar";
 import AddPost from "../AddPost";
 import NavbarUserButton from "../NavbarUserButton";
 import NotificationBadge from "../NotificationBadge";
-import { CreateSub } from "..";
+import { CreateEditSub } from "..";
 
 const Navbar = ({ isAuthenticated }: IProps) => {
   const classes = useStyles();
@@ -46,7 +46,7 @@ const Navbar = ({ isAuthenticated }: IProps) => {
 
   const renderAuthenticatedButtons = () => (
     <div className={classes.sectionDesktop}>
-      <CreateSub />
+      <CreateEditSub />
       <NotificationBadge />
       <AddPost />
       <NavbarUserButton />

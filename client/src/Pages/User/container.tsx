@@ -116,6 +116,8 @@ class Subreaddit extends Component<IProps, IState> {
               <DetailCard
                 avatar={userData.Avatar}
                 name={`u/${userData.UserName}`}
+                isOwner={userData.UserName === this.props.user?.UserName}
+                type={"user"}
                 subLines={[
                   `bake day on ${dayjs(userData.CreatedAt).format("MMM DD")}`,
                   `${formatNumberNotation(Math.round(userData.Breads))} breads`,
