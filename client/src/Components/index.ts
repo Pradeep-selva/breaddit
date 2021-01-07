@@ -16,6 +16,7 @@ export { default as PaginationContainer } from "./PaginationContainer";
 export { default as NotificationBadge } from "./NotificationBadge";
 export { default as DetailCard } from "./DetailCard";
 export { default as CreateEditSub } from "./CreateEditSub";
+export { default as EditUser } from "./EditUser";
 export { default as CommentCard } from "./CommentCard";
 export { default as CommentBox } from "./CommentBox";
 export { default as SearchResultCard } from "./SearchResultCard";
