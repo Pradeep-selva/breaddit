@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Paper, Typography } from "@material-ui/core";
 import { useStyles } from "./styles";
 import CircleAvatar from "../Avatar";
-import { CreateEditSub } from "..";
+import { CreateEditSub, EditUser } from "..";
 import { FormDefaultValues } from "../CreateEditSub/schema";
 
 interface IProps {
@@ -23,10 +23,11 @@ const DetailCard = ({
   description,
   renderBottom,
   isOwner,
+  type,
   subEditFormValues
 }: IProps) => {
   const classes = useStyles();
-  const [editSub, setEditSub] = React.useState(false);
+  const [edit, setEdit] = React.useState(false);
 
   return (
     <React.Fragment>
@@ -35,7 +36,7 @@ const DetailCard = ({
           size={"xl"}
           url={avatar}
           className={classes.avatar}
-          onEdit={isOwner ? () => setEditSub(true) : undefined}
+          onEdit={isOwner ? () => setEdit(true) : undefined}
         />
         <Typography className={classes.name}>{name}</Typography>
         {subLines.map((line) => (
@@ -48,12 +49,17 @@ const DetailCard = ({
           {renderBottom()}
         </Box>
       </Paper>
-      <CreateEditSub
-        edit
-        openToEdit={editSub}
-        closeEdit={() => setEditSub(false)}
-        defaultEditFormValues={subEditFormValues}
-      />
+      {isOwner &&
+        (type === "sub" ? (
+          <CreateEditSub
+            edit
+            openToEdit={edit}
+            closeEdit={() => setEdit(false)}
+            defaultEditFormValues={subEditFormValues}
+          />
+        ) : (
+          <EditUser openToEdit={edit} closeEdit={() => setEdit(false)} />
+        ))}
     </React.Fragment>
   );
 };

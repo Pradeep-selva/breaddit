@@ -19,64 +19,54 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { styles, IClass } from "./styles";
-import { FormDefaultValues, FormSchema } from "./schema";
+import { FormValuesType, FormSchema } from "./schema";
 import { IoMdArrowBack } from "react-icons/io";
-import { BsImages, BsPlusCircleFill } from "react-icons/bs";
+import { BsImages } from "react-icons/bs";
 import { getFormPayload, getTruncatedContent } from "../../Services";
 import Transition from "../Transition";
 import { GREY, SMOKEY_WHITE, WHITE } from "../../Common/colors";
 import BoxedTextField from "../BoxedTextField";
 import validate from "validate.js";
-import { RouteNames, STATUS_SUCCESS } from "../../Configs";
-import { createSub, updateSub } from "../../APIs";
-import { Link } from "react-router-dom";
+import { IProps as ReduxProps } from ".";
+import { STATUS_SUCCESS } from "../../Configs";
+import { updateUserData } from "../../APIs";
 
 interface IState {
-  values: typeof FormDefaultValues;
+  values: FormValuesType;
   errors: any;
   loading: boolean;
-  open: boolean;
   showToast: boolean;
-  nameCount: number;
-  descriptionCount: number;
-  tagCount: number;
+  bioCount: number;
+  locationCount: number;
+  statusCount: number;
 }
 
-type IProps = IClass & {
-  sub?: string;
-  history?: any;
-  textButton?: boolean;
-  edit?: boolean;
-  defaultEditFormValues?: typeof FormDefaultValues;
-  openToEdit?: boolean;
-  closeEdit?: () => void;
-};
+type IProps = IClass &
+  ReduxProps & {
+    history?: any;
+    openToEdit: boolean;
+    closeEdit: () => void;
+  };
 
-class CreateEditSub extends Component<
-  IClass & IProps & { sub?: string },
-  IState
-> {
-  constructor(props: IClass & IProps) {
+class EditUser extends Component<IProps & { sub?: string }, IState> {
+  constructor(props: IProps) {
     super(props);
 
     this.state = {
       values: {
-        ...(props.defaultEditFormValues || FormDefaultValues)
+        Bio: props.user?.Bio || "",
+        Location: props.user?.Location || "",
+        Status: props.user?.Status || "",
+        Avatar: (null as unknown) as File
       },
       errors: {},
       loading: false,
-      open: false,
       showToast: false,
-      nameCount: 30,
-      descriptionCount: 100,
-      tagCount: 10
+      bioCount: 120,
+      locationCount: 30,
+      statusCount: 75
     };
   }
-
-  handleOpen = () => this.setState({ open: true });
-
-  handleClose = () => this.setState({ open: false });
-
   onFieldChange = (
     event: React.ChangeEvent<HTMLInputElement> &
       FormEvent<HTMLDivElement> &
@@ -96,7 +86,7 @@ class CreateEditSub extends Component<
       this.setState({
         values: {
           ...this.state.values,
-          Thumbnail: image
+          Avatar: image
         },
         errors: {}
       });
@@ -104,7 +94,7 @@ class CreateEditSub extends Component<
       this.setState({
         errors: {
           ...this.state.errors,
-          Thumbnail: ["Image cannot be larger than 5mb"]
+          Avatar: ["Image cannot be larger than 5mb"]
         }
       });
     }
@@ -115,20 +105,12 @@ class CreateEditSub extends Component<
       let newState = { ...this.state };
       let errors = validate(newState.values, FormSchema);
 
-      if (newState.tagCount < 0) {
-        errors = {
-          ...errors,
-          Tags: ["You cannot enter more than 10 tags"]
-        };
-      }
-
       newState.errors = errors || {};
       this.setState(
         (state) => ({ ...newState }),
         () => {
           if (!errors) {
             let { values } = this.state;
-            values.Name = values.Name.split(" ").join("");
             const payload = values;
 
             for (let k in payload) {
@@ -138,28 +120,20 @@ class CreateEditSub extends Component<
               }
             }
 
-            console.log(payload);
-            (!this.props.edit
-              ? createSub(getFormPayload(payload))
-              : updateSub(getFormPayload(payload), payload.Name)
-            )
+            updateUserData(getFormPayload(payload))
               .then(({ data, statusCode }) => {
                 if (statusCode === STATUS_SUCCESS) {
-                  this.props.edit &&
-                    !!this.props.closeEdit &&
-                    this.props.closeEdit();
+                  this.props.closeEdit();
 
                   this.setState(
                     {
-                      open: false,
                       showToast: true
                     },
                     () => {
                       setTimeout(
                         () =>
-                          this.setState(
-                            { showToast: false },
-                            () => this.props.edit && window.location.reload()
+                          this.setState({ showToast: false }, () =>
+                            window.location.reload()
                           ),
                         3000
                       );
@@ -195,37 +169,15 @@ class CreateEditSub extends Component<
   );
 
   render() {
-    const { loading, open, showToast } = this.state;
-    const {
-      classes,
-      closeEdit,
-      textButton = false,
-      edit = false,
-      openToEdit = false
-    } = this.props;
+    const { loading, showToast } = this.state;
+    const { classes, closeEdit, openToEdit = false } = this.props;
 
     return (
       <React.Fragment>
-        {!edit &&
-          (textButton ? (
-            <Button variant={"contained"} onClick={this.handleOpen}>
-              POST
-            </Button>
-          ) : (
-            <Tooltip title={"Create a subreaddit"}>
-              <IconButton
-                onClick={this.handleOpen}
-                color={"inherit"}
-                style={{ flex: 1, marginRight: 20 }}
-              >
-                <BsPlusCircleFill color={SMOKEY_WHITE} />
-              </IconButton>
-            </Tooltip>
-          ))}
         <Dialog
-          open={openToEdit || open}
+          open={openToEdit}
           fullScreen
-          onClose={closeEdit || this.handleClose}
+          onClose={closeEdit}
           PaperProps={{
             className: classes.dialogContainer
           }}
@@ -238,14 +190,14 @@ class CreateEditSub extends Component<
                 <IconButton
                   edge='start'
                   color='inherit'
-                  onClick={closeEdit || this.handleClose}
+                  onClick={closeEdit}
                   aria-label='close'
                 >
                   <IoMdArrowBack />
                 </IconButton>
               )}
               <Typography variant='h6' className={classes.title}>
-                {edit ? "Edit" : "Create"} Subreaddit
+                Update your info
               </Typography>
 
               <Button
@@ -293,7 +245,7 @@ class CreateEditSub extends Component<
                           justifyContent: "center"
                         }}
                       >
-                        <Tooltip title={"Add a thumbnail"}>
+                        <Tooltip title={"Update avatar"}>
                           <IconButton
                             onClick={() =>
                               document.getElementById("Image")?.click()
@@ -303,7 +255,7 @@ class CreateEditSub extends Component<
                           </IconButton>
                         </Tooltip>
                       </Box>
-                      {this.renderErrors(this.state.errors.Thumbnail)}
+                      {this.renderErrors(this.state.errors.Avatar)}
                       <Typography
                         variant={"caption"}
                         style={{
@@ -311,83 +263,81 @@ class CreateEditSub extends Component<
                           marginBottom: "0.5rem"
                         }}
                       >
-                        {this.state.values.Thumbnail?.name?.length > 0 &&
+                        {this.state.values.Avatar?.name?.length > 0 &&
                           getTruncatedContent(
-                            this.state.values.Thumbnail.name,
+                            this.state.values.Avatar.name,
                             10,
-                            this.state.values.Thumbnail.name.split(".").pop()
+                            this.state.values.Avatar.name.split(".").pop()
                           )}
                       </Typography>
                     </Grid>
 
                     <Grid item xs={9}>
-                      {!edit && (
-                        <BoxedTextField
-                          fullWidth
-                          id={"Name"}
-                          color={"primary"}
-                          label={"Subreaddit Name"}
-                          type={"text"}
-                          placeholder={"Give your sub a name"}
-                          value={this.state.values.Name}
-                          onChange={(event: any) => {
-                            this.onFieldChange(event);
-                            this.setState((state) => ({
-                              nameCount: 30 - event.target.value.length
-                            }));
-                          }}
-                          helperText={this.state.errors.Name}
-                          textCount={this.state.nameCount}
-                          textCountStyle={
-                            this.state.nameCount >= 0
-                              ? { color: "green" }
-                              : { color: "red" }
-                          }
-                        />
-                      )}
+                      <BoxedTextField
+                        fullWidth
+                        id={"Status"}
+                        color={"primary"}
+                        label={"Status"}
+                        type={"text"}
+                        placeholder={"Let us in on your life"}
+                        value={this.state.values.Status}
+                        onChange={(event: any) => {
+                          this.onFieldChange(event);
+                          this.setState((state) => ({
+                            statusCount: 75 - event.target.value.length
+                          }));
+                        }}
+                        helperText={this.state.errors.Status}
+                        textCount={this.state.statusCount}
+                        textCountStyle={
+                          this.state.statusCount >= 0
+                            ? { color: "green" }
+                            : { color: "red" }
+                        }
+                      />
                     </Grid>
                     <BoxedTextField
                       fullWidth
-                      id={"Description"}
+                      id={"Bio"}
                       color={"primary"}
-                      label={"Description"}
+                      label={"Bio"}
                       type={"text"}
-                      placeholder={"Say something about your subreaddit"}
+                      placeholder={"Whats on your mind?"}
                       rows={10}
-                      value={this.state.values.Description}
+                      value={this.state.values.Bio}
                       onChange={(event: any) => {
                         this.onFieldChange(event);
                         this.setState((state) => ({
-                          descriptionCount: 100 - event.target.value.length
+                          bioCount: 120 - event.target.value.length
                         }));
                       }}
-                      helperText={this.state.errors.Description}
+                      helperText={this.state.errors.Bio}
                       style={{ marginTop: "1vh" }}
-                      textCount={this.state.descriptionCount}
+                      textCount={this.state.bioCount}
                       textCountStyle={
-                        this.state.descriptionCount >= 0
+                        this.state.bioCount >= 0
                           ? { color: "green" }
                           : { color: "red" }
                       }
                     />
                     <BoxedTextField
                       fullWidth
-                      id={"Tags"}
+                      id={"Location"}
                       color={"primary"}
-                      label={"Tags"}
+                      label={"Location"}
                       type={"text"}
-                      placeholder={"Write some tags separated by space"}
-                      value={this.state.values.Tags}
+                      placeholder={"Where do you live?"}
+                      value={this.state.values.Location}
                       onChange={(event: any) => {
                         this.onFieldChange(event);
                         this.setState((state) => ({
-                          tagCount: 10 - event.target.value.split(" ").length
+                          locationCount: 30 - event.target.value.length
                         }));
                       }}
-                      helperText={this.state.errors.Tags}
-                      textCount={this.state.tagCount}
+                      helperText={this.state.errors.Location}
+                      textCount={this.state.locationCount}
                       textCountStyle={
-                        this.state.tagCount >= 0
+                        this.state.locationCount >= 0
                           ? { color: "green" }
                           : { color: "red" }
                       }
@@ -408,18 +358,8 @@ class CreateEditSub extends Component<
           </DialogContent>
         </Dialog>
         <Snackbar autoHideDuration={3000} open={showToast}>
-          <Alert
-            variant='filled'
-            severity='success'
-            action={
-              <Link to={`${RouteNames.sub}/${this.state.values.Name}`}>
-                <Button style={{ color: WHITE }} size='small'>
-                  GO TO SUB
-                </Button>
-              </Link>
-            }
-          >
-            b/{this.state.values.Name} {edit ? "updated" : "created"}!
+          <Alert variant='filled' severity='success'>
+            Your details have been updated!
           </Alert>
         </Snackbar>
       </React.Fragment>
@@ -427,4 +367,4 @@ class CreateEditSub extends Component<
   }
 }
 
-export default withStyles(styles)(CreateEditSub);
+export default withStyles(styles)(EditUser);

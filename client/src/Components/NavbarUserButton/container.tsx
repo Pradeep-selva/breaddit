@@ -77,7 +77,7 @@ const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
         onClick={handleClick}
         className={classes.button}
       >
-        {userData?.UserName}
+        u/{userData?.UserName}
       </Button>
       <Menu
         id='simple-menu'
