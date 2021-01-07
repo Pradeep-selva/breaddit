@@ -189,6 +189,7 @@ func GetPostByIdhandler(c *gin.Context) {
 	}
 
 	data := dsnap.Data()
+	data["ID"] = dsnap.Ref.ID
 
 	iter := utils.Client.Collection("comments").Where("PostId", "==", postId).Documents(utils.Ctx)
 	var comments []entities.Comment
