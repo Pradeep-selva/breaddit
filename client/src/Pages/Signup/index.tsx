@@ -133,7 +133,7 @@ class Signup extends Component<IClass, State> {
         <Paper className={classes.container}>
           <Grid container>
             <Grid item xs={3} className={classes.loginIllustration} />
-            <Grid item xs={12} md={9} className={classes.loginContainer}>
+            <Grid item xs={9} className={classes.loginContainer}>
               <Typography
                 variant={"h3"}
                 color={"textSecondary"}

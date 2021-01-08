@@ -76,7 +76,7 @@ class Home extends Component<Props, IState> {
 
     return (
       <PaginationContainer handlePagination={this.fetchMore}>
-        <Container className={classes.container}>
+        <Container className={classes.container} maxWidth={"md"}>
           <Typography color={"textPrimary"} className={classes.sectionTitle}>
             Hot Breads
           </Typography>
