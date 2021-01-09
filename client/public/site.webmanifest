@@ -1,6 +1,7 @@
 {
-  "name": "Breaddit",
+  "name": "Breaddit: front page of the breads",
   "short_name": "Breaddit",
+  "start_url": "/index.html",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
