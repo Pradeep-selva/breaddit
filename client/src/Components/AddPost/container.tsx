@@ -452,21 +452,21 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
                     <TabPanel
                       value={tabValue}
                       index={0}
-                      style={{ backgroundColor: LIGHT_BLACK }}
+                      style={{ backgroundColor: LIGHT_BLACK, padding: "1rem" }}
                     >
                       {this.renderTextTab()}
                     </TabPanel>
                     <TabPanel
                       value={tabValue}
                       index={1}
-                      style={{ backgroundColor: LIGHT_BLACK }}
+                      style={{ backgroundColor: LIGHT_BLACK, padding: "1rem" }}
                     >
                       {this.renderImageTab()}
                     </TabPanel>
                     <TabPanel
                       value={tabValue}
                       index={2}
-                      style={{ backgroundColor: LIGHT_BLACK }}
+                      style={{ backgroundColor: LIGHT_BLACK, padding: "1rem" }}
                     >
                       {this.renderLinkTab()}
                     </TabPanel>

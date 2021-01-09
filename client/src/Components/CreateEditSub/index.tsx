@@ -16,7 +16,8 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-  withStyles
+  withStyles,
+  withWidth
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { styles, IClass } from "./styles";
@@ -52,6 +53,7 @@ type IProps = IClass & {
   defaultEditFormValues?: typeof FormDefaultValues;
   openToEdit?: boolean;
   closeEdit?: () => void;
+  width: string;
 };
 
 class CreateEditSub extends Component<
@@ -303,7 +305,10 @@ class CreateEditSub extends Component<
                               document.getElementById("Image")?.click()
                             }
                           >
-                            <BsImages color={SMOKEY_WHITE} size={40} />
+                            <BsImages
+                              color={SMOKEY_WHITE}
+                              size={this.props.width === "xs" ? 20 : 45}
+                            />
                           </IconButton>
                         </Tooltip>
                       </Box>
@@ -431,4 +436,4 @@ class CreateEditSub extends Component<
   }
 }
 
-export default withStyles(styles)(CreateEditSub);
+export default withWidth()(withStyles(styles)(CreateEditSub));
