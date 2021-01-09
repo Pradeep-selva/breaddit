@@ -20,11 +20,7 @@ export const FormFields = [
 
 export const FormSchema = {
   identifier: {
-    presence: { allowEmpty: false, message: "can't be blank. " },
-    length: {
-      maximum: 20,
-      message: "must be at max 20 characters"
-    }
+    presence: { allowEmpty: false, message: "can't be blank. " }
   },
   password: {
     presence: { allowEmpty: false, message: "can't be blank. " }
