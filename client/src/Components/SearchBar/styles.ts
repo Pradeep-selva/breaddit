@@ -21,7 +21,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       pointerEvents: "none",
       display: "flex",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
+      [theme.breakpoints.down("xs")]: {
+        display: "none"
+      }
     },
     inputRoot: {
       color: "inherit"

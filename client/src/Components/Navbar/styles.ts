@@ -22,12 +22,6 @@ export const useStyles = makeStyles((theme: Theme) =>
         display: "flex",
         flex: 0.5
       }
-    },
-    sectionMobile: {
-      display: "flex",
-      [theme.breakpoints.up("md")]: {
-        display: "none"
-      }
     }
   })
 );

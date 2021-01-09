@@ -10,6 +10,7 @@ import {
   fade,
   Grid,
   IconButton,
+  MenuItem,
   Paper,
   Snackbar,
   Toolbar,
@@ -46,6 +47,7 @@ type IProps = IClass & {
   sub?: string;
   history?: any;
   textButton?: boolean;
+  menu?: boolean;
   edit?: boolean;
   defaultEditFormValues?: typeof FormDefaultValues;
   openToEdit?: boolean;
@@ -201,7 +203,8 @@ class CreateEditSub extends Component<
       closeEdit,
       textButton = false,
       edit = false,
-      openToEdit = false
+      openToEdit = false,
+      menu = false
     } = this.props;
 
     return (
@@ -211,6 +214,8 @@ class CreateEditSub extends Component<
             <Button variant={"contained"} onClick={this.handleOpen}>
               POST
             </Button>
+          ) : menu ? (
+            <MenuItem onClick={this.handleOpen}>Create Subreaddit</MenuItem>
           ) : (
             <Tooltip title={"Create a subreaddit"}>
               <IconButton

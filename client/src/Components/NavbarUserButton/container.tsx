@@ -25,7 +25,11 @@ interface IDialogType {
   onComplete: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
+const NavbarUserButton = ({
+  userData,
+  logoutUser,
+  mobile
+}: IProps & { mobile?: boolean }) => {
   const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -72,7 +76,9 @@ const NavbarUserButton = ({ userData, logoutUser }: IProps) => {
   return (
     <React.Fragment>
       <Button
-        startIcon={<Avatar size={"sm"} url={userData?.Avatar || ""} />}
+        startIcon={
+          mobile ? null : <Avatar size={"sm"} url={userData?.Avatar || ""} />
+        }
         endIcon={<AiFillCaretDown size={10} />}
         onClick={handleClick}
         className={classes.button}
