@@ -1,4 +1,4 @@
-import { createStyles, fade } from "@material-ui/core";
+import { createStyles, fade, Theme } from "@material-ui/core";
 import {
   DARK_GREY,
   GREY,
@@ -7,7 +7,6 @@ import {
   SEMI_GREY,
   SMOKEY_WHITE
 } from "../../Common/colors";
-import theme from "../../Theme";
 
 const rawStyles = {
   container: null,
@@ -29,15 +28,18 @@ const rawStyles = {
   imageContainer: null
 };
 
-export const styles = () =>
+export const styles = (theme: Theme) =>
   createStyles({
     wrapper: {
       maxWidth: "50%",
-      marginTop: "3rem"
+      marginTop: "3rem",
+      [theme.breakpoints.down("xs")]: {
+        maxWidth: "100%",
+        marginTop: 0
+      }
     },
     container: {
       backgroundColor: DARK_GREY,
-      // height: "11rem",
       minWidth: "100%",
       marginBottom: "2.5vh",
       display: "flex",

@@ -69,6 +69,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       flex: 1,
       paddingRight: "1rem"
     },
+    linkDetailContainer: {
+      flex: 1,
+      paddingRight: "1rem",
+      [theme.breakpoints.down("xs")]: {
+        display: "none"
+      }
+    },
     imageUrlContainer: {
       border: `1px solid ${SEMI_GREY}`,
       minWidth: "5rem",

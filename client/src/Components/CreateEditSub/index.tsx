@@ -10,12 +10,14 @@ import {
   fade,
   Grid,
   IconButton,
+  MenuItem,
   Paper,
   Snackbar,
   Toolbar,
   Tooltip,
   Typography,
-  withStyles
+  withStyles,
+  withWidth
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { styles, IClass } from "./styles";
@@ -46,10 +48,12 @@ type IProps = IClass & {
   sub?: string;
   history?: any;
   textButton?: boolean;
+  menu?: boolean;
   edit?: boolean;
   defaultEditFormValues?: typeof FormDefaultValues;
   openToEdit?: boolean;
   closeEdit?: () => void;
+  width: string;
 };
 
 class CreateEditSub extends Component<
@@ -138,7 +142,6 @@ class CreateEditSub extends Component<
               }
             }
 
-            console.log(payload);
             (!this.props.edit
               ? createSub(getFormPayload(payload))
               : updateSub(getFormPayload(payload), payload.Name)
@@ -201,7 +204,8 @@ class CreateEditSub extends Component<
       closeEdit,
       textButton = false,
       edit = false,
-      openToEdit = false
+      openToEdit = false,
+      menu = false
     } = this.props;
 
     return (
@@ -211,6 +215,8 @@ class CreateEditSub extends Component<
             <Button variant={"contained"} onClick={this.handleOpen}>
               POST
             </Button>
+          ) : menu ? (
+            <MenuItem onClick={this.handleOpen}>Create Subreaddit</MenuItem>
           ) : (
             <Tooltip title={"Create a subreaddit"}>
               <IconButton
@@ -299,7 +305,10 @@ class CreateEditSub extends Component<
                               document.getElementById("Image")?.click()
                             }
                           >
-                            <BsImages color={SMOKEY_WHITE} size={40} />
+                            <BsImages
+                              color={SMOKEY_WHITE}
+                              size={this.props.width === "xs" ? 20 : 45}
+                            />
                           </IconButton>
                         </Tooltip>
                       </Box>
@@ -427,4 +436,4 @@ class CreateEditSub extends Component<
   }
 }
 
-export default withStyles(styles)(CreateEditSub);
+export default withWidth()(withStyles(styles)(CreateEditSub));

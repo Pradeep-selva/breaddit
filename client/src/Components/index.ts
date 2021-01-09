@@ -20,4 +20,5 @@ export { default as EditUser } from "./EditUser";
 export { default as CommentCard } from "./CommentCard";
 export { default as CommentBox } from "./CommentBox";
 export { default as SearchResultCard } from "./SearchResultCard";
+export { default as ScrollUpButton } from "./ScrollUpButton";
 export * from "./Skeletons";

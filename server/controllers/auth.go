@@ -103,7 +103,6 @@ func LoginHandler(c *gin.Context) {
 	var err error
 
 	c.ShouldBindBodyWith(&body, binding.JSON)
-	log.Println(body)
 
 	if body.UserName == "" {
 		iter := utils.Client.Collection("auth").Where("Email", "==", body.Email).Documents(utils.Ctx)

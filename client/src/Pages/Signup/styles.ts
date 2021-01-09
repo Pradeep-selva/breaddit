@@ -1,13 +1,16 @@
 import { createStyles } from "@material-ui/core";
 import { ImageURLS } from "../../Assets";
 import { BLACK, DARK_GREY } from "../../Common/colors";
-// import theme from "../../Theme";
+import theme from "../../Theme";
 
 const rawStyles = {
   container: {
     display: "flex",
     alignItems: "center",
-    marginTop: "15vh"
+    marginTop: "15vh",
+    [theme.breakpoints.down("xs")]: {
+      marginTop: "5vh"
+    }
   },
   loginIllustration: {
     background: `url(${ImageURLS.loginBackground})`,
@@ -21,7 +24,7 @@ const rawStyles = {
     marginBottom: "2%"
   },
   subTitle: {
-    fontSize: "0.7vw",
+    fontSize: "0.8rem",
     maxWidth: "80%",
     marginBottom: "20%"
   },

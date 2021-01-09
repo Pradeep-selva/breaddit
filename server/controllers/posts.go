@@ -518,6 +518,18 @@ func CommentOnPostHandler(c *gin.Context) {
 		return
 	}
 
+	_, err = docRef.Update(utils.Ctx, []firestore.Update{
+		{Path: "Comments", Value: firestore.Increment(1)},
+	})
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"error":      "An error occured",
+			"statusCode": http.StatusInternalServerError,
+		})
+		return
+	}	
+
+
 	notification := entities.Notification{
 		Content: "u/" + UID + " has commented on your post",
 		Sender:  UID,

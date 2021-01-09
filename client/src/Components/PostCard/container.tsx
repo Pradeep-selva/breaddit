@@ -6,7 +6,8 @@ import {
   Link as MuiLink,
   Button,
   IconButton,
-  Snackbar
+  Snackbar,
+  Hidden
 } from "@material-ui/core";
 import React from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
@@ -83,7 +84,7 @@ const PostCard = ({
 
   return (
     <React.Fragment>
-      <Grid item>
+      <Grid item xs={12}>
         <Paper className={classes.container}>
           <Box className={classes.upvoteSection}>
             <VotesSection cumulativeVotes={cumulativeVotes} postId={ID} />
@@ -98,7 +99,11 @@ const PostCard = ({
               >
                 b/{Sub}
               </Typography>
-              <Typography className={classes.postedText}>posted by</Typography>
+              <Hidden xsDown>
+                <Typography className={classes.postedText}>
+                  posted by
+                </Typography>
+              </Hidden>
               <Avatar
                 url={User?.Avatar || ""}
                 size={"xs"}
@@ -167,7 +172,13 @@ const PostCard = ({
                 )}
               </Box>
               {(!!Link || !!Image) && (
-                <Box className={classes.imageDetailContainer}>
+                <Box
+                  className={
+                    !!Link
+                      ? classes.linkDetailContainer
+                      : classes.imageDetailContainer
+                  }
+                >
                   <Box
                     className={classes.imageUrlContainer}
                     style={{
@@ -189,7 +200,7 @@ const PostCard = ({
                   color={"textPrimary"}
                   className={classes.bottomBarText}
                 >
-                  {Comments}
+                  {Comments} <Hidden xsDown>comments</Hidden>
                 </Typography>
               </Box>
               <Box style={{ flex: 6 }} className={classes.bottomBarElement}>

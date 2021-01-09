@@ -1,4 +1,4 @@
-import { IconButton } from "@material-ui/core";
+import { IconButton, Tooltip } from "@material-ui/core";
 import React from "react";
 import { GrEdit } from "react-icons/gr";
 import { DARK_GREY } from "../../Common/colors";
@@ -24,18 +24,20 @@ const Avatar = ({ url, size, style, className, onEdit }: IProps) => (
       className={className || ""}
     />
     {!!onEdit && (
-      <IconButton
-        size={"small"}
-        onClick={onEdit || undefined}
-        style={{
-          position: "absolute",
-          bottom: 5,
-          right: 5,
-          backgroundColor: "white"
-        }}
-      >
-        <GrEdit color={DARK_GREY} />
-      </IconButton>
+      <Tooltip title={"Edit details"}>
+        <IconButton
+          size={"small"}
+          onClick={onEdit || undefined}
+          style={{
+            position: "absolute",
+            bottom: 5,
+            right: 5,
+            backgroundColor: "white"
+          }}
+        >
+          <GrEdit color={DARK_GREY} />
+        </IconButton>
+      </Tooltip>
     )}
   </div>
 );

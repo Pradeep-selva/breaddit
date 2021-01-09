@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import theme from "../Theme";
 import store from "../Redux";
 import { MuiThemeProvider } from "@material-ui/core";
-import { Navbar } from "../Components";
+import { Navbar, ScrollUpButton } from "../Components";
 import "./App.css";
 
 export const App = () => {
@@ -20,6 +20,7 @@ export const App = () => {
         <Router>
           <Navbar />
           <Routes />
+          <ScrollUpButton />
         </Router>
       </Provider>
     </MuiThemeProvider>

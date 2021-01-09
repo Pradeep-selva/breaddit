@@ -9,6 +9,7 @@ import {
   DialogContent,
   Grid,
   IconButton,
+  MenuItem,
   Paper,
   Snackbar,
   Tab,
@@ -60,6 +61,7 @@ type IProps = IClass &
     subPageCallBack?: Function;
     history?: any;
     textButton?: boolean;
+    menu?: boolean;
   };
 
 class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
@@ -357,7 +359,12 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
 
   render() {
     const { loading, open, tabValue, showToast } = this.state;
-    const { classes, joinedSubs, textButton = false } = this.props;
+    const {
+      classes,
+      joinedSubs,
+      textButton = false,
+      menu = false
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -365,6 +372,8 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
           <Button variant={"contained"} onClick={this.handleOpen}>
             POST
           </Button>
+        ) : menu ? (
+          <MenuItem onClick={this.handleOpen}>Add Post</MenuItem>
         ) : (
           <Tooltip title={"Add a post"}>
             <IconButton
@@ -443,21 +452,21 @@ class AddPost extends Component<IClass & IProps & { sub?: string }, IState> {
                     <TabPanel
                       value={tabValue}
                       index={0}
-                      style={{ backgroundColor: LIGHT_BLACK }}
+                      style={{ backgroundColor: LIGHT_BLACK, padding: "1rem" }}
                     >
                       {this.renderTextTab()}
                     </TabPanel>
                     <TabPanel
                       value={tabValue}
                       index={1}
-                      style={{ backgroundColor: LIGHT_BLACK }}
+                      style={{ backgroundColor: LIGHT_BLACK, padding: "1rem" }}
                     >
                       {this.renderImageTab()}
                     </TabPanel>
                     <TabPanel
                       value={tabValue}
                       index={2}
-                      style={{ backgroundColor: LIGHT_BLACK }}
+                      style={{ backgroundColor: LIGHT_BLACK, padding: "1rem" }}
                     >
                       {this.renderLinkTab()}
                     </TabPanel>

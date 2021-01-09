@@ -9,7 +9,8 @@ import {
   withStyles,
   Link as MuiLink,
   IconButton,
-  Grid
+  Grid,
+  Hidden
 } from "@material-ui/core";
 import { deletePostById, getPostById } from "../../APIs";
 import { RouteNames, STATUS_SUCCESS } from "../../Configs";
@@ -119,12 +120,12 @@ class ExpandedPost extends Component<IProps, IState> {
     return (
       <Container className={classes.wrapper}>
         <Grid container>
-          <Grid item xs={1}>
+          <Grid item xs={12} sm={1}>
             <IconButton onClick={this.onBack}>
               <IoIosArrowRoundBack color={WHITE} size={"3rem"} />
             </IconButton>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={12} sm={11}>
             <React.Fragment>
               {!!postData ? (
                 <Paper className={classes.container}>
@@ -144,9 +145,11 @@ class ExpandedPost extends Component<IProps, IState> {
                       >
                         b/{postData?.Sub}
                       </Typography>
-                      <Typography className={classes.postedText}>
-                        posted by
-                      </Typography>
+                      <Hidden xsDown>
+                        <Typography className={classes.postedText}>
+                          posted by
+                        </Typography>
+                      </Hidden>
                       <Avatar
                         url={postData?.User?.Avatar || ""}
                         size={"xs"}

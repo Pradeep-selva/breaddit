@@ -17,6 +17,7 @@ import AddPost from "../AddPost";
 import NavbarUserButton from "../NavbarUserButton";
 import NotificationBadge from "../NotificationBadge";
 import { CreateEditSub } from "..";
+import NavMobileMenu from "../NavMobileMenu";
 
 const Navbar = ({ isAuthenticated }: IProps) => {
   const classes = useStyles();
@@ -75,15 +76,7 @@ const Navbar = ({ isAuthenticated }: IProps) => {
           {isAuthenticated
             ? renderAuthenticatedButtons()
             : renderUnauthenticatedButtons()}
-          {/* <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label='show more'
-              aria-controls={mobileMenuId}
-              aria-haspopup='true'
-              onClick={handleMobileMenuOpen}
-              color='inherit'
-            ></IconButton>
-          </div> */}
+          <NavMobileMenu />
         </Toolbar>
       </AppBar>
     </div>

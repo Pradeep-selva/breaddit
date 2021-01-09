@@ -6,7 +6,8 @@ import {
   Grid,
   Paper,
   Typography,
-  withStyles
+  withStyles,
+  withWidth
 } from "@material-ui/core";
 import dayjs from "dayjs";
 import React, { Component } from "react";
@@ -44,7 +45,7 @@ interface IState {
   subData: ISubData | null;
 }
 
-type IProps = SelfProps & IClass & ReduxProps;
+type IProps = SelfProps & IClass & ReduxProps & { width: string };
 
 class Subreaddit extends Component<IProps, IState> {
   limit: number;
@@ -212,7 +213,13 @@ class Subreaddit extends Component<IProps, IState> {
           </Box>
         </Paper>
         <Container maxWidth={"md"}>
-          <Grid container spacing={5} style={{ marginTop: "3vh" }}>
+          <Grid
+            container
+            spacing={5}
+            justify={"center"}
+            style={{ marginTop: "3vh" }}
+            direction={this.props.width === "xs" ? "column-reverse" : "row"}
+          >
             <Grid item xs={12} sm={8}>
               <Box display={"flex"}>
                 <Typography
@@ -249,9 +256,9 @@ class Subreaddit extends Component<IProps, IState> {
                   avatar={subData?.Thumbnail}
                   isOwner={isUserOwner}
                   subEditFormValues={{
-                    Description: subData.Description,
-                    Name: subData.Name,
-                    Tags: subData.Tags.join(" "),
+                    Description: subData.Description || "",
+                    Name: subData.Name || "",
+                    Tags: subData.Tags?.join(" ") || "",
                     Thumbnail: (null as unknown) as File
                   }}
                   type={"sub"}
@@ -308,4 +315,4 @@ class Subreaddit extends Component<IProps, IState> {
   }
 }
 
-export default withStyles(styles)(Subreaddit);
+export default withWidth()(withStyles(styles)(Subreaddit));
