@@ -200,7 +200,7 @@ const PostCard = ({
                   color={"textPrimary"}
                   className={classes.bottomBarText}
                 >
-                  {Comments}
+                  {Comments} comments
                 </Typography>
               </Box>
               <Box style={{ flex: 6 }} className={classes.bottomBarElement}>

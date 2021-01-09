@@ -149,7 +149,6 @@ class Subreaddit extends Component<IProps, IState> {
     const { classes, user } = this.props;
     const isUserMember = user?.JoinedSubs.includes(this.sub);
     const isUserOwner = subData?.Owner === user?.UserName;
-    console.log(this.props.width);
 
     return (
       <PaginationContainer handlePagination={this.fetchMore}>

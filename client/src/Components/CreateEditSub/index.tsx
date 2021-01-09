@@ -140,7 +140,6 @@ class CreateEditSub extends Component<
               }
             }
 
-            console.log(payload);
             (!this.props.edit
               ? createSub(getFormPayload(payload))
               : updateSub(getFormPayload(payload), payload.Name)
