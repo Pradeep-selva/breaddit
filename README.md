@@ -4,7 +4,7 @@
 - Sign up/Log in and join this community of bakers and bread lovers in a reddit like platform,
   to share your thoughts on your favorite kinds of breads in subreaddits of your choice,
   and interact with them, through your votes and comments.
-- Installable as a PWA!
+- Installable on your mobile device as a PWA!
 - [Visit site](https://breadddit.web.app/) to see it in action.
 
 ## Screenshots
