@@ -14,6 +14,8 @@ export const App = () => {
     checkUserAuthentication();
   }, []);
 
+  console.log(process.env.NODE_ENV);
+
   return (
     <MuiThemeProvider theme={theme}>
       <Provider store={store}>

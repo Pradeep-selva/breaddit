@@ -41,6 +41,6 @@ export const Routes = () => (
     <Route exact path={RouteNames.tc} component={TermsConditions} />
     <AuthRoute exact path={RouteNames.login} component={Login} />
     <AuthRoute exact path={RouteNames.signup} component={Signup} />
-    <Route exact component={ExpandedPost} />
+    {/* <Route exact component={ExpandedPost} /> */}
   </Switch>
 );

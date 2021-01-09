@@ -21,3 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+sw.js.map
+workbox-9e257e41.js
+workbox-9e257e41.js.map
