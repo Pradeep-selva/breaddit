@@ -3,7 +3,8 @@ import {
   Container,
   Grid,
   Typography,
-  withStyles
+  withStyles,
+  withWidth
 } from "@material-ui/core";
 import dayjs from "dayjs";
 import React, { Component } from "react";
@@ -25,6 +26,7 @@ interface SelfProps {
   history: {
     push: Function;
   };
+  width: string;
 }
 
 interface IState {
@@ -92,7 +94,12 @@ class Subreaddit extends Component<IProps, IState> {
 
     return (
       <Container maxWidth={"md"}>
-        <Grid container spacing={5} style={{ marginTop: "5vh" }}>
+        <Grid
+          container
+          spacing={5}
+          style={{ marginTop: "5vh" }}
+          direction={this.props.width === "xs" ? "column-reverse" : "row"}
+        >
           <Grid item xs={12} sm={8}>
             <Typography color={"textPrimary"} className={classes.postsTitle}>
               Posts from {this.userName}
@@ -144,4 +151,4 @@ class Subreaddit extends Component<IProps, IState> {
   }
 }
 
-export default withStyles(styles)(Subreaddit);
+export default withWidth()(withStyles(styles)(Subreaddit));
