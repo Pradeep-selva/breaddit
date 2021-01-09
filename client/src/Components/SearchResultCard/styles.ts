@@ -15,6 +15,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       "&:hover": {
         transform: "scale(1.05)",
         cursor: "pointer"
+      },
+      [theme.breakpoints.down("xs")]: {
+        width: "90%",
+        paddingRight: "1.5rem"
       }
     },
     title: {
