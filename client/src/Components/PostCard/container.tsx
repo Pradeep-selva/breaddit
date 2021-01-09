@@ -194,7 +194,7 @@ const PostCard = ({
               )}
             </Box>
             <Box style={{ flex: 0.7 }} className={classes.bottomBarContainer}>
-              <Box style={{ flex: 1 }} className={classes.bottomBarElement}>
+              <Box style={{ flex: 1.5 }} className={classes.bottomBarElement}>
                 <MdComment size={15} />
                 <Typography
                   color={"textPrimary"}
