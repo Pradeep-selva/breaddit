@@ -32,8 +32,9 @@
 
 - Clone the repo and install dependencies with `npm install` (or) `yarn` in `client`, and `go mod vendor` in `server`.
 - Create a `.env` in src directory of `client` with a variable named `REACT_APP_X_API_KEY` containing your x-api-key, which must be added to `server` too.
+- Create a `.env` in src directory containing the x-api-key and all your AWS S3 credentials.
 - In root directory run `cd client && yarn start` and `cd server && go run main.go`.
-- go to `localhost:8080`
+- go to `localhost:3000`
 
 ## License
 
